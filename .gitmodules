@@ -1,3 +1,6 @@
 [submodule "gmusicapi"]
 	path = gmusicapi
 	url = https://github.com/simon-weber/gmusicapi
+[submodule "Catch"]
+	path = Catch
+	url = https://github.com/philsquared/Catch
