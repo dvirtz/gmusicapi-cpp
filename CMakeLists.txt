@@ -42,5 +42,7 @@ endif()
 
 include(doxygen.cmake)
 
+enable_testing()
+
 add_subdirectory(src)
 add_subdirectory(test)

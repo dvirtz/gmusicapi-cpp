@@ -42,4 +42,19 @@ void GMusicApi::registerTypeConverters()
 	pyToCppConverter<RegisteredDevice, boost::python::dict>::registerConverter();
 }
 
+void GMusicApi::handlePythonException() const
+{
+	PyObject *exc, *val, *tb;
+	object formatted_list, formatted;
+	PyErr_Fetch(&exc, &val, &tb);
+	handle<> hexc(exc), hval(allow_null(val)), htb(allow_null(tb));
+	object traceback(import("traceback"));
+
+	object format_exception(traceback.attr("format_exception"));
+	formatted_list = format_exception(hexc, hval, htb);
+	formatted = str("\n").join(formatted_list);
+
+	throw std::runtime_error(extract<std::string>(formatted));
+}
+
 } // namespace GMusicApi

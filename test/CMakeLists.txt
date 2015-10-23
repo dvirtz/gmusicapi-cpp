@@ -32,6 +32,6 @@ target_link_libraries(Tester PUBLIC
 
 get_filename_component(PYTHON_PATH ${PYTHON_EXECUTABLE} DIRECTORY)
 
-add_custom_command(TARGET Tester 
-	POST_BUILD 
-	COMMAND ${CMAKE_COMMAND} -E env "PATH=${PYTHON_PATH}" $<TARGET_FILE:Tester>)
+add_test(NAME RunTests COMMAND Tester)
+
+set_tests_properties(RunTests PROPERTIES ENVIRONMENT "PATH=${PYTHON_PATH};$ENV{PATH}")

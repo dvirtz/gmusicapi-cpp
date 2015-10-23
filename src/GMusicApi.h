@@ -8,6 +8,7 @@ MSC_RESTORE_WARNINGS
 #include <string>
 #include <sstream>
 #include <map>
+#include <exception>
 
 namespace GMusicApi
 {
@@ -31,20 +32,40 @@ private:
 
 	void registerTypeConverters();
 
+	void handlePythonException() const;
+
 	boost::python::object m_dict;
 };
 
 template<typename ...Args>
 boost::python::object GMusicApi::createObject(const std::string & name, Args&& ...args) const
 {
-	boost::python::object type = m_dict[name];
-	return boost::python::call<boost::python::object>(type.ptr(), std::forward<Args>(args)...);
+	namespace bp = boost::python;
+	try
+	{
+		bp::object type = m_dict[name];
+		return bp::call<boost::python::object>(type.ptr(), std::forward<Args>(args)...);
+	}
+	catch (const bp::error_already_set&)
+	{
+		handlePythonException();
+		return bp::object();
+	}
 }
 
 template<typename R, typename ...Args>
 R GMusicApi::callMethod(const boost::python::object& object, const std::string & methodName, Args && ...args) const
 {
-	return boost::python::call_method<R>(object.ptr(), methodName.c_str(), std::forward<Args>(args)...);
+	namespace bp = boost::python;
+	try
+	{
+		return boost::python::call_method<R>(object.ptr(), methodName.c_str(), std::forward<Args>(args)...);
+	}
+	catch (const bp::error_already_set&)
+	{
+		handlePythonException();
+		return R();
+	}
 }
 
 } // namespace GMusicApi

@@ -39,8 +39,13 @@ TEST_CASE("Mobileclient login", "[Mobileclient]")
 					SECTION("stream url not empty")
 					{
 						auto song = songs.front();
-						auto registeredDeviceId = registeredDevices.front().m_id;
-						auto streamUrl = m.get_stream_url(song.m_id, registeredDeviceId);
+						auto registeredDeviceIt 
+							= std::find_if(registeredDevices.begin(), registeredDevices.end(), [](const RegisteredDevice& device)
+						{
+							return device.m_type == "ANDROID";
+						});
+						REQUIRE(registeredDeviceIt != registeredDevices.end());
+						auto streamUrl = m.get_stream_url(song.m_id, registeredDeviceIt->m_id);
 						REQUIRE_FALSE(streamUrl.empty());
 					}
 				}
