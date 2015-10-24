@@ -13,6 +13,3 @@ endif()
 target_include_directories(GMusicApi SYSTEM PUBLIC
 	${Boost_INCLUDE_DIR}
 	${PYTHON_INCLUDE_DIRS})
-
-target_include_directories(GMusicApi PUBLIC
-	${CMAKE_SOURCE_DIR}/include)
