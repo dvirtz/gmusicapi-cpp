@@ -112,7 +112,7 @@ struct pySequenceToCppContainerConverter
 						  boost::python::converter::rvalue_from_python_stage1_data* data)
 	{
 		using namespace boost::python;
-		using value_type = Container::value_type;
+		using value_type = typename Container::value_type;
 
 		// Grab pointer to memory into which to construct the new QString
 		void* storage = (
