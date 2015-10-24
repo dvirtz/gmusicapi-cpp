@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1.0)
 project(GMusicApi)
 
 # require C++11 support
-if(DEFINED $ENV{TRAVIS})
+if(DEFINED TRAVIS)
 	# for some reason, Travis-CI doesn't support CMAKE_CXX_STANDARD variable
 	message(STATUS "on Travis-CI")
 	include(CheckCXXCompilerFlag)
@@ -17,6 +17,7 @@ if(DEFINED $ENV{TRAVIS})
 			message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 	endif()
 else()
+	message(STATUS "not on Travis-CI")
 	set(CMAKE_CXX_STANDARD 11)
 endif()
 

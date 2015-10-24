@@ -1,27 +1,42 @@
+sudo: false
+
 language: cpp
 
 compiler:
 # - clang
 - gcc
 
-install:
-- sudo apt-get install -y libboost-dev libboost-python-dev python-dev doxygen
-- wget -qO- http://www.cmake.org/files/v3.1/cmake-3.1.0-Linux-x86_64.tar.gz | tar xvz
+addons:
+  apt:
+    sources:
+    # - llvm-toolchain-precise
+    - ubuntu-toolchain-r-test
+    packages:
+    # - clang-3.7
+    - g++-4.9
+    - gcc-4.9
+    - libboost-all-dev
+    - doxygen
 
 env:
   matrix:
-  - BUILD_TYPE=Debug
+  # - BUILD_TYPE=Debug
   - BUILD_TYPE=Release
   global:
   - secure: "g+iZw5iuBztrlPegctYgoANAmuQnOM60zAN6XsGswkuRN076WC7J8q1ZoxPfRsk54trWqx3v5o5KZwu9AapvSNiIiaY9KVVoVRNFAP9298GOmN9lTPdkVp/qNBSU5G52mi9ZAy9uzl8Ri31xQbWhg2sfF+kAZV6xh5CMSpHwfXnCYObA/Yn1lvdmwARW6EBEtzheKZf57HBD9FensnhKRgZqw+BcfwcYx2YCTIecywPR4GsxBxNabQdojgUrBRxwNmKixCUjyMoX3WPjbJvoeDTVXoXBRe3QDmIK5QaSa+JGkbw8Hx9BGKuYEUXhJ4xkH3Zqrd5CBAI1k4YFHsSDu+MXmkj0l5/NyvTuhc9SS3NrbNUXJeDSHJqfHPPKT9QjNixwObvrpJcdT4LHH4B/JvMVPfLBDN2XfdoaKtMPAm4i9CabaqhZbQXqKLfV/O3Ai2s0oOLCFBmpxYqIsn+bTD4+Ga8nHUqVIV6+MUF1jWZueP8/RfohHrHC9BqbBeRSG6hKpk/Y3TGvSu25vXt2vNl01mZetdm4Sa7wpQ6BN9YOQqYgBcokGDdqdQQQWSDKtte3wDKOQby27Oo1GrSfWNhLSEKZXjWLrRVya1UO8/JtzaDoRhVjJ5W4Rj4gfpwV8ghsQQKQ/NbmOLtlvfDn+CRtVbG46tTGrDPW3nh538k="
   - secure: "QSS8aCzBwgA8NwXa0SIFRj2L1//fTXRGLr1utGEzSK+iIQ0R3i3SpRakl22JhnHBCXULmW9A0UCgejbn7uM8NtDPBYleldpe+3Yqxk/2a9VO91ETUc6agcpwrGz9B+V03NwpR9G5m9eLaTW5BmgbtrTf0wNOX1ekZF0khb7/bY+EABPrl8ELAQ9VokXy9sDJJmqdjKe3xIPUGs9USgd94g2eHCd7BOvVx2+jMmiXyiu3N4xJipy4XXkihrOqUDP/tbdsYursKBrlE4fXsbI4wq1dF9HeGTugq8glIg417ZaxlkziuBt1qqWf+doCwOnQcYXy4u8aU+4ryRdq6CsvqMCQpS6BTaudgu+PxBtynEHQcx+htEZ3fDkVxHIcZJ/EYbTRAooIWZd5Xx5tSXkQ2c6PC9GmoylBebARf810khpqLNL1q00MvUNlm2ZIQ90Zszsmp3eW566Fnk1nccjviothBYUpX/IedR7URj+qxZj2ozkS1V5YAt6Okg7hb7i4unIcteKxzUiK4twtHIap7fXottYiohsYmn/OXj+MJeX1DbzNOSNNxLFXg8BD/VrRG+4kk6Qr5CIQvh9uhaEtN5kjl/91nfRU0yh5xhPCUsNHC79Kjdc0DWnRFEBfYD1HryfowqcTqwIGhE1Rd4kELB52OIrbxh4ARHKAbtl6QU8="
 
+install:
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
+  - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.8" CC="clang-3.8"; fi
+  
 before_script:
+- wget -qO- http://www.cmake.org/files/v3.1/cmake-3.1.0-Linux-x86_64.tar.gz | tar xvz
 - export PATH=$PWD/cmake-3.1.0-Linux-x86_64/bin:$PATH
 
 script:
 - mkdir _build
 - cd _build
-- cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DGM_U=$GM_U -DGM_P=$GM_P
+- cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DGM_U=$GM_U -DGM_P=$GM_P -DTRAVIS
 - make VERBOSE=1
 - ctest
