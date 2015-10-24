@@ -37,6 +37,6 @@ before_script:
 script:
 - mkdir _build
 - cd _build
-- cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DGM_U=$GM_U -DGM_P=$GM_P -DTRAVIS
+- cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DGM_U=$GM_U -DGM_P=$GM_P -DTRAVIS=True
 - make VERBOSE=1
 - ctest
