@@ -8,7 +8,6 @@ MSC_DISABLE_WARNINGS
 MSC_RESTORE_WARNINGS
 #include "Song.h"
 #include "AlbumArt.h"
-#include <codecvt>
 
 // convert python types to user defined C++ types
 // based on https://misspent.wordpress.com/2009/09/27/how-to-write-boost-python-converters/
@@ -48,13 +47,10 @@ inline void pyConvert<std::string, boost::python::str>(PyObject* pObj, void* sto
 {
 	if (PyUnicode_Check(pObj))
 	{
-		std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-		new (storage) std::string(converter.to_bytes(reinterpret_cast<const wchar_t*>(PyUnicode_AS_DATA(pObj))));
+		pObj = PyUnicode_AsUTF8String(pObj);
 	}
-	else
-	{
-		new (storage) std::string(PyString_AsString(pObj));
-	}
+
+	new (storage) std::string(PyString_AsString(pObj));
 }
 
 template<typename CType, typename PyType = boost::python::object>
