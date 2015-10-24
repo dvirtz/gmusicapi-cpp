@@ -1,5 +1,5 @@
 #include "utility.h"
-#include "Catch.hpp"
+#include "catch.hpp"
 #include "Mobileclient.h"
 #include "userCredentials.h"
 #include "Song.h"

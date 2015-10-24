@@ -1,4 +1,4 @@
-#include "Catch.hpp"
+#include "catch.hpp"
 #include "Webclient.h"
 
 using namespace GMusicApi;
