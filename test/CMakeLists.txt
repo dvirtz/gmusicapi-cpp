@@ -29,9 +29,9 @@ target_link_libraries(Tester PUBLIC
 	${Boost_LIBRARIES}
 	${PYTHON_LIBRARIES})
 
-get_filename_component(PYTHON_PATH ${PYTHON_EXECUTABLE} DIRECTORY)
-
 find_package(PythonInterp REQUIRED)
+
+get_filename_component(PYTHON_PATH ${PYTHON_EXECUTABLE} DIRECTORY)
 
 add_custom_command(TARGET Tester 
 	POST_BUILD 
