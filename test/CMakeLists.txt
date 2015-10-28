@@ -27,10 +27,11 @@ target_include_directories(Tester PUBLIC ${Catch_INCLUDE_DIR}
 target_link_libraries(Tester PUBLIC
 	GMusicApi
 	${Boost_LIBRARIES}
-	debug ${PYTHON_LIBRARY_DEBUG} 
-	optimized ${PYTHON_LIBRARY_RELEASE})
+	${PYTHON_LIBRARIES})
 
 get_filename_component(PYTHON_PATH ${PYTHON_EXECUTABLE} DIRECTORY)
+
+find_package(PythonInterp REQUIRED)
 
 add_custom_command(TARGET Tester 
 	POST_BUILD 

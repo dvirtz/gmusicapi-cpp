@@ -1,6 +1,7 @@
 #include "GMusicApi.h"
 #include "typeConverters.h"
 #include "RegisteredDevice.h"
+#include "gmusicapiPath.h"
 #include <iostream>
 
 namespace GMusicApi
@@ -16,9 +17,24 @@ GMusicApi& GMusicApi::instance()
 
 GMusicApi::GMusicApi()
 {
+	// must be called before dilling with python
 	Py_Initialize();
-	auto module = import("gmusicapi");
-	m_dict = module.attr("__dict__");
+
+	try
+	{
+		// add gmusicapi module to path
+		auto sys = import("sys");
+		list path = extract<list>(sys.attr("path"));
+		path.append(gmusicapi_path);
+
+		// import gmusicapi module
+		auto module = import("gmusicapi");
+		m_dict = module.attr("__dict__");
+	}
+	catch (const error_already_set&)
+	{
+		handlePythonException();
+	}
 
 	registerTypeConverters();
 }
