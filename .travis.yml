@@ -18,6 +18,8 @@ addons:
     - libboost-all-dev
     - doxygen
     - python-pip
+    - libffi-dev
+    - libssl-dev
 
 env:
   matrix:
@@ -34,11 +36,10 @@ install:
 before_script:
 - wget -qO- http://www.cmake.org/files/v3.1/cmake-3.1.0-Linux-x86_64.tar.gz | tar xvz
 - export PATH=$PWD/cmake-3.1.0-Linux-x86_64/bin:$PATH
-- pip install --user --upgrade gmusicapi
 
 script:
 - mkdir _build
 - cd _build
 - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DGM_U=$GM_U -DGM_P=$GM_P -DTRAVIS=True
-- make VERBOSE=1
+- make
 - ctest
