@@ -36,7 +36,8 @@ install:
 before_script:
 - wget -qO- http://www.cmake.org/files/v3.1/cmake-3.1.0-Linux-x86_64.tar.gz | tar xvz
 - export PATH=$PWD/cmake-3.1.0-Linux-x86_64/bin:$PATH
-- pip install -r --user --upgrade gmusicapi/requirements.txt 
+- pip install --upgrade pip
+- pip install --user --upgrade -r gmusicapi/requirements.txt 
 
 
 script:
