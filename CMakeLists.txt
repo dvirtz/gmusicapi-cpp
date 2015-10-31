@@ -48,11 +48,13 @@ endmacro()
 # the following resolves the issue in
 # http://stackoverflow.com/questions/10660524/error-building-boost-1-49-0-with-gcc-4-7-0
 if(MINGW)
-    add_definitions(-D_hypot=hypot)
+	add_definitions(-D_hypot=hypot)
 endif()
 
 if(MSVC)
 	add_definitions(/WX /W4)
+elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+	add_definitions(-Wall -Wpedantic -Werror)
 endif()
 
 include(doxygen.cmake)
