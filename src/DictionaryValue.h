@@ -29,8 +29,8 @@ private:
 template<typename T>
 DictionaryValue<T>::DictionaryValue(const boost::python::dict& dict,
 									const std::string& key,
-									const T&& defaultValue = T())
-	: m_dict(dict), m_key(key), m_value(defaultValue)
+									const T&& defaultValue /*= T()*/)
+	: m_key(key), m_value(defaultValue), m_dict(dict)
 {
 	getFromDict(dict, m_key, m_value);
 }
