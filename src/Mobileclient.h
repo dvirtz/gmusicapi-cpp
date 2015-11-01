@@ -9,7 +9,8 @@
 namespace GMusicApi
 {
 
-/*Allows library management and streaming by posing as the googleapis.com mobile clients.
+/**
+Allows library management and streaming by posing as the googleapis.com mobile clients.
 
 Uploading is not supported by this client (use <Musicmanager> to upload). 
 */
@@ -135,6 +136,8 @@ public:
 							   SongQuality quality = SongQuality::High);
 
 	std::vector<RegisteredDevice> get_registered_devices();
+
+	void change_song_metadata(const std::vector<Song>& songs);
 };
 
 

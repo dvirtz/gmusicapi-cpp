@@ -49,6 +49,14 @@ TEST_CASE("Mobileclient login", "[Mobileclient]")
 						REQUIRE_FALSE(streamUrl.empty());
 					}
 				}
+
+				SECTION("can change song metadata")
+				{
+					auto song = songs.front();
+					song.m_rating = "5";
+					m.change_song_metadata({ song });
+					REQUIRE(m.get_all_songs(true).front().m_rating == "5");
+				}
 			}
 			SECTION("non incremental")
 			{

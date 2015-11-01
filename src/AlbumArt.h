@@ -3,6 +3,7 @@
 MSC_DISABLE_WARNINGS
 #include <boost/python.hpp>
 MSC_RESTORE_WARNINGS
+#include "DictionaryValue.h"
 
 namespace GMusicApi
 {
@@ -10,11 +11,13 @@ namespace GMusicApi
 struct AlbumArt
 {
 	AlbumArt(const boost::python::dict& dict)
+		: m_dict(dict),
+		m_url(dict, "url")
 	{
-		getFromDict(dict, "url", m_url);
 	}
 
-	std::string m_url;
+	boost::python::dict				m_dict;
+	DictionaryValue<std::string>	m_url;
 };
 
 } // namespace GMusicApi

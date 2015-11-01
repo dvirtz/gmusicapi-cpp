@@ -3,6 +3,7 @@
 MSC_DISABLE_WARNINGS
 #include <boost/python.hpp>
 MSC_RESTORE_WARNINGS
+#include "DictionaryValue.h"
 
 namespace GMusicApi
 {
@@ -10,21 +11,23 @@ namespace GMusicApi
 struct RegisteredDevice
 {
 	RegisteredDevice(const boost::python::dict& dict)
-	{
-		getFromDict(dict, "kind", m_kind);
-		getFromDict(dict, "id", m_id);
-		getFromDict(dict, "friendlyName", m_friendlyName);
-		getFromDict(dict, "type", m_type);
-		getFromDict(dict, "lastAccessedTimeMs", m_lastAccessedTimeMs);
-		getFromDict(dict, "smartPhone", m_isSmartphone);
+		: m_dict(dict),
+		m_kind(dict, "kind"),
+		m_id(dict, "id"),
+		m_friendlyName(dict, "friendlyName"),
+		m_type(dict, "type"),
+		m_lastAccessedTimeMs(dict, "lastAccessedTimeMs"),
+		m_isSmartphone(dict, "smartPhone")
+	{		
 	}
 
-	std::string m_kind;
-	std::string m_id;
-	std::string m_friendlyName;
-	std::string m_type;
-	std::string	m_lastAccessedTimeMs;
-	bool		m_isSmartphone = false;
+	boost::python::dict				m_dict;
+	DictionaryValue<std::string>	m_kind;
+	DictionaryValue<std::string>	m_id;
+	DictionaryValue<std::string>	m_friendlyName;
+	DictionaryValue<std::string>	m_type;
+	DictionaryValue<std::string>	m_lastAccessedTimeMs;
+	DictionaryValue<bool>			m_isSmartphone;
 };
 
 } // namespace GMusicApi

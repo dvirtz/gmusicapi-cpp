@@ -5,6 +5,7 @@ configure_file("${GMUSICAPI_PATH_H}.in" ${CMAKE_CURRENT_BINARY_DIR}/${GMUSICAPI_
 
 set(HEADERS GMusicApi.h GMusicApiUser.h Mobileclient.h Webclient.h Song.h 
 	typeConverters.h GeneratedRange.h AlbumArt.h SongQuality.h RegisteredDevice.h 
+	genDefs.h DictionaryValue.h
 	${CMAKE_CURRENT_BINARY_DIR}/${GMUSICAPI_PATH_H})
 
 set(SOURCES GMusicApi.cpp Mobileclient.cpp Webclient.cpp GMusicApiUser.cpp)

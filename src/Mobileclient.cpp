@@ -53,5 +53,10 @@ std::vector<RegisteredDevice> Mobileclient::get_registered_devices()
 	return callMethod<std::vector<RegisteredDevice>>("get_registered_devices");
 }
 
+void Mobileclient::change_song_metadata(const std::vector<Song>& songs)
+{
+	callMethod<void>("change_song_metadata", songs);
+}
+
 
 } // namespace GMusicApi

@@ -6,6 +6,7 @@ MSC_DISABLE_WARNINGS
 MSC_RESTORE_WARNINGS
 #include "AlbumArt.h"
 #include "GeneratedRange.h"
+#include "DictionaryValue.h"
 #include <string>
 #include <vector>
 
@@ -15,67 +16,68 @@ namespace GMusicApi
 struct Song
 {
 	Song(const boost::python::dict& dict)
-	{
-		getFromDict(dict, "comment", m_comment);
-		getFromDict(dict, "rating", m_rating);
-		getFromDict(dict, "albumArtRef", m_albumArtRef);
-		getFromDict(dict, "artistId", m_artistId);
-		getFromDict(dict, "composer", m_composer);
-		getFromDict(dict, "year", m_year);
-		getFromDict(dict, "creationTimestamp", m_creationTimestamp);
-		getFromDict(dict, "id", m_id);
-		getFromDict(dict, "album", m_album);
-		getFromDict(dict, "totalDiscCount", m_totalDiscCount);
-		getFromDict(dict, "title", m_title);
-		getFromDict(dict, "recentTimestamp", m_recentTimestamp);
-		getFromDict(dict, "albumArtist", m_albumArtist);
-		getFromDict(dict, "trackNumber", m_trackNumber);
-		getFromDict(dict, "discNumber", m_discNumber);
-		getFromDict(dict, "deleted", m_deleted);
-		getFromDict(dict, "nid", m_nid);
-		getFromDict(dict, "totalTrackCount", m_totalTrackCount);
-		getFromDict(dict, "estimatedSize", m_estimatedSize);
-		getFromDict(dict, "albumId", m_albumId);
-		getFromDict(dict, "beatsPerMinute", m_beatsPerMinute);
-		getFromDict(dict, "genre", m_genre);
-		getFromDict(dict, "playCount", m_playCount);
-		getFromDict(dict, "artistArtRef", m_artistArtRef);
-		getFromDict(dict, "kind", m_kind);
-		getFromDict(dict, "artist", m_artist);
-		getFromDict(dict, "lastModifiedTimestamp", m_lastModifiedTimestamp);
-		getFromDict(dict, "clientId", m_clientId);
-		getFromDict(dict, "durationMillis", m_durationMillis);
-	}
+		: m_dict(dict),
+		m_comment(dict, "comment"),
+		m_rating(dict, "rating"),
+		m_albumArtRef(dict, "albumArtRef"),
+		m_artistId(dict, "artistId"),
+		m_composer(dict, "composer"),
+		m_year(dict, "year"),
+		m_creationTimestamp(dict, "creationTimestamp"),
+		m_id(dict, "id"),
+		m_album(dict, "album"),
+		m_totalDiscCount(dict, "totalDiscCount"),
+		m_title(dict, "title"),
+		m_recentTimestamp(dict, "recentTimestamp"),
+		m_albumArtist(dict, "albumArtist"),
+		m_trackNumber(dict, "trackNumber"),
+		m_discNumber(dict, "discNumber"),
+		m_deleted(dict, "deleted"),
+		m_nid(dict, "nid"),
+		m_totalTrackCount(dict, "totalTrackCount"),
+		m_estimatedSize(dict, "estimatedSize"),
+		m_albumId(dict, "albumId"),
+		m_beatsPerMinute(dict, "beatsPerMinute"),
+		m_genre(dict, "genre"),
+		m_playCount(dict, "playCount"),
+		m_artistArtRef(dict, "artistArtRef"),
+		m_kind(dict, "kind"),
+		m_artist(dict, "artist"),
+		m_lastModifiedTimestamp(dict, "lastModifiedTimestamp"),
+		m_clientId(dict, "clientId"),
+		m_durationMillis(dict, "durationMillis")
+	{}
 
-	std::string              m_comment;
-	std::string              m_rating;
-	std::vector<AlbumArt>    m_albumArtRef;
-	std::vector<std::string> m_artistId;
-	std::string              m_composer;
-	int                      m_year;
-	std::string              m_creationTimestamp;
-	std::string              m_id;
-	std::string              m_album;
-	int                      m_totalDiscCount;
-	std::string              m_title;
-	std::string              m_recentTimestamp;
-	std::string              m_albumArtist;
-	int                      m_trackNumber;
-	int                      m_discNumber;
-	bool                     m_deleted;
-	std::string              m_nid;
-	int                      m_totalTrackCount;
-	std::string              m_estimatedSize;
-	std::string              m_albumId;
-	int                      m_beatsPerMinute;
-	std::string              m_genre;
-	int                      m_playCount;
-	std::vector<AlbumArt>    m_artistArtRef;
-	std::string              m_kind;
-	std::string              m_artist;
-	std::string              m_lastModifiedTimestamp;
-	std::string              m_clientId;
-	std::string              m_durationMillis;
+	boost::python::dict							m_dict;
+	DictionaryValue<std::string>				m_comment;
+	DictionaryValue<std::string>				m_rating;
+	DictionaryValue<std::vector<AlbumArt>>		m_albumArtRef;
+	DictionaryValue<std::vector<std::string>>	m_artistId;
+	DictionaryValue<std::string>				m_composer;
+	DictionaryValue<int>						m_year;
+	DictionaryValue<std::string>				m_creationTimestamp;
+	DictionaryValue<std::string>				m_id;
+	DictionaryValue<std::string>				m_album;
+	DictionaryValue<int>						m_totalDiscCount;
+	DictionaryValue<std::string>				m_title;
+	DictionaryValue<std::string>				m_recentTimestamp;
+	DictionaryValue<std::string>				m_albumArtist;
+	DictionaryValue<int>						m_trackNumber;
+	DictionaryValue<int>						m_discNumber;
+	DictionaryValue<bool>						m_deleted;
+	DictionaryValue<std::string>				m_nid;
+	DictionaryValue<int>						m_totalTrackCount;
+	DictionaryValue<std::string>				m_estimatedSize;
+	DictionaryValue<std::string>				m_albumId;
+	DictionaryValue<int>						m_beatsPerMinute;
+	DictionaryValue<std::string>				m_genre;
+	DictionaryValue<int>						m_playCount;
+	DictionaryValue<std::vector<AlbumArt>>		m_artistArtRef;
+	DictionaryValue<std::string>				m_kind;
+	DictionaryValue<std::string>				m_artist;
+	DictionaryValue<std::string>				m_lastModifiedTimestamp;
+	DictionaryValue<std::string>				m_clientId;
+	DictionaryValue<std::string>				m_durationMillis;
 };
 
 using SongRange = GeneratedRange<Song>;

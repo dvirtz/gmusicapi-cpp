@@ -53,8 +53,8 @@ inline void pyConvert<std::string, boost::python::str>(PyObject* pObj, void* sto
 	new (storage) std::string(PyString_AsString(pObj));
 }
 
-template<typename CType, typename PyType = boost::python::object>
-struct pyToCppConverter
+template<typename PyType, typename CType>
+struct PyToCppConverter
 {
 	static void registerConverter()
 	{
@@ -89,7 +89,7 @@ struct pyToCppConverter
 };
 
 template<typename Container>
-struct pySequenceToCppContainerConverter
+struct PySequenceToCppContainerConverter
 {
 	static void registerConverter()
 	{
@@ -129,11 +129,37 @@ struct pySequenceToCppContainerConverter
 };
 
 // conver C++ type to python
-struct nullptrToNoneConverter
+struct NullptrToNoneConverter
 {
 	static PyObject* convert(const nullptr_t &)
 	{
 		Py_RETURN_NONE;
+	}
+};
+
+template<typename Container>
+struct CppContainerToPyListConverter
+{
+	static PyObject* convert(const Container& container)
+	{
+		namespace py = boost::python;
+		py::list l;
+		for (auto& element : container)
+		{
+			l.append(element);
+		}
+
+		// increment reference before return pointer to local
+		return py::incref(l.ptr());
+	}
+};
+
+template<typename DictStruct>
+struct DictStructToPyDicCoverter
+{
+	static PyObject* convert(const DictStruct& dictStruct)
+	{
+		return dictStruct.m_dict.ptr();
 	}
 };
 
