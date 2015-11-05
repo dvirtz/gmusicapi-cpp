@@ -29,13 +29,14 @@ env:
   - secure: "QSS8aCzBwgA8NwXa0SIFRj2L1//fTXRGLr1utGEzSK+iIQ0R3i3SpRakl22JhnHBCXULmW9A0UCgejbn7uM8NtDPBYleldpe+3Yqxk/2a9VO91ETUc6agcpwrGz9B+V03NwpR9G5m9eLaTW5BmgbtrTf0wNOX1ekZF0khb7/bY+EABPrl8ELAQ9VokXy9sDJJmqdjKe3xIPUGs9USgd94g2eHCd7BOvVx2+jMmiXyiu3N4xJipy4XXkihrOqUDP/tbdsYursKBrlE4fXsbI4wq1dF9HeGTugq8glIg417ZaxlkziuBt1qqWf+doCwOnQcYXy4u8aU+4ryRdq6CsvqMCQpS6BTaudgu+PxBtynEHQcx+htEZ3fDkVxHIcZJ/EYbTRAooIWZd5Xx5tSXkQ2c6PC9GmoylBebARf810khpqLNL1q00MvUNlm2ZIQ90Zszsmp3eW566Fnk1nccjviothBYUpX/IedR7URj+qxZj2ozkS1V5YAt6Okg7hb7i4unIcteKxzUiK4twtHIap7fXottYiohsYmn/OXj+MJeX1DbzNOSNNxLFXg8BD/VrRG+4kk6Qr5CIQvh9uhaEtN5kjl/91nfRU0yh5xhPCUsNHC79Kjdc0DWnRFEBfYD1HryfowqcTqwIGhE1Rd4kELB52OIrbxh4ARHKAbtl6QU8="
 
 before_install:
-  - yes | sudo add-apt-repository ppa:kalakris/cmake
+  - yes | sudo add-apt-repository ppa:george-edison55/precise-backports
   - sudo apt-get update -qq
   
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
   - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.8" CC="clang-3.8"; fi
   - pip install --user --upgrade -r gmusicapi/requirements.txt 
+  - sudo apt-get install cmake
   
 #before_script:
 #- wget -qO- http://www.cmake.org/files/v3.1/cmake-3.1.0-Linux-x86_64.tar.gz | tar xvz
