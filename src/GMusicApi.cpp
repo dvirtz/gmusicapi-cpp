@@ -60,6 +60,8 @@ void GMusicApi::registerTypeConverters()
 	// C++ to Python converters
 	to_python_converter<nullptr_t, NullptrToNoneConverter>();
 	to_python_converter<std::vector<Song>, CppContainerToPyListConverter<std::vector<Song>>>();
+    to_python_converter<std::vector<AlbumArt>, CppContainerToPyListConverter<std::vector<AlbumArt>>>();
+    to_python_converter<std::vector<std::string>, CppContainerToPyListConverter<std::vector<std::string>>>();
 	to_python_converter<Song, DictStructToPyDicCoverter<Song>>();
 	to_python_converter<AlbumArt, DictStructToPyDicCoverter<AlbumArt>>();
 	to_python_converter<RegisteredDevice, DictStructToPyDicCoverter<RegisteredDevice>>();

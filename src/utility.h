@@ -56,4 +56,11 @@ void getFromDict(const boost::python::dict& dict, const std::string& key, T& t)
 		t = boost::python::extract<T>(dict[key]);
 	}
 }
+
+template<typename T>
+void setToDict(boost::python::dict& dict, const std::string& key, const T& t)
+{
+    dict[key] = t;
+}
+
 } // namespace GMusicApi

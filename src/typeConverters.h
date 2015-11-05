@@ -5,7 +5,12 @@ MSC_DISABLE_WARNINGS
 #include <boost/python/detail/wrap_python.hpp>
 #include <boost/python.hpp>
 #include <boost/python/stl_iterator.hpp>
+#include <boost/fusion/include/for_each.hpp>
+#include <boost/fusion/include/at_c.hpp>
+#include <boost/fusion/include/iter_fold.hpp>
+#include <boost/mpl/range_c.hpp>
 MSC_RESTORE_WARNINGS
+#include <type_traits>
 #include "Song.h"
 #include "AlbumArt.h"
 
@@ -33,8 +38,10 @@ inline bool isPyType<boost::python::str>(PyObject* pObj)
 
 // add ability for preprocessing the python type
 // before converting to C type
-template<typename CType, typename PyType>
-inline void pyConvert(PyObject* pObj, void* storage)
+template<typename PyType, typename CType>
+inline void pyConvert(PyObject* pObj, void* storage,
+                      typename std::enable_if<!std::is_same<PyType, boost::python::str>::value
+                      && !std::is_same<PyType, boost::python::dict>::value>::type* = nullptr)
 {
 	using namespace boost::python;
 
@@ -42,16 +49,54 @@ inline void pyConvert(PyObject* pObj, void* storage)
 	new (storage) CType(extract<PyType>(object(hndl)));
 }
 
-template<>
-inline void pyConvert<std::string, boost::python::str>(PyObject* pObj, void* storage)
-{
-	if (PyUnicode_Check(pObj))
-	{
-		pObj = PyUnicode_AsUTF8String(pObj);
-	}
+template <typename First, typename F>
+inline void
+apply(const First& /*first*/, const First& /*last*/, F /*f*/)
+{}
 
-	new (storage) std::string(PyString_AsString(pObj));
+template <typename First, typename Last, typename F>
+inline void
+apply(const First& first, const Last& last, F f)
+{
+    namespace bf = boost::fusion;
+    namespace bfe = bf::extension;
+
+    auto& member = bf::deref(first);
+    auto name = bfe::struct_member_name<std::remove_const<First::seq_type>::type, First::index::value>::call();
+    f(name, member);
+
+    apply(boost::fusion::next(first), last, f);
 }
+
+template<typename PyType, typename CType>
+inline void pyConvert(PyObject* pObj, void* storage,
+                      typename std::enable_if<std::is_same<PyType, boost::python::dict>::value>::type* = nullptr)
+{
+    namespace bt  = boost::python;
+    namespace bf  = boost::fusion;
+
+    bt::handle<> hndl(bt::borrowed(pObj));
+    auto d = bt::extract<bt::dict>(bt::object(hndl));
+    auto& s = *new (storage) CType();
+    
+    apply(bf::begin(s), bf::end(s), [&d](const std::string& name, auto& member)
+    {
+        getFromDict(d, name, member);
+    });
+}
+
+template<typename PyType, typename CType>
+inline void pyConvert(PyObject* pObj, void* storage,
+                      typename std::enable_if<std::is_same<PyType, boost::python::str>::value>::type* = nullptr)
+{
+    if (PyUnicode_Check(pObj))
+    {
+        pObj = PyUnicode_AsUTF8String(pObj);
+    }
+
+    new (storage) std::string(PyString_AsString(pObj));
+}
+
 
 template<typename PyType, typename CType>
 struct PyToCppConverter
@@ -81,7 +126,7 @@ struct PyToCppConverter
 			(boost::python::converter::rvalue_from_python_storage<CType>*)
 			data)->storage.bytes;
 
-		pyConvert<CType, PyType>(pObj, storage);
+		pyConvert<PyType, CType>(pObj, storage);
 
 		// Stash the memory chunk pointer for later use by boost.python
 		data->convertible = storage;
@@ -159,7 +204,16 @@ struct DictStructToPyDicCoverter
 {
 	static PyObject* convert(const DictStruct& dictStruct)
 	{
-		return dictStruct.m_dict.ptr();
+        namespace bt = boost::python;
+        namespace bf = boost::fusion;
+
+        bt::dict d;
+        apply(bf::begin(dictStruct), bf::end(dictStruct), [&d](const std::string& name, auto& member)
+        {
+            setToDict(d, name, member);
+        });
+
+        return bt::incref(d.ptr());
 	}
 };
 

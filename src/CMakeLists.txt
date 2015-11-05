@@ -5,7 +5,7 @@ configure_file("${GMUSICAPI_PATH_H}.in" ${CMAKE_CURRENT_BINARY_DIR}/${GMUSICAPI_
 
 set(HEADERS GMusicApi.h GMusicApiUser.h Mobileclient.h Webclient.h Song.h 
 	typeConverters.h GeneratedRange.h AlbumArt.h SongQuality.h RegisteredDevice.h 
-	genDefs.h DictionaryValue.h
+	genDefs.h 
 	${CMAKE_CURRENT_BINARY_DIR}/${GMUSICAPI_PATH_H})
 
 set(SOURCES GMusicApi.cpp Mobileclient.cpp Webclient.cpp GMusicApiUser.cpp)
@@ -16,6 +16,7 @@ add_library(GMusicApi ${SOURCES} ${HEADERS} ${INC_FILES})
 
 if(MSVC)
 	set_source_files_properties(GMusicApi.cpp PROPERTIES COMPILE_FLAGS /wd4172)
+	target_compile_options(GMusicApi PUBLIC /Wv:18)
 endif()
 
 target_include_directories(GMusicApi SYSTEM PUBLIC

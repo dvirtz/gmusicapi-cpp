@@ -42,20 +42,36 @@ TEST_CASE("Mobileclient login", "[Mobileclient]")
 						auto registeredDeviceIt 
 							= std::find_if(registeredDevices.begin(), registeredDevices.end(), [](const RegisteredDevice& device)
 						{
-							return device.m_type == "ANDROID";
+							return device.type == "ANDROID";
 						});
 						REQUIRE(registeredDeviceIt != registeredDevices.end());
-						auto streamUrl = m.get_stream_url(song.m_id, registeredDeviceIt->m_id);
+						auto streamUrl = m.get_stream_url(song.id, registeredDeviceIt->id);
 						REQUIRE_FALSE(streamUrl.empty());
 					}
 				}
 
 				SECTION("can change song metadata")
 				{
-					auto song = songs.front();
-					song.m_rating = "5";
-					m.change_song_metadata({ song });
-					REQUIRE(m.get_all_songs(true).front().m_rating == "5");
+                    auto id = songs.front().id;
+                    auto checkRatingChange = [id, &m](const std::string& rating)
+                    {
+                        auto songById = [&m](const std::string& songId)
+                        {
+                            auto songs = m.get_all_songs(true);
+                            return *std::find_if(songs.begin(), songs.end(), [songId](const Song& song)
+                            {
+                                return song.id == songId;
+                            });
+                        };
+                        auto song = songById(id);
+                        song.rating = rating;
+                        m.change_song_metadata({ song });
+                        // refresh song
+                        song = songById(id);
+                        REQUIRE(song.rating == rating);
+                    };
+                    checkRatingChange("5");
+                    checkRatingChange("0");
 				}
 			}
 			SECTION("non incremental")
