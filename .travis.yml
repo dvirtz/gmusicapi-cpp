@@ -36,7 +36,7 @@ install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
   - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.8" CC="clang-3.8"; fi
   - pip install --user --upgrade -r gmusicapi/requirements.txt 
-  - sudo apt-get upgrade
+  - sudo apt-get install cmake cmake-data
   
 #before_script:
 #- wget -qO- http://www.cmake.org/files/v3.1/cmake-3.1.0-Linux-x86_64.tar.gz | tar xvz
