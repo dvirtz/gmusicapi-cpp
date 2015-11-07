@@ -1,4 +1,5 @@
 #pragma once
+
 #ifdef _MSC_VER
 #define MSC_DISABLE_WARNINGS \
 __pragma(warning(push, 0))
@@ -9,11 +10,18 @@ __pragma(warning(pop))
 #define MSC_RESTORE_WARNINGS
 #endif // MSC_VER
 
+#ifdef _MSC_VER
+#define NORETURN(...) __declspec(noreturn) __VA_ARGS__
+#else
+#define NORETURN(...) __VA_ARGS__ __attribute__ ((noreturn))
+#endif
+
 MSC_DISABLE_WARNINGS
 #include <boost/python.hpp>
 #include <boost/python/stl_iterator.hpp>
 MSC_RESTORE_WARNINGS
 #include <iostream>
+#include <stdexcept>
 
 namespace GMusicApi
 {
@@ -61,6 +69,23 @@ template<typename T>
 void setToDict(boost::python::dict& dict, const std::string& key, const T& t)
 {
     dict[key] = t;
+}
+
+NORETURN(inline void handlePythonException())
+{
+    using namespace boost::python;
+
+    PyObject *exc, *val, *tb;
+    object formatted_list, formatted;
+    PyErr_Fetch(&exc, &val, &tb);
+    handle<> hexc(exc), hval(allow_null(val)), htb(allow_null(tb));
+    object traceback(import("traceback"));
+
+    object format_exception(traceback.attr("format_exception"));
+    formatted_list = format_exception(hexc, hval, htb);
+    formatted = str("\n").join(formatted_list);
+
+    throw std::runtime_error(extract<std::string>(formatted));
 }
 
 } // namespace GMusicApi

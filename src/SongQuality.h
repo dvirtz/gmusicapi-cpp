@@ -4,12 +4,12 @@
 namespace GMusicApi
 {
 
-/** Values that represent song qualities. */
+/*! Values that represent song qualities. */
 enum class SongQuality
 {
-	High,	//! 320kbps
-	Medium,	//! 160kbps
-	Low,	//! 128kbps
+	High,	//!< 320kbps
+	Medium,	//!< 160kbps
+	Low,	//!< 128kbps
 };
 
 inline std::string songQualityName(SongQuality songQuality)

@@ -60,8 +60,8 @@ apply(const First& first, const Last& last, F f)
     namespace bfe = bf::extension;
 
     auto& member = bf::deref(first);
-    using seq_type = typename std::remove_const<typename First::seq_type>::type;
-    auto name = bfe::struct_member_name<seq_type, First::index::value>::call();
+    auto name = bfe::struct_member_name<std::remove_const<typename First::seq_type>::type, 
+        First::index::value>::call();
     f(name, member);
 
     apply(boost::fusion::next(first), last, f);
@@ -198,16 +198,16 @@ struct CppContainerToPyListConverter
 	}
 };
 
-template<typename Struct>
-struct StructToPyDictCoverter
+template<typename DictStruct>
+struct DictStructToPyDicCoverter
 {
-	static PyObject* convert(const Struct& s)
+	static PyObject* convert(const DictStruct& dictStruct)
 	{
         namespace bt = boost::python;
         namespace bf = boost::fusion;
 
         bt::dict d;
-        apply(bf::begin(s), bf::end(s), [&d](const std::string& name, auto& member)
+        apply(bf::begin(dictStruct), bf::end(dictStruct), [&d](const std::string& name, auto& member)
         {
             setToDict(d, name, member);
         });

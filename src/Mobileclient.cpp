@@ -9,18 +9,19 @@ namespace GMusicApi
 {
 
 Mobileclient::Mobileclient(bool debug_logging /*= true*/, bool validate /*= true*/, bool verify_ssl /*= true*/)
-	: GMusicApiUser("Mobileclient", debug_logging, validate, verify_ssl)
-{
-}
-
-
-Mobileclient::~Mobileclient()
+	: ClientBase("Mobileclient", debug_logging, validate, verify_ssl)
 {
 }
 
 bool Mobileclient::login(const std::string & email, const std::string & password, const std::string & android_id) const
 {
-	return callMethod<bool>("login", email, password, android_id);
+    if (android_id.empty())
+    {
+        auto fromMacAddress = getMember("FROM_MAC_ADDRESS");
+        return callMethod<bool>("login", email, password, fromMacAddress);
+    }
+
+    return callMethod<bool>("login", email, password, android_id);
 }
 
 bool Mobileclient::logout() const
@@ -53,9 +54,9 @@ std::vector<RegisteredDevice> Mobileclient::get_registered_devices()
 	return callMethod<std::vector<RegisteredDevice>>("get_registered_devices");
 }
 
-void Mobileclient::change_song_metadata(const std::vector<Song>& songs)
+std::vector<std::string> Mobileclient::change_song_metadata(const std::vector<Song>& songs)
 {
-	callMethod<void>("change_song_metadata", songs);
+	return callMethod<std::vector<std::string>>("change_song_metadata", songs);
 }
 
 

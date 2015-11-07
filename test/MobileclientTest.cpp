@@ -65,7 +65,8 @@ TEST_CASE("Mobileclient login", "[Mobileclient]")
                         };
                         auto song = songById(id);
                         song.rating = rating;
-                        m.change_song_metadata({ song });
+                        auto ids = m.change_song_metadata({ song });
+                        REQUIRE(ids == std::vector<std::string>({id}));
                         // refresh song
                         song = songById(id);
                         REQUIRE(song.rating == rating);
@@ -85,4 +86,12 @@ TEST_CASE("Mobileclient login", "[Mobileclient]")
 	{
 		REQUIRE(m.logout());
 	}
+}
+
+TEST_CASE("can change validate", "[Mobileclient]")
+{
+    Mobileclient m;
+    REQUIRE(m.validate());
+    m.set_validate(false);
+    REQUIRE_FALSE(m.validate());
 }
