@@ -71,7 +71,9 @@ void setToDict(boost::python::dict& dict, const std::string& key, const T& t)
     dict[key] = t;
 }
 
-NORETURN(inline void handlePythonException())
+NORETURN(void handlePythonException());
+
+inline void handlePythonException()
 {
     using namespace boost::python;
 
