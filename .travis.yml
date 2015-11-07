@@ -10,6 +10,7 @@ addons:
   apt:
     sources:
     - george-edison55-precise-backports
+    - ubuntu-toolchain-r-test
     packages:
     # - clang-3.7
     - g++-4.9
