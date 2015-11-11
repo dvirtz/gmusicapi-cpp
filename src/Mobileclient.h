@@ -5,6 +5,7 @@
 #include "RegisteredDevice.h"
 #include <string>
 #include <vector>
+#include <boost/date_time.hpp>
 
 namespace GMusicApi
 {
@@ -144,6 +145,40 @@ public:
         mc.change_song_metadata({song});
     */
 	std::vector<std::string> change_song_metadata(const std::vector<Song>& songs);
+
+    /*!
+    Deletes songs from the library.
+
+    \param song_ids     a list of song ids, or a single song id.
+    \return a list of deleted song ids.
+    */
+    std::vector<std::string> delete_songs(const std::vector<std::string> song_ids);
+
+    /*!
+    Returns a list of dictionaries that each represent a track.
+
+    Only All Access tracks will be returned.
+
+    Promoted tracks are determined in an unknown fashion,
+    but positively-rated library tracks are common.
+
+    See get_track_info() for the format of a track dictionary.
+    */
+    SongRange get_promoted_songs();
+
+    /*!
+    Increments a song's playcount and returns its song id.
+
+    \param song_id  a song id. Providing the id of an AA track that has been added to the library 
+                    will __not__ increment the corresponding library song's playcount. 
+                    To do this, use the 'id' field (which looks like a uuid and doesn't begin with 'T'),
+                    not the 'nid' field.
+    \param plays    (optional) positive number of plays to increment by. The default is 1.
+    \param playtime (optional) a time the song was played. It will default to the time of the call.
+     */
+    std::string increment_song_playcount(const std::string& song_id,
+                                         int plays = 1,
+                                         const boost::posix_time::ptime& playtime = boost::posix_time::microsec_clock::local_time());
 };
 
 

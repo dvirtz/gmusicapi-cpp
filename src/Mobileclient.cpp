@@ -59,5 +59,21 @@ std::vector<std::string> Mobileclient::change_song_metadata(const std::vector<So
 	return callMethod<std::vector<std::string>>("change_song_metadata", songs);
 }
 
+std::vector<std::string> Mobileclient::delete_songs(const std::vector<std::string> song_ids)
+{
+    return callMethod<std::vector<std::string>>("delete_songs", song_ids);
+}
+
+SongRange Mobileclient::get_promoted_songs()
+{
+    return callMethod<SongRange>("get_promoted_songs");
+}
+
+std::string Mobileclient::increment_song_playcount(const std::string & song_id, 
+                                                   int plays, 
+                                                   const boost::posix_time::ptime& playtime)
+{
+    return callMethod<std::string>("increment_song_playcount", song_id, plays, playtime);
+}
 
 } // namespace GMusicApi

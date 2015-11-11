@@ -9,6 +9,8 @@ MSC_DISABLE_WARNINGS
 #include <boost/fusion/include/at_c.hpp>
 #include <boost/fusion/include/iter_fold.hpp>
 #include <boost/mpl/range_c.hpp>
+#include <datetime.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
 MSC_RESTORE_WARNINGS
 #include <type_traits>
 
@@ -199,7 +201,7 @@ struct CppContainerToPyListConverter
 };
 
 template<typename Struct>
-struct StructToPyDictCoverter
+struct StructToPyDictConverter
 {
 	static PyObject* convert(const Struct& s)
 	{
@@ -214,6 +216,22 @@ struct StructToPyDictCoverter
 
         return bt::incref(d.ptr());
 	}
+};
+
+struct BoostPTimeToPyDateTimeConverter
+{
+    static PyObject* convert(const boost::posix_time::ptime& time)
+    {
+        auto d = time.date();
+        auto tod = time.time_of_day();
+        auto usec = static_cast<int>(tod.total_microseconds() % 1000000);
+        return PyDateTime_FromDateAndTime(static_cast<int>(d.year()), 
+                                          static_cast<int>(d.month()), 
+                                          static_cast<int>(d.day()), 
+                                          static_cast<int>(tod.hours()), 
+                                          static_cast<int>(tod.minutes()), 
+                                          static_cast<int>(tod.seconds()), usec);
+    }
 };
 
 } // namepsace GMusicApi

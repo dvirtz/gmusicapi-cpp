@@ -18,8 +18,10 @@ GMusicApi& GMusicApi::instance()
 
 GMusicApi::GMusicApi()
 {
-	// must be called before dilling with python
+	// must be called before dealing with python
 	Py_Initialize();
+    // need to be called before dealing with python's datetime
+    PyDateTime_IMPORT;
 
 	try
 	{
@@ -63,9 +65,10 @@ void GMusicApi::registerTypeConverters()
 	to_python_converter<std::vector<Song>, CppContainerToPyListConverter<std::vector<Song>>>();
 	to_python_converter<std::vector<AlbumArt>, CppContainerToPyListConverter<std::vector<AlbumArt>>>();
 	to_python_converter<std::vector<std::string>, CppContainerToPyListConverter<std::vector<std::string>>>();
-	to_python_converter<Song, StructToPyDictCoverter<Song>>();
-	to_python_converter<AlbumArt, StructToPyDictCoverter<AlbumArt>>();
-	to_python_converter<RegisteredDevice, StructToPyDictCoverter<RegisteredDevice>>();
+	to_python_converter<Song, StructToPyDictConverter<Song>>();
+	to_python_converter<AlbumArt, StructToPyDictConverter<AlbumArt>>();
+	to_python_converter<RegisteredDevice, StructToPyDictConverter<RegisteredDevice>>();
+    to_python_converter<boost::posix_time::ptime, BoostPTimeToPyDateTimeConverter>();
 }
 
 } // namespace GMusicApi
