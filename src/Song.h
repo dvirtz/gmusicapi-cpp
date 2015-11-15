@@ -6,6 +6,7 @@ MSC_DISABLE_WARNINGS
 MSC_RESTORE_WARNINGS
 #include "AlbumArt.h"
 #include "GeneratedRange.h"
+#include "genDefs.h"
 #include <string>
 #include <vector>
 
@@ -15,7 +16,7 @@ BOOST_FUSION_DEFINE_STRUCT(
     (GMusicApi), Song,
     (std::string, comment)
     (std::string, rating)
-    (std::vector<GMAlbumArt>, albumArtRef)
+    (std::vector<GMusicApi::AlbumArt>, albumArtRef)
     (std::vector<std::string>, artistId)
     (std::string, composer)
     (int, year)
@@ -36,7 +37,7 @@ BOOST_FUSION_DEFINE_STRUCT(
     (int, beatsPerMinute)
     (std::string, genre)
     (int, playCount)
-    (std::vector<GMAlbumArt>, artistArtRef)
+    (std::vector<GMusicApi::AlbumArt>, artistArtRef)
     (std::string, kind)
     (std::string, artist)
     (std::string, lastModifiedTimestamp)
@@ -48,6 +49,5 @@ namespace GMusicApi
 {
 
 using SongRange = GeneratedRange<Song>;
-using pyGeneratorToSongRangeConverter = pyGeneratorToGeneratedRangeConverter<Song>;
 
 } // namespace GMusicApi

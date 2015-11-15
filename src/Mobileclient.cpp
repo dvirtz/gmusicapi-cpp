@@ -76,4 +76,9 @@ std::string Mobileclient::increment_song_playcount(const std::string & song_id,
     return callMethod<std::string>("increment_song_playcount", song_id, plays, playtime);
 }
 
+PlaylistRange Mobileclient::get_all_playlists(bool incremental, bool include_deleted)
+{
+    return callMethod<PlaylistRange>("get_all_playlists", incremental, include_deleted);
+}
+
 } // namespace GMusicApi

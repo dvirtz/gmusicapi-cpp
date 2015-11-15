@@ -3,6 +3,7 @@
 #include "Song.h"
 #include "SongQuality.h"
 #include "RegisteredDevice.h"
+#include "Playlist.h"
 #include <string>
 #include <vector>
 #include <boost/date_time.hpp>
@@ -179,6 +180,16 @@ public:
     std::string increment_song_playcount(const std::string& song_id,
                                          int plays = 1,
                                          const boost::posix_time::ptime& playtime = boost::posix_time::microsec_clock::local_time());
+
+    /*!
+    Returns a range of playlists.
+
+    \param incremental  if `true`, return a generator that yields lists of at most 1000 playlists
+                        as they are retrieved from the server. This can be useful for presenting 
+                        a loading bar to a user.
+    \param include_deleted  if `true`, include playlists that have been deleted in the past.
+    */
+    PlaylistRange get_all_playlists(bool incremental = false, bool include_deleted = false);
 };
 
 

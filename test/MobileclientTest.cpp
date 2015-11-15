@@ -36,16 +36,10 @@ TEST_CASE("Mobileclient song list", "[Mobileclient]")
     Mobileclient mc;
     mc.login(gm_user, gm_pass);
 
-    SECTION("incremental")
-    {
-        auto songs = mc.get_all_songs(true);
-        REQUIRE_FALSE(songs.empty());
-    }
+    auto incremental = mc.get_all_songs(true);
+    auto non_incremental = mc.get_all_songs(false);
 
-    SECTION("non incremental")
-    {
-        REQUIRE_FALSE(mc.get_all_songs().empty());
-    }
+    REQUIRE(incremental == non_incremental);
 }
 
 TEST_CASE("registered devices list not empty", "[Mobileclient]")
@@ -107,7 +101,6 @@ TEST_CASE("Song manipulation", "[Mobileclient]")
         auto currentPlayCount = song.playCount;
         auto playCountIncrement = 2;
         auto now = boost::posix_time::microsec_clock::universal_time();
-        //std::string in; std::cout << "ready\n"; std::cin >> in;
         REQUIRE(mc.increment_song_playcount(songId, playCountIncrement, now) == songId);
         // refresh song
         song = songById(songId);
@@ -129,4 +122,17 @@ TEST_CASE("Promoted songs empty", "[Mobileclient][NoAllAccess]")
     mc.login(gm_user, gm_pass);
 
     REQUIRE(mc.get_promoted_songs().empty());
+}
+
+TEST_CASE("Playlists", "[Mobileclient]")
+{
+    Mobileclient mc;
+    mc.login(gm_user, gm_pass);
+
+    //std::string in; std::cout << "ready\n"; std::cin >> in;
+
+    auto incremental = mc.get_all_playlists(true);
+    auto non_incremental = mc.get_all_playlists();
+
+    REQUIRE(incremental == non_incremental);
 }

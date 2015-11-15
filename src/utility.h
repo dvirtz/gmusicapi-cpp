@@ -21,6 +21,7 @@ MSC_DISABLE_WARNINGS
 #include <boost/python/stl_iterator.hpp>
 MSC_RESTORE_WARNINGS
 #include <iostream>
+#include <vector>
 #include <stdexcept>
 
 namespace GMusicApi
@@ -90,4 +91,21 @@ inline void handlePythonException()
     throw std::runtime_error(extract<std::string>(formatted));
 }
 
+/*!
+print vectors
+*/
+template <typename T>
+std::ostream& operator<<(std::ostream& out, const std::vector<T>& v)
+{
+    out << '[';
+    std::copy(v.begin(), v.end(), std::ostream_iterator<T>(out, ", "));
+    out << "\b\b]"; // erase last comma
+    return out;
+}
+
 } // namespace GMusicApi
+
+namespace std
+{
+using GMusicApi::operator<<;
+}

@@ -34,11 +34,21 @@ public:
 		if (m_generatorIt != m_generatorEnd)
 		{
 			m_currentIt = input_iterator<T>(*m_generatorIt);
+            skipEmpty();
 		}
 	}
 
 private:
 	friend class boost::iterator_core_access;
+
+    void skipEmpty()
+    {
+        while (m_currentIt == m_currentEnd
+               && ++m_generatorIt != m_generatorEnd)
+        {
+            m_currentIt = input_iterator<T>(*m_generatorIt);
+        }
+    }
 
 	void increment()
 	{
@@ -47,6 +57,7 @@ private:
 			if (++m_generatorIt != m_generatorEnd)
 			{
 				m_currentIt = input_iterator<T>(*m_generatorIt);
+                skipEmpty();
 			}
 		}
 	}
@@ -78,7 +89,7 @@ using GeneratedRange = boost::any_range<
 
 
 template<typename T>
-struct pyGeneratorToGeneratedRangeConverter
+struct PyGeneratorToGeneratedRangeConverter
 {
 	static void registerConverter()
 	{

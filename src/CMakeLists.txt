@@ -3,12 +3,12 @@ file(TO_NATIVE_PATH ${CMAKE_SOURCE_DIR}/gmusicapi GMUSICAPI_PATH)
 string(REPLACE "\\" "\\\\" GMUSICAPI_PATH ${GMUSICAPI_PATH})
 configure_file("${GMUSICAPI_PATH_H}.in" ${CMAKE_CURRENT_BINARY_DIR}/${GMUSICAPI_PATH_H})
 
-set(HEADERS GMusicApi.h ClientBase.h Mobileclient.h Webclient.h Song.h 
+set(HEADERS Module.h ClientBase.h Mobileclient.h Webclient.h Song.h 
 	typeConverters.h GeneratedRange.h AlbumArt.h SongQuality.h RegisteredDevice.h 
-	genDefs.h 
+	genDefs.h Playlist.h
 	${CMAKE_CURRENT_BINARY_DIR}/${GMUSICAPI_PATH_H})
 
-set(SOURCES GMusicApi.cpp Mobileclient.cpp Webclient.cpp ClientBase.cpp)
+set(SOURCES Module.cpp Mobileclient.cpp Webclient.cpp ClientBase.cpp)
 
 FIND_BOOST_PYTHON()
 
