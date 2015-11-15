@@ -11,12 +11,12 @@ addons:
     sources:
     - george-edison55-precise-backports
     - ubuntu-toolchain-r-test
-    - apokluda-boost1.53
+    - boost-latest
     packages:
     # - clang-3.7
     - g++-4.9
     - gcc-4.9
-    - libboost1.53-all-dev
+    - libboost1.55-all-dev
     - python-pip
     - libffi-dev
     - libssl-dev
