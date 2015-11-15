@@ -1,8 +1,9 @@
-#include "GMusicApi.h"
+#include "Module.h"
 #include "RegisteredDevice.h"
 #include "gmusicapiPath.h"
 #include "Song.h"
 #include "typeConverters.h"
+#include "Playlist.h"
 #include <iostream>
 
 namespace GMusicApi
@@ -10,13 +11,13 @@ namespace GMusicApi
 
 using namespace boost::python;
 
-GMusicApi& GMusicApi::instance()
+Module& Module::instance()
 {
-	static GMusicApi instance;
+	static Module instance;
 	return instance;
 }
 
-GMusicApi::GMusicApi()
+Module::Module()
 {
 	// must be called before dealing with python
 	Py_Initialize();
@@ -43,15 +44,15 @@ GMusicApi::GMusicApi()
 }
 
 
-GMusicApi::~GMusicApi()
+Module::~Module()
 {
 }
 
-void GMusicApi::registerTypeConverters()
+void Module::registerTypeConverters()
 {
 	// Python to C++ converters
 	PySequenceToCppContainerConverter<SongRange>::registerConverter();
-	pyGeneratorToSongRangeConverter::registerConverter();
+    PyGeneratorToGeneratedRangeConverter<Song>::registerConverter();
 	PyToCppConverter<dict, Song>::registerConverter();
 	PySequenceToCppContainerConverter<std::vector<std::string>>::registerConverter();
 	PyToCppConverter<str, std::string>::registerConverter();
@@ -59,6 +60,8 @@ void GMusicApi::registerTypeConverters()
 	PySequenceToCppContainerConverter<std::vector<AlbumArt>>::registerConverter();
 	PySequenceToCppContainerConverter<std::vector<RegisteredDevice>>::registerConverter();
 	PyToCppConverter<dict, RegisteredDevice>::registerConverter();
+    PySequenceToCppContainerConverter<PlaylistRange>::registerConverter();
+    PyGeneratorToGeneratedRangeConverter<Playlist>::registerConverter();
 
 	// C++ to Python converters
 	to_python_converter<nullptr_t, NullptrToNoneConverter>();

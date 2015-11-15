@@ -17,9 +17,9 @@ void ClientBase::set_validate(bool val)
     setMember("validate", val);
 }
 
-GMusicApi& ClientBase::instance() const
+Module& ClientBase::instance() const
 {
-	return GMusicApi::instance();
+	return Module::instance();
 }
 
 } // namespace GMusicApi

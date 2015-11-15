@@ -10,19 +10,19 @@ MSC_RESTORE_WARNINGS
 namespace GMusicApi
 {
 
-class GMusicApi
+class Module
 {
 public:
-	static GMusicApi& instance();
+	static Module& instance();
 
 	template<typename... Args>
 	boost::python::object createObject(const std::string& name, Args&&... args) const;
 
 private:
-	GMusicApi();
-	~GMusicApi();
-	GMusicApi(const GMusicApi&) = delete;
-	GMusicApi& operator=(const GMusicApi&) = delete;
+	Module();
+	~Module();
+	Module(const Module&) = delete;
+	Module& operator=(const Module&) = delete;
 
 	void registerTypeConverters();
 
@@ -30,7 +30,7 @@ private:
 };
 
 template<typename ...Args>
-boost::python::object GMusicApi::createObject(const std::string & name, Args&& ...args) const
+boost::python::object Module::createObject(const std::string & name, Args&& ...args) const
 {
 	namespace bp = boost::python;
 	try

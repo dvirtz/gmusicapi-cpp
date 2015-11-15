@@ -1,5 +1,5 @@
 #pragma once
-#include "GMusicApi.h"
+#include "Module.h"
 
 namespace GMusicApi
 {
@@ -61,7 +61,7 @@ protected:
     void setMember(const std::string& memberName, const T& value);
 
 private:
-	GMusicApi& instance() const;
+	Module& instance() const;
 	boost::python::object m_object;
 };
 
