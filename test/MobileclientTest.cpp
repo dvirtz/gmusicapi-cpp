@@ -42,7 +42,7 @@ TEST_CASE("Mobileclient song list sanity", "[Mobileclient]")
     auto incremental = mc.get_all_songs(true);
     auto non_incremental = mc.get_all_songs(false);
 
-    REQUIRE(incremental == non_incremental);
+    REQUIRE(boost::equal(incremental, non_incremental));
 }
 
 TEST_CASE("registered devices list not empty", "[Mobileclient]")
@@ -136,7 +136,7 @@ TEST_CASE("Playlists sanity", "[Mobileclient]")
     auto incremental = mc.get_all_playlists(true);
     auto non_incremental = mc.get_all_playlists();
 
-    REQUIRE(incremental == non_incremental);
+    REQUIRE(boost::equal(incremental, non_incremental));
 }
 
 TEST_CASE("Playlists", "[Mobileclient]")
@@ -144,11 +144,11 @@ TEST_CASE("Playlists", "[Mobileclient]")
     Mobileclient mc;
     mc.login(gm_user, gm_pass);
 
-    auto all_playlists = mc.get_all_playlists();
-    auto playlist_count = boost::size(all_playlists);
+    auto all_playlists_vec = toVector(mc.get_all_playlists());
+    auto playlist_count = all_playlists_vec.size();
     auto list_id = mc.create_playlist("gmusicapi-cpp test playlist", "this is a new playlist");
 
-    auto all_playlists_vec = toVector(mc.get_all_playlists());
+    all_playlists_vec = toVector(mc.get_all_playlists());
 
     REQUIRE(all_playlists_vec.size() == playlist_count + 1);
 

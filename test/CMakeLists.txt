@@ -13,7 +13,7 @@ configure_file("${USER_CRED_H}.in" ${CMAKE_CURRENT_BINARY_DIR}/${USER_CRED_H})
 set(HEADERS ${CMAKE_CURRENT_BINARY_DIR}/${USER_CRED_H})
 set(SOURCES MobileclientTest.cpp TesterMain.cpp WebclientTester.cpp)
 
-FIND_BOOST_PYTHON()
+FIND_BOOST_PYTHON(date_time)
 
 if(MSVC)
 	set_source_files_properties(TesterMain.cpp PROPERTIES COMPILE_FLAGS /wd4702)
