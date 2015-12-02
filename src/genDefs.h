@@ -6,6 +6,8 @@ general definitions and constants
 #include <boost/fusion/include/equal_to.hpp>
 #include <boost/fusion/include/not_equal_to.hpp>
 #include <boost/fusion/include/io.hpp>
+#include <string>
+#include <vector>
 
 namespace GMusicApi
 {
@@ -19,5 +21,9 @@ enum
 using boost::fusion::operator==;
 using boost::fusion::operator!=;
 using boost::fusion::operator<<;
+
+using identifier    = std::string;
+using identifiers   = std::vector<identifier>;
+using timestamp     = std::string;
 
 } // namepsace GMusicApi

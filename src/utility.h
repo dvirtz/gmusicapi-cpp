@@ -103,6 +103,15 @@ std::ostream& operator<<(std::ostream& out, const std::vector<T>& v)
     return out;
 }
 
+/*!
+convert sequence to vector
+*/
+template<typename Sequence>
+auto toVector(const Sequence& range)
+{
+    return std::vector<typename Sequence::value_type>(range.begin(), range.end());
+}
+
 } // namespace GMusicApi
 
 namespace std

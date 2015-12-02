@@ -10,9 +10,9 @@ MSC_RESTORE_WARNINGS
 BOOST_FUSION_DEFINE_STRUCT(
     (GMusicApi), RegisteredDevice,
     (std::string, kind)
-    (std::string, id)
+    (GMusicApi::identifier, id)
     (std::string, friendlyName)
     (std::string, type)
-    (std::string, lastAccessedTimeMs)
+    (GMusicApi::timestamp, lastAccessedTimeMs)
     (bool, isSmartphone)
     )

@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <boost/date_time.hpp>
+#include <boost/optional.hpp>
 
 namespace GMusicApi
 {
@@ -14,106 +15,106 @@ namespace GMusicApi
 /*!
 Allows library management and streaming by posing as the googleapis.com mobile clients.
 
-Uploading is not supported by this client (use Musicmanager to upload). 
+Uploading is not supported by this client (use Musicmanager to upload).
 */
 class Mobileclient : public ClientBase
 {
 public:
 
-	/*!
-	Constructor.
-	
-	\param	debug_logging	each Client has a `logger` member. 
-						The logger is named `gmusicapi.<client class><client number>` and will propogate 
+    /*!
+    Constructor.
+
+    \param	debug_logging	each Client has a `logger` member.
+                        The logger is named `gmusicapi.<client class><client number>` and will propogate
                         to the gmusicapi root logger.
-						If this param is `true`, handlers will be configured to send this client's debug 
-                        log output to disk, with warnings and above printed to stderr. 
-                        [Appdirs](https://pypi.python.org/pypi/appdirs) `user_log_dir` is used by default. 
-						Users can run:
-	 
+                        If this param is `true`, handlers will be configured to send this client's debug
+                        log output to disk, with warnings and above printed to stderr.
+                        [Appdirs](https://pypi.python.org/pypi/appdirs) `user_log_dir` is used by default.
+                        Users can run:
+
                             Utils u;
                             std::cout << u.log_filepath();
-						to see the exact location on their system.	 
-						If `false`, no handlers will be configured; users must create their own handlers.	 
-						Completely ignoring logging is dangerous and not recommended. 
-						The Google Music protocol can change at any time; 
-						if something were to go wrong, the logs would be necessary for recovery.
-	\param	validate	if `false`, do not validate server responses against known schemas. 
-						This helps to catch protocol changes, but requires significant cpu work.
-						This arg is stored and can be safely modified at runtime by calling validate().
-	\param	verify_ssl  if `false`, exceptions will not be raised if there are problems verifying SSL certificates. 
-						Be wary of using this option; it's almost always better to fix the machine's SSL 
-						configuration than to ignore errors.
-	*/
-	Mobileclient(bool debug_logging = true, bool validate = true, bool verify_ssl = true);
+                        to see the exact location on their system.
+                        If `false`, no handlers will be configured; users must create their own handlers.
+                        Completely ignoring logging is dangerous and not recommended.
+                        The Google Music protocol can change at any time;
+                        if something were to go wrong, the logs would be necessary for recovery.
+    \param	validate	if `false`, do not validate server responses against known schemas.
+                        This helps to catch protocol changes, but requires significant cpu work.
+                        This arg is stored and can be safely modified at runtime by calling validate().
+    \param	verify_ssl  if `false`, exceptions will not be raised if there are problems verifying SSL certificates.
+                        Be wary of using this option; it's almost always better to fix the machine's SSL
+                        configuration than to ignore errors.
+    */
+    Mobileclient(bool debug_logging = true, bool validate = true, bool verify_ssl = true);
 
-	/*!
-	Authenticates the Mobileclient.
-	
-	\param	email	  	eg `'test@gmail.com'` or just `'test'`.
-	\param	password  	the account's password. This is not stored locally, and is sent securely over
-	 				    SSL. App-specific passwords are not supported.
-	\param	android_id	16 hex digits, eg `'1234567890abcdef'`.	 					
-	 				    pass an empty string instead to attempt to use this machine's
-	 				    MAC address as an android id.
-	 				    __Use this at your own risk:__
-	 				    the id will be a non-standard 12 characters, but appears to work fine in
-	 				    testing. If a valid MAC address cannot be determined on this machine (which
-	 				    is often the case when running on a VPS), raise OSError.
-	
-	\return	`true` on success, `false` on failure.
-	*/
-	bool login(const std::string& email,
-			   const std::string& password, 
-			   const std::string& android_id = std::string()) const;
+    /*!
+    Authenticates the Mobileclient.
 
-	/*!
-	Forgets local authentication in this instance.
-	
-	\return	`true` on success, `false` on failure.
-	*/
-	bool logout() const;
+    \param	email	  	eg `'test@gmail.com'` or just `'test'`.
+    \param	password  	the account's password. This is not stored locally, and is sent securely over
+                        SSL. App-specific passwords are not supported.
+    \param	android_id	16 hex digits, eg `'1234567890abcdef'`.
+                        pass an empty string instead to attempt to use this machine's
+                        MAC address as an android id.
+                        __Use this at your own risk:__
+                        the id will be a non-standard 12 characters, but appears to work fine in
+                        testing. If a valid MAC address cannot be determined on this machine (which
+                        is often the case when running on a VPS), raise OSError.
 
-	/*!
-	Returns a range of songs.
-	
-	\param	incremental	    if `true`, returns a lazily evaluated range that yields lists of at most 1000 tracks as
-	 					they are retrieved from the server. This can be useful for presenting a
-	 					loading bar to a user.
-	 						
-	\param	include_deleted	if `true, include tracks that have been deleted in the past.
-	 */
-	SongRange get_all_songs(bool incremental = false, bool include_deleted = false);
+    \return	`true` on success, `false` on failure.
+    */
+    bool login(const std::string& email,
+               const std::string& password,
+               const identifier& android_id = identifier()) const;
 
-	/*!
-	Returns a url that will point to an mp3 file.
-	
-	\param	song_id  	a single song id.
-	\param	device_id	defaults to `android_id` from login. Otherwise, provide a mobile device 
-                        id as a string. Android device ids are 16 characters, while iOS ids are 
-                        uuids with `ios:` prepended.                        
+    /*!
+    Forgets local authentication in this instance.
+
+    \return	`true` on success, `false` on failure.
+    */
+    bool logout() const;
+
+    /*!
+    Returns a range of songs.
+
+    \param	incremental	    if `true`, returns a lazily evaluated range that yields lists of at most 1000 tracks as
+                        they are retrieved from the server. This can be useful for presenting a
+                        loading bar to a user.
+
+    \param	include_deleted	if `true, include tracks that have been deleted in the past.
+     */
+    SongRange get_all_songs(bool incremental = false, bool include_deleted = false);
+
+    /*!
+    Returns a url that will point to an mp3 file.
+
+    \param	song_id  	a single song id.
+    \param	device_id	defaults to `android_id` from login. Otherwise, provide a mobile device
+                        id as a string. Android device ids are 16 characters, while iOS ids are
+                        uuids with `ios:` prepended.
                         If you have already used Google Music on a mobile device,
                         get_registered_devices() will provide at least one working id.
-                        Omit `0x` from the start of the string if present.	 					
-	 				    Registered computer ids (a MAC address) will not be accepted and will 403.                        
+                        Omit `0x` from the start of the string if present.
+                        Registered computer ids (a MAC address) will not be accepted and will 403.
                         Providing an unregistered mobile device id will register it to your account,
                         subject to Google's [device limits](http://support.google.com/googleplay/bin/answer.py?hl=en&amp;answer=1230356).
                         __Registering a device id that you do not own is likely a violation of the
                         TOS.__
-	\param	quality  	stream bits per second quality.
+    \param	quality  	stream bits per second quality.
 
-	When handling the resulting url, keep in mind that:
-	- you will likely need to handle redirects
-	- the url expires after a minute
-	- only one IP can be streaming music at once. This can result in an http 403 with 
+    When handling the resulting url, keep in mind that:
+    - you will likely need to handle redirects
+    - the url expires after a minute
+    - only one IP can be streaming music at once. This can result in an http 403 with
     `X-Rejected-Reason: ANOTHER_STREAM_BEING_PLAYED`.
 
-	The file will not contain metadata. Use Webclient::get_song_download_info or Musicmanager::download_song 
+    The file will not contain metadata. Use Webclient::get_song_download_info or Musicmanager::download_song
     to download files with metadata.
-	*/
-	std::string get_stream_url(const std::string& song_id,
-							   const std::string& device_id = std::string(),
-							   SongQuality quality = SongQuality::High);
+    */
+    std::string get_stream_url(const identifier& song_id,
+                               const boost::optional<identifier>& device_id = boost::optional<identifier>(),
+                               SongQuality quality = SongQuality::High);
 
     /*!
     Returns a list of dictionaries representing devices associated with the account.
@@ -125,7 +126,7 @@ public:
     register a device of type `'ANDROID'` or `'IOS'` respectively, which is
     required for streaming with the Mobileclient.
     */
-	std::vector<RegisteredDevice> get_registered_devices();
+    std::vector<RegisteredDevice> get_registered_devices();
 
     /*!
     Changes the metadata of tracks.
@@ -145,7 +146,7 @@ public:
         song.rating = "5";
         mc.change_song_metadata({song});
     */
-	std::vector<std::string> change_song_metadata(const std::vector<Song>& songs);
+    identifiers change_song_metadata(const std::vector<Song>& songs);
 
     /*!
     Deletes songs from the library.
@@ -153,7 +154,7 @@ public:
     \param song_ids     a list of song ids, or a single song id.
     \return a list of deleted song ids.
     */
-    std::vector<std::string> delete_songs(const std::vector<std::string> song_ids);
+    identifiers delete_songs(const identifiers& song_ids);
 
     /*!
     Returns a list of dictionaries that each represent a track.
@@ -170,26 +171,141 @@ public:
     /*!
     Increments a song's playcount and returns its song id.
 
-    \param song_id  a song id. Providing the id of an AA track that has been added to the library 
-                    will __not__ increment the corresponding library song's playcount. 
+    \param song_id  a song id. Providing the id of an AA track that has been added to the library
+                    will __not__ increment the corresponding library song's playcount.
                     To do this, use the 'id' field (which looks like a uuid and doesn't begin with 'T'),
                     not the 'nid' field.
-    \param plays    (optional) positive number of plays to increment by. The default is 1.
-    \param playtime (optional) a time the song was played. It will default to the time of the call.
+    \param plays    positive number of plays to increment by. The default is 1.
+    \param playtime a time the song was played. It will default to the time of the call.
      */
-    std::string increment_song_playcount(const std::string& song_id,
-                                         int plays = 1,
-                                         const boost::posix_time::ptime& playtime = boost::posix_time::microsec_clock::local_time());
+    identifier increment_song_playcount(const identifier& song_id,
+                                        int plays = 1,
+                                        const boost::posix_time::ptime& playtime = boost::posix_time::microsec_clock::local_time());
 
     /*!
     Returns a range of playlists.
 
     \param incremental  if `true`, return a generator that yields lists of at most 1000 playlists
-                        as they are retrieved from the server. This can be useful for presenting 
+                        as they are retrieved from the server. This can be useful for presenting
                         a loading bar to a user.
     \param include_deleted  if `true`, include playlists that have been deleted in the past.
     */
     PlaylistRange get_all_playlists(bool incremental = false, bool include_deleted = false);
+
+    /*!
+    Retrieves the contents of __all__ user-created playlists - the Mobileclient does not support retrieving
+    only the contents of one playlist.
+
+    This will not return results for public playlists that the user is subscribed to;
+    use get_shared_playlist_contents() instead.
+
+    The same structure as get_all_playlists() will be returned, but with the addition of
+    the `tracks` field in each Playlist set to a list of properly-ordered tracks.
+    */
+    PlaylistRange get_all_user_playlist_contents();
+
+    /*!
+    Creates a new empty playlist and returns its id.
+
+    \param name         the desired title.
+                        Creating multiple playlists with the same name is allowed
+    \param description  the desired description
+    \param isPublic     if `true`, creates a public All Access playlist.
+    */
+    identifier create_playlist(const std::string& name,
+                               const std::string& description = std::string(),
+                               bool isPublic = false);
+
+    /*!
+    Deletes a playlist and returns its id.
+
+    \param playlist_id  the id to delete.
+    */
+    identifier delete_playlist(const identifier& playlist_id);
+
+    /*
+    Changes the name of a playlist and returns its id.
+
+    \param playlist_id      the id of the playlist
+    \param new_name         desired title
+    \param new_description  desired description
+    \param isPublic         if `true` and the user has All Access, share playlist.
+    */
+    identifier edit_playlist(const identifier& playlist_id,
+                             const boost::optional<std::string>& new_name = boost::optional<std::string>(),
+                             const boost::optional<std::string>& new_description = boost::optional<std::string>(),
+                             const boost::optional<bool>& isPublic = boost::optional<bool>());
+
+    /*!
+    Appends songs to the end of a playlist.
+    Returns a list of playlist entry ids that were added.
+
+    \param playlist_id  the id of the playlist to add to.
+    \param song_ids     a list of song ids, or a single song id.
+
+    Playlists have a maximum size of 1000 songs.
+    Calls may fail before that point (presumably) due to an error on Google's end
+    (see [#239](https://github.com/simon-weber/gmusicapi/issues/239>)).
+    */
+    identifiers add_songs_to_playlist(const identifier& playlist_id, const identifiers& song_ids);
+
+    /*!
+    Reorders a single entry in a playlist and returns its id.
+
+    Read `reorder_playlist_entry(foo, bar, gaz)` as "reorder playlist entry __foo__ to follow entry
+    __bar__ and precede entry __gaz__."
+
+    \param entry            the playlist entry to move.
+    \param to_follow_entry  the playlist entry that will come before `entry` in the resulting playlist.
+                            If not set, `entry` will be the first entry in the playlist.
+    \param to_precede_entry the playlist entry that will come after `entry` in the resulting playlist.
+                            if not set, `entry` will be the last entry in the playlist.
+
+    `reorder_playlist_entry(foo)` is invalid and will raise ValueError;
+    provide at least one of `to_follow_entry` or `to_precede_entry`.
+
+    Not setting `to_follow_entry` or `to_precede_entry` when `entry` is not to be the first or last
+    entry in the playlist is undefined.
+
+    All params are entries returned by get_all_user_playlist_contents() or get_shared_playlist_contents().
+    */
+    identifiers reorder_playlist_entry(const PlaylistEntry& entry,
+                                       const boost::optional<PlaylistEntry>& to_follow_entry = boost::optional<PlaylistEntry>(),
+                                       const boost::optional<PlaylistEntry>& to_precede_entry = boost::optional<PlaylistEntry>());
+
+    /*!
+    Removes specific entries from a playlist.
+    Returns a list of entry ids that were removed.
+
+    \param entry_ids    a list of entry ids, or a single entry id.
+    */
+    identifiers remove_entries_from_playlist(const identifiers& entry_ids);
+
+    /*!
+    Retrieves the contents of a public All Access playlist.
+
+    \param share_token  from `Playlist::shareToken`, or a playlist share url
+    (https://play.google.com/music/playlist/<token>).
+
+    Note that tokens from urls will need to be url-decoded,
+    eg ``AM...%3D%3D`` becomes ``AM...==``.
+
+    For example, to retrieve the contents of a playlist that the user is
+    subscribed to::
+
+        auto all_playlists = mc.get_all_playlists();
+        std::vector subscribed_to;
+        std::copy_if(all_playlists.begin(), all_playlists.end(), std::back_inserter(subscribed_to), [](const Playlist& p){p.type == "shared";});
+        auto share_tok = subscribed_to[0].shareToken;
+        auto tracks = mc.get_shared_playlist_contents(share_tok);
+
+    The user need not be subscribed to a playlist to list its tracks.
+
+    Returns a list of playlist entries
+    with structure the same as those
+    returned by get_all_user_playlist_contents(), but with the `clientId` and `playlistId` empty.
+    */
+    PlaylistRange get_shared_playlist_contents(const std::string& share_token);
 };
 
 

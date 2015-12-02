@@ -3,6 +3,9 @@
 #include "Mobileclient.h"
 #include "userCredentials.h"
 #include "Song.h"
+#include "Playlist.h"
+#include <boost/range.hpp>
+#include <boost/range/algorithm.hpp>
 
 using namespace GMusicApi;
 
@@ -31,7 +34,7 @@ TEST_CASE("Mobileclient login", "[Mobileclient]")
     }
 }
 
-TEST_CASE("Mobileclient song list", "[Mobileclient]")
+TEST_CASE("Mobileclient song list sanity", "[Mobileclient]")
 {
     Mobileclient mc;
     mc.login(gm_user, gm_pass);
@@ -69,15 +72,16 @@ TEST_CASE("Song manipulation", "[Mobileclient]")
 
     SECTION("stream url not empty")
     {
-        auto registeredDevices = mc.get_registered_devices();
+        //auto registeredDevices = mc.get_registered_devices();
 
-        auto registeredDeviceIt
-            = std::find_if(registeredDevices.begin(), registeredDevices.end(), [](const RegisteredDevice& device)
-        {
-            return device.type == "ANDROID";
-        });
-        REQUIRE(registeredDeviceIt != registeredDevices.end());
-        REQUIRE_FALSE(mc.get_stream_url(songId, registeredDeviceIt->id).empty());
+        //auto registeredDeviceIt
+        //    = std::find_if(registeredDevices.begin(), registeredDevices.end(), [](const RegisteredDevice& device)
+        //{
+        //    return device.type == "ANDROID";
+        //});
+        //REQUIRE(registeredDeviceIt != registeredDevices.end());
+        //REQUIRE_FALSE(mc.get_stream_url(songId, registeredDeviceIt->id).empty());
+        REQUIRE_FALSE(mc.get_stream_url(songId).empty());
     }
 
     SECTION("can change song metadata")
@@ -124,15 +128,86 @@ TEST_CASE("Promoted songs empty", "[Mobileclient][NoAllAccess]")
     REQUIRE(mc.get_promoted_songs().empty());
 }
 
-TEST_CASE("Playlists", "[Mobileclient]")
+TEST_CASE("Playlists sanity", "[Mobileclient]")
 {
     Mobileclient mc;
     mc.login(gm_user, gm_pass);
-
-    //std::string in; std::cout << "ready\n"; std::cin >> in;
 
     auto incremental = mc.get_all_playlists(true);
     auto non_incremental = mc.get_all_playlists();
 
     REQUIRE(incremental == non_incremental);
+}
+
+TEST_CASE("Playlists", "[Mobileclient]")
+{
+    Mobileclient mc;
+    mc.login(gm_user, gm_pass);
+
+    auto all_playlists = mc.get_all_playlists();
+    auto playlist_count = boost::size(all_playlists);
+    auto list_id = mc.create_playlist("gmusicapi-cpp test playlist", "this is a new playlist");
+
+    auto all_playlists_vec = toVector(mc.get_all_playlists());
+
+    REQUIRE(all_playlists_vec.size() == playlist_count + 1);
+
+    auto findPlaylist = [list_id](const std::vector<Playlist>& playlists)
+    {
+        return std::find_if(playlists.begin(), playlists.end(), [list_id](const Playlist& p) { return p.id == list_id; });
+    };
+
+    auto it = findPlaylist(all_playlists_vec);
+    REQUIRE(it != all_playlists_vec.end());
+
+    auto all_songs = mc.get_all_songs(true);
+    auto& song = all_songs.front();
+    
+    auto entry_ids = mc.add_songs_to_playlist(list_id, { song.id });
+    REQUIRE(entry_ids.size() == 1);
+
+    auto getPlaylist = [&mc, &findPlaylist]()
+    {
+        auto user_playlists = toVector(mc.get_all_user_playlist_contents());
+
+        auto it = findPlaylist(user_playlists);
+        REQUIRE(it != user_playlists.end());
+
+        return *it;
+    };
+
+
+    auto playlist = getPlaylist();
+    REQUIRE(playlist.tracks.size() == 1);
+
+    auto& entry = playlist.tracks.front();
+    REQUIRE(entry.id == entry_ids.front());
+    REQUIRE(entry.trackId == song.id);
+    REQUIRE(entry.playlistId == list_id);
+
+    mc.add_songs_to_playlist(list_id, { song.id });
+
+    playlist = getPlaylist();
+    REQUIRE(playlist.tracks.size() == 2);
+
+    entry_ids = identifiers{ playlist.tracks[0].id, playlist.tracks[1].id };
+    // switch entry positions
+    mc.reorder_playlist_entry(playlist.tracks[0], playlist.tracks[1]);
+
+    playlist = getPlaylist();
+    REQUIRE(playlist.tracks.size() == 2);
+    REQUIRE(playlist.tracks[0].id == entry_ids[1]);
+    REQUIRE(playlist.tracks[1].id == entry_ids[0]);
+
+    auto entries_to_remove = identifiers{ entry_ids[0] };
+    REQUIRE(entries_to_remove == mc.remove_entries_from_playlist(entries_to_remove));
+
+    playlist = getPlaylist();
+    REQUIRE(playlist.tracks.size() == 1);
+    REQUIRE(playlist.tracks[0].id == entry_ids[1]);
+
+    REQUIRE(list_id == mc.delete_playlist(list_id));
+    all_playlists_vec = toVector(mc.get_all_playlists());
+    REQUIRE(boost::size(all_playlists_vec) == playlist_count);
+    REQUIRE(findPlaylist(all_playlists_vec) == all_playlists_vec.end());
 }

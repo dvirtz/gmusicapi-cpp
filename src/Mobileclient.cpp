@@ -9,11 +9,10 @@ namespace GMusicApi
 {
 
 Mobileclient::Mobileclient(bool debug_logging /*= true*/, bool validate /*= true*/, bool verify_ssl /*= true*/)
-	: ClientBase("Mobileclient", debug_logging, validate, verify_ssl)
-{
-}
+    : ClientBase("Mobileclient", debug_logging, validate, verify_ssl)
+{}
 
-bool Mobileclient::login(const std::string & email, const std::string & password, const std::string & android_id) const
+bool Mobileclient::login(const std::string & email, const std::string & password, const identifier & android_id) const
 {
     if (android_id.empty())
     {
@@ -26,42 +25,40 @@ bool Mobileclient::login(const std::string & email, const std::string & password
 
 bool Mobileclient::logout() const
 {
-	return callMethod<bool>("logout");
+    return callMethod<bool>("logout");
 }
 
 SongRange Mobileclient::get_all_songs(bool incremental, bool include_deleted)
 {
-	return callMethod<SongRange>("get_all_songs", incremental, include_deleted);
+    return callMethod<SongRange>("get_all_songs", incremental, include_deleted);
 }
 
-std::string Mobileclient::get_stream_url(const std::string & song_id, 
-										 const std::string & device_id, 
-										 SongQuality quality)
+std::string Mobileclient::get_stream_url(const identifier & song_id,
+                                         const boost::optional<identifier>& device_id,
+                                         SongQuality quality)
 {
-	// according to boost::python documentation at 
-	// http://www.boost.org/doc/libs/1_38_0/libs/python/doc/v2/callbacks.html#argument_handling
-	// nullptr arguments will result in None object being passed to Python
-	if (device_id.empty())
-		return callMethod<std::string>("get_stream_url", song_id, nullptr, songQualityName(quality));
-
-	// Omit '0x' from the start of the string if present.
-	auto device_id_without_prefix = std::regex_replace(device_id, std::regex("0x(.*)"), "$1");
-	return callMethod<std::string>("get_stream_url", song_id, device_id_without_prefix, songQualityName(quality));
+    auto dev_id = device_id;
+    // Omit '0x' from the start of the string if present.
+    if (dev_id)
+    {
+        dev_id = std::regex_replace(*dev_id, std::regex("0x(.*)"), "$1");
+    }
+    return callMethod<std::string>("get_stream_url", song_id, dev_id, songQualityName(quality));
 }
 
 std::vector<RegisteredDevice> Mobileclient::get_registered_devices()
 {
-	return callMethod<std::vector<RegisteredDevice>>("get_registered_devices");
+    return callMethod<std::vector<RegisteredDevice>>("get_registered_devices");
 }
 
-std::vector<std::string> Mobileclient::change_song_metadata(const std::vector<Song>& songs)
+identifiers Mobileclient::change_song_metadata(const std::vector<Song>& songs)
 {
-	return callMethod<std::vector<std::string>>("change_song_metadata", songs);
+    return callMethod<identifiers>("change_song_metadata", songs);
 }
 
-std::vector<std::string> Mobileclient::delete_songs(const std::vector<std::string> song_ids)
+identifiers Mobileclient::delete_songs(const identifiers& song_ids)
 {
-    return callMethod<std::vector<std::string>>("delete_songs", song_ids);
+    return callMethod<identifiers>("delete_songs", song_ids);
 }
 
 SongRange Mobileclient::get_promoted_songs()
@@ -69,16 +66,63 @@ SongRange Mobileclient::get_promoted_songs()
     return callMethod<SongRange>("get_promoted_songs");
 }
 
-std::string Mobileclient::increment_song_playcount(const std::string & song_id, 
-                                                   int plays, 
-                                                   const boost::posix_time::ptime& playtime)
+identifier Mobileclient::increment_song_playcount(const identifier & song_id,
+                                                  int plays,
+                                                  const boost::posix_time::ptime& playtime)
 {
-    return callMethod<std::string>("increment_song_playcount", song_id, plays, playtime);
+    return callMethod<identifier>("increment_song_playcount", song_id, plays, playtime);
 }
 
 PlaylistRange Mobileclient::get_all_playlists(bool incremental, bool include_deleted)
 {
     return callMethod<PlaylistRange>("get_all_playlists", incremental, include_deleted);
+}
+
+PlaylistRange Mobileclient::get_all_user_playlist_contents()
+{
+    return callMethod<PlaylistRange>("get_all_user_playlist_contents");
+}
+
+identifier Mobileclient::create_playlist(const std::string & name,
+                                         const std::string & description,
+                                         bool isPublic)
+{
+    return callMethod<identifier>("create_playlist", name, description, isPublic);
+}
+
+identifier Mobileclient::delete_playlist(const identifier& playlist_id)
+{
+    return callMethod<identifier>("delete_playlist", playlist_id);
+}
+
+identifier Mobileclient::edit_playlist(const identifier & playlist_id,
+                                       const boost::optional<std::string>& new_name,
+                                       const boost::optional<std::string>& new_description,
+                                       const boost::optional<bool>& isPublic)
+{
+    return callMethod<identifier>("edit_playlist", playlist_id, new_name, new_description, isPublic);
+}
+
+identifiers Mobileclient::add_songs_to_playlist(const identifier & playlist_id, const identifiers& song_ids)
+{
+    return callMethod<identifiers>("add_songs_to_playlist", playlist_id, song_ids);
+}
+
+identifiers Mobileclient::reorder_playlist_entry(const PlaylistEntry & entry,
+                                                 const boost::optional<PlaylistEntry>& to_follow_entry,
+                                                 const boost::optional<PlaylistEntry>& to_precede_entry)
+{
+    return callMethod<identifiers>("reorder_playlist_entry", entry, to_follow_entry, to_precede_entry);
+}
+
+identifiers Mobileclient::remove_entries_from_playlist(const identifiers & entry_ids)
+{
+    return callMethod<identifiers>("remove_entries_from_playlist", entry_ids);
+}
+
+PlaylistRange Mobileclient::get_shared_playlist_contents(const std::string & share_token)
+{
+    return callMethod<PlaylistRange>("get_shared_playlist_contents", share_token);
 }
 
 } // namespace GMusicApi

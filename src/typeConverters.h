@@ -11,6 +11,7 @@ MSC_DISABLE_WARNINGS
 #include <boost/mpl/range_c.hpp>
 #include <datetime.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/optional.hpp>
 MSC_RESTORE_WARNINGS
 #include <type_traits>
 
@@ -231,6 +232,22 @@ struct BoostPTimeToPyDateTimeConverter
                                           static_cast<int>(tod.hours()), 
                                           static_cast<int>(tod.minutes()), 
                                           static_cast<int>(tod.seconds()), usec);
+    }
+};
+
+template<typename T>
+struct BoostOptionalToPyConverter
+{
+    static PyObject* convert(const boost::optional<T>& opt)
+    {
+        namespace bp = boost::python;
+        if (opt)
+        {
+            return bp::incref(bp::converter::arg_to_python<T>(*opt).get());
+        }
+
+        // if not set convert to None
+        Py_RETURN_NONE;
     }
 };
 
