@@ -4,6 +4,8 @@
 #include "Song.h"
 #include "typeConverters.h"
 #include "Playlist.h"
+#include "RadioStation.h"
+#include "SearchResults.h"
 #include <iostream>
 
 namespace GMusicApi
@@ -51,34 +53,27 @@ Module::~Module()
 void Module::registerTypeConverters()
 {
 	// Python to C++ converters
-	PySequenceToCppContainerConverter<SongRange>::registerConverter();
-    PyGeneratorToGeneratedRangeConverter<Song>::registerConverter();
-	PyToCppConverter<dict, Song>::registerConverter();
 	PySequenceToCppContainerConverter<std::vector<std::string>>::registerConverter();
 	PyToCppConverter<str, std::string>::registerConverter();
-	PyToCppConverter<dict, AlbumArt>::registerConverter();
-	PySequenceToCppContainerConverter<std::vector<AlbumArt>>::registerConverter();
-	PySequenceToCppContainerConverter<std::vector<RegisteredDevice>>::registerConverter();
-	PyToCppConverter<dict, RegisteredDevice>::registerConverter();
-    PyToCppConverter<dict, Playlist>::registerConverter();
-    PySequenceToCppContainerConverter<PlaylistRange>::registerConverter();
-    PyGeneratorToGeneratedRangeConverter<Playlist>::registerConverter();
-    PyToCppConverter<dict, PlaylistEntry>::registerConverter();
-    PySequenceToCppContainerConverter<std::vector<PlaylistEntry>>::registerConverter();
 
 	// C++ to Python converters
 	to_python_converter<nullptr_t, NullptrToNoneConverter>();
-	to_python_converter<std::vector<Song>, CppContainerToPyListConverter<std::vector<Song>>>();
-	to_python_converter<std::vector<AlbumArt>, CppContainerToPyListConverter<std::vector<AlbumArt>>>();
 	to_python_converter<std::vector<std::string>, CppContainerToPyListConverter<std::vector<std::string>>>();
-	to_python_converter<Song, StructToPyDictConverter<Song>>();
-	to_python_converter<AlbumArt, StructToPyDictConverter<AlbumArt>>();
-	to_python_converter<RegisteredDevice, StructToPyDictConverter<RegisteredDevice>>();
-    to_python_converter<PlaylistEntry, StructToPyDictConverter<PlaylistEntry>>();
     to_python_converter<boost::posix_time::ptime, BoostPTimeToPyDateTimeConverter>();
     to_python_converter<boost::optional<std::string>, BoostOptionalToPyConverter<std::string>>();
     to_python_converter<boost::optional<bool>, BoostOptionalToPyConverter<bool>>();
-    to_python_converter<boost::optional<PlaylistEntry>, BoostOptionalToPyConverter<PlaylistEntry>>();
+    to_python_converter<boost::optional<boost::posix_time::ptime>, BoostOptionalToPyConverter<boost::posix_time::ptime>>();
+    to_python_converter<boost::optional<identifiers>, BoostOptionalToPyConverter<identifiers>>();
+
+    //call other registeration methods
+    registerSongConverters();
+    registerAlbumArtConverters();
+    registerRegisteredDeviceConverters();
+    registerPlaylistConverters();
+    registerRadioStationConverters();
+    registerAlbumConverters();
+    registerArtistConverters();
+    registerSearchResultsConverters();
 }
 
 } // namespace GMusicApi

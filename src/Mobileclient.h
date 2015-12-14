@@ -4,6 +4,8 @@
 #include "SongQuality.h"
 #include "RegisteredDevice.h"
 #include "Playlist.h"
+#include "RadioStation.h"
+#include "SearchResults.h"
 #include <string>
 #include <vector>
 #include <boost/date_time.hpp>
@@ -113,7 +115,7 @@ public:
     to download files with metadata.
     */
     std::string get_stream_url(const identifier& song_id,
-                               const boost::optional<identifier>& device_id = boost::optional<identifier>(),
+                               const boost::optional<identifier>& device_id = {},
                                SongQuality quality = SongQuality::High);
 
     /*!
@@ -180,7 +182,7 @@ public:
      */
     identifier increment_song_playcount(const identifier& song_id,
                                         int plays = 1,
-                                        const boost::posix_time::ptime& playtime = boost::posix_time::microsec_clock::local_time());
+                                        const boost::optional<boost::posix_time::ptime>& playtime = {});
 
     /*!
     Returns a range of playlists.
@@ -232,9 +234,9 @@ public:
     \param isPublic         if `true` and the user has All Access, share playlist.
     */
     identifier edit_playlist(const identifier& playlist_id,
-                             const boost::optional<std::string>& new_name = boost::optional<std::string>(),
-                             const boost::optional<std::string>& new_description = boost::optional<std::string>(),
-                             const boost::optional<bool>& isPublic = boost::optional<bool>());
+                             const boost::optional<std::string>& new_name = {},
+                             const boost::optional<std::string>& new_description = {},
+                             const boost::optional<bool>& isPublic = {});
 
     /*!
     Appends songs to the end of a playlist.
@@ -270,8 +272,8 @@ public:
     All params are entries returned by get_all_user_playlist_contents() or get_shared_playlist_contents().
     */
     identifiers reorder_playlist_entry(const PlaylistEntry& entry,
-                                       const boost::optional<PlaylistEntry>& to_follow_entry = boost::optional<PlaylistEntry>(),
-                                       const boost::optional<PlaylistEntry>& to_precede_entry = boost::optional<PlaylistEntry>());
+                                       const boost::optional<PlaylistEntry>& to_follow_entry = {},
+                                       const boost::optional<PlaylistEntry>& to_precede_entry = {});
 
     /*!
     Removes specific entries from a playlist.
@@ -306,6 +308,93 @@ public:
     returned by get_all_user_playlist_contents(), but with the `clientId` and `playlistId` empty.
     */
     PlaylistRange get_shared_playlist_contents(const std::string& share_token);
+
+    /*!
+    Returns a list of dictionaries that each represent a radio station.
+
+    \param incremental      if `true`, return a generator that yields lists of at most 1000 stations
+                            as they are retrieved from the server. This can be useful for
+                            presenting a loading bar to a user.
+    \param include_deleted  if `true`, include stations that have been deleted in the past.
+    \param updated_after    a datetime.datetime; defaults to unix epoch
+    */
+    RadioStationRange get_all_stations(bool incremental = false,
+                                       bool include_deleted = false,
+                                       const boost::optional<boost::posix_time::ptime>& updated_after = {});
+
+    /*!
+    Returns a list of dictionaries that each represent a track.
+
+    Each call performs a separate sampling (with replacement?)
+    from all possible tracks for the station.
+
+    Nonexistent stations will return an empty list.
+
+    \param station_id           the id of a radio station to retrieve tracks from.
+                                Use the special id `'IFL'` for the "I'm Feeling Lucky" station.
+    \param num_tracks           the number of tracks to retrieve
+    \param recently_played_ids  a list of recently played track ids retrieved from this station. 
+                                This avoids playing duplicates.
+    */
+    SongRange get_station_tracks(identifier station_id,
+                                 size_t num_tracks = 25,
+                                 const boost::optional<identifiers>& recently_played_ids = {});
+
+    /*!
+    Creates an All Access radio station and returns its id.
+
+    \param name     the name of the station to create
+    \param \*_id    the id of an item to seed the station from.
+                    Exactly one of these params must be provided, or ValueError
+                    will be raised.
+    */
+    identifier create_station(const std::string& name,
+                              const boost::optional<identifier>& track_id = {}, 
+                              const boost::optional<identifier>& artist_id = {}, 
+                              const boost::optional<identifier>& album_id = {},
+                              const boost::optional<identifier>& genre_id = {});
+
+    /*!
+    Deletes All Access radio stations and returns their ids.
+
+    \param station_ids  a single id, or a list of ids to delete.
+    */
+    identifiers delete_stations(const identifiers& station_ids);
+
+    /*!
+    Queries the server for All Access songs, albums and shared playlists.
+
+    Using this method without an All Access subscription will always result in
+    CallFailure being raised.
+
+    \param query        a string keyword to search with. 
+                        Capitalization and punctuation are ignored.
+    \param max_results  Maximum number of items to be retrieved
+    */
+    SearchResults search_all_access(const std::string& query, size_t max_results = 50);
+
+    /*!
+    Adds an All Access track to the library, returning the library track id.
+
+    \param aa_song_id   All Access song id
+    */
+    identifier add_aa_track(const identifier& aa_song_id);
+
+    /*!
+    Retrieves details on an artist.
+
+    \param artist_id        an All Access artist id (hint: they always start with 'A')
+    \param include_albums   when `true`, fills the `'albums'` field
+    \param max_top_tracks   maximum number of top tracks to retrieve
+    \param max_rel_artist   maximum number of related artists to retrieve
+
+    Using this method without an All Access subscription will always result in
+    CallFailure being raised.
+    */
+    Artist get_artist_info(const identifier& artist_id,
+                           bool include_albums = true,
+                           size_t max_top_tracks = 5,
+                           size_t max_rel_artist = 5);
 };
 
 

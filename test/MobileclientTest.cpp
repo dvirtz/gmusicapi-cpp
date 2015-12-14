@@ -211,3 +211,14 @@ TEST_CASE("Playlists", "[Mobileclient]")
     REQUIRE(boost::size(all_playlists_vec) == playlist_count);
     REQUIRE(findPlaylist(all_playlists_vec) == all_playlists_vec.end());
 }
+
+TEST_CASE("Radio stations sanity", "[Mobileclient][.All Access]")
+{
+    Mobileclient mc;
+    mc.login(gm_user, gm_pass);
+
+    auto incremental = mc.get_all_stations(true);
+    auto non_incremental = mc.get_all_stations(false);
+
+    REQUIRE(boost::equal(incremental, non_incremental));
+}

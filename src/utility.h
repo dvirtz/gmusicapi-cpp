@@ -62,7 +62,7 @@ void getFromDict(const boost::python::dict& dict, const std::string& key, T& t)
 {
 	if (dict.has_key(key))
 	{
-		t = boost::python::extract<T>(dict[key]);
+		t = boost::python::extract<T>(dict[key])();
 	}
 }
 

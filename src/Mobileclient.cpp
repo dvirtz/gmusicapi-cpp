@@ -68,7 +68,7 @@ SongRange Mobileclient::get_promoted_songs()
 
 identifier Mobileclient::increment_song_playcount(const identifier & song_id,
                                                   int plays,
-                                                  const boost::posix_time::ptime& playtime)
+                                                  const boost::optional<boost::posix_time::ptime>& playtime)
 {
     return callMethod<identifier>("increment_song_playcount", song_id, plays, playtime);
 }
@@ -123,6 +123,53 @@ identifiers Mobileclient::remove_entries_from_playlist(const identifiers & entry
 PlaylistRange Mobileclient::get_shared_playlist_contents(const std::string & share_token)
 {
     return callMethod<PlaylistRange>("get_shared_playlist_contents", share_token);
+}
+
+RadioStationRange Mobileclient::get_all_stations(bool incremental, 
+                                                 bool include_deleted, 
+                                                 const boost::optional<boost::posix_time::ptime>& updated_after)
+{
+    return callMethod<RadioStationRange>("get_all_stations", incremental, include_deleted, updated_after);
+}
+
+SongRange Mobileclient::get_station_tracks(identifier station_id, 
+                                           size_t num_tracks, 
+                                           const boost::optional<identifiers>& recently_played_ids)
+{
+    return callMethod<SongRange>("get_station_tracks", station_id, num_tracks, recently_played_ids);
+}
+
+identifier Mobileclient::create_station(const std::string & name, 
+                                        const boost::optional<identifier>& track_id, 
+                                        const boost::optional<identifier>& artist_id, 
+                                        const boost::optional<identifier>& album_id, 
+                                        const boost::optional<identifier>& genre_id)
+{
+    return callMethod<identifier>("create_station", name, track_id, artist_id, album_id, genre_id);
+}
+
+identifiers Mobileclient::delete_stations(const identifiers & station_ids)
+{
+    return callMethod<identifiers>("delete_stations", station_ids);
+}
+
+SearchResults Mobileclient::search_all_access(const std::string & query, size_t max_results)
+{
+    return callMethod<SearchResults>("search_all_access", query, max_results);
+}
+
+identifier Mobileclient::add_aa_track(const identifier& aa_song_id)
+{
+    return callMethod<identifier>("add_aa_track", aa_song_id);
+}
+
+
+Artist Mobileclient::get_artist_info(const identifier& artist_id,
+                                     bool include_albums,
+                                     size_t max_top_tracks,
+                                     size_t max_rel_artist)
+{
+    return callMethod<Artist>("get_artist_info", artist_id, include_albums, max_top_tracks, max_rel_artist);
 }
 
 } // namespace GMusicApi

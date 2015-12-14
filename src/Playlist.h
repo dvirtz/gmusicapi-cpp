@@ -3,16 +3,18 @@
 #include "utility.h"
 MSC_DISABLE_WARNINGS
 #include <boost/fusion/include/define_struct.hpp>
+#include <boost/optional.hpp>
 MSC_RESTORE_WARNINGS
 #include "GeneratedRange.h"
 #include "genDefs.h"
+#include "typeConverters.h"
 #include <string>
 #include <vector>
 
 BOOST_FUSION_DEFINE_STRUCT(
     (GMusicApi), PlaylistEntry,
     (std::string, kind)
-    (bool,  deleted)
+    (bool, deleted)
     (GMusicApi::identifier, trackId)
     (GMusicApi::timestamp, lastModifiedTimestamp)
     (GMusicApi::identifier, playlistId)
@@ -21,7 +23,7 @@ BOOST_FUSION_DEFINE_STRUCT(
     (std::string, source)
     (GMusicApi::timestamp, creationTimestamp)
     (GMusicApi::identifier, id)
-    )
+    );
 
 BOOST_FUSION_DEFINE_STRUCT(
     (GMusicApi), Playlist,
@@ -37,11 +39,26 @@ BOOST_FUSION_DEFINE_STRUCT(
     (GMusicApi::timestamp, creationTimestamp)
     (GMusicApi::identifier, id)
     (std::vector<GMusicApi::PlaylistEntry>, tracks)
-    )
+    );
 
 namespace GMusicApi
 {
 
 using PlaylistRange = GeneratedRange<Playlist>;
+
+inline void registerPlaylistConverters()
+{
+    namespace bp = boost::python;
+    // Python to C++ converters
+    PyToCppConverter<bp::dict, Playlist>::registerConverter();
+    PySequenceToCppContainerConverter<PlaylistRange>::registerConverter();
+    PyGeneratorToGeneratedRangeConverter<Playlist>::registerConverter();
+    PyToCppConverter<bp::dict, PlaylistEntry>::registerConverter();
+    PySequenceToCppContainerConverter<std::vector<PlaylistEntry>>::registerConverter();
+
+    // C++ to Python converters
+    bp::to_python_converter<PlaylistEntry, StructToPyDictConverter<PlaylistEntry>>();
+    bp::to_python_converter<boost::optional<PlaylistEntry>, BoostOptionalToPyConverter<PlaylistEntry>>();
+}
 
 } // namespace GMusicApi
