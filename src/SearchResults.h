@@ -20,10 +20,10 @@ BOOST_FUSION_DEFINE_STRUCT( \
     (std::string, type) \
     )
 
-DEFINE_SEARCH_HIT_STRUCT(Album, album);
-DEFINE_SEARCH_HIT_STRUCT(Artist, artist);
-DEFINE_SEARCH_HIT_STRUCT(Song, track);
-DEFINE_SEARCH_HIT_STRUCT(Playlist, playlist);
+DEFINE_SEARCH_HIT_STRUCT(Album, album)
+DEFINE_SEARCH_HIT_STRUCT(Artist, artist)
+DEFINE_SEARCH_HIT_STRUCT(Song, track)
+DEFINE_SEARCH_HIT_STRUCT(Playlist, playlist)
 
 #undef DEFINE_SEARCH_HIT_STRUCT
 
