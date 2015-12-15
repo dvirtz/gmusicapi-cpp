@@ -15,7 +15,7 @@ BOOST_FUSION_DEFINE_STRUCT(
     (GMusicApi::identifier, genreId)
     (GMusicApi::identifier, trackId)
     (GMusicApi::identifier, trackLockerId)
-    );
+    )
 
 BOOST_FUSION_DEFINE_STRUCT(
     (GMusicApi), RadioStation,
@@ -28,7 +28,7 @@ BOOST_FUSION_DEFINE_STRUCT(
     (GMusicApi::identifier, clientId)
     (GMusicApi::RadioSeed, seed)
     (GMusicApi::identifier, id)
-    );
+    )
 
 namespace GMusicApi
 {

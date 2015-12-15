@@ -16,7 +16,7 @@ BOOST_FUSION_DEFINE_STRUCT(
     (std::vector<GMusicApi::Artist>, related_artists)
     (std::vector<GMusicApi::Song>, topTracks)
     (int, total_albums)
-    );
+    )
 
 namespace GMusicApi
 {

@@ -17,7 +17,7 @@ BOOST_FUSION_DEFINE_STRUCT(
     (std::string, kind)
     (std::string, name)
     (int, year)
-    );
+    )
 
 namespace GMusicApi
 {

@@ -10,7 +10,7 @@ MSC_RESTORE_WARNINGS
 BOOST_FUSION_DEFINE_STRUCT(
     (GMusicApi), AlbumArt,
     (std::string, url)
-    );
+    )
 
 namespace GMusicApi
 {

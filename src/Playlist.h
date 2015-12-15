@@ -23,7 +23,7 @@ BOOST_FUSION_DEFINE_STRUCT(
     (std::string, source)
     (GMusicApi::timestamp, creationTimestamp)
     (GMusicApi::identifier, id)
-    );
+    )
 
 BOOST_FUSION_DEFINE_STRUCT(
     (GMusicApi), Playlist,
@@ -39,7 +39,7 @@ BOOST_FUSION_DEFINE_STRUCT(
     (GMusicApi::timestamp, creationTimestamp)
     (GMusicApi::identifier, id)
     (std::vector<GMusicApi::PlaylistEntry>, tracks)
-    );
+    )
 
 namespace GMusicApi
 {

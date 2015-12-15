@@ -33,7 +33,7 @@ BOOST_FUSION_DEFINE_STRUCT(
     (std::vector<GMusicApi::ArtistHit>, artist_hits)
     (std::vector<GMusicApi::SongHit>, song_hits)
     (std::vector<GMusicApi::PlaylistHit>, playlist_hits)
-    );
+    )
 
 namespace GMusicApi
 {

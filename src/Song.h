@@ -42,7 +42,7 @@ BOOST_FUSION_DEFINE_STRUCT(
     (GMusicApi::timestamp, lastModifiedTimestamp)
     (GMusicApi::identifier, clientId)
     (GMusicApi::timestamp, durationMillis)
-    );
+    )
 
 namespace GMusicApi
 {

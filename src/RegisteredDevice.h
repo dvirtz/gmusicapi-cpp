@@ -15,7 +15,7 @@ BOOST_FUSION_DEFINE_STRUCT(
     (std::string, type)
     (GMusicApi::timestamp, lastAccessedTimeMs)
     (bool, isSmartphone)
-    );
+    )
 
 namespace GMusicApi
 {
