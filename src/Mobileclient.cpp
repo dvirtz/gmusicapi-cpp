@@ -172,4 +172,19 @@ Artist Mobileclient::get_artist_info(const identifier& artist_id,
     return callMethod<Artist>("get_artist_info", artist_id, include_albums, max_top_tracks, max_rel_artist);
 }
 
+Album Mobileclient::get_album_info(const identifier & album_id, bool include_tracks)
+{
+    return callMethod<Album>("get_album_info", album_id, include_tracks);
+}
+
+Song Mobileclient::get_track_info(const identifier & store_track_id)
+{
+    return callMethod<Song>("get_track_info", store_track_id);
+}
+
+GenreRange Mobileclient::get_genres(const boost::optional<identifier>& parent_genre_id)
+{
+    return callMethod<GenreRange>("get_genres", parent_genre_id);
+}
+
 } // namespace GMusicApi

@@ -6,7 +6,7 @@ MSC_DISABLE_WARNINGS
 MSC_RESTORE_WARNINGS
 #include "genDefs.h"
 
-BOOST_FUSION_DEFINE_STRUCT(
+GMUSICAPI_DEFINE_STRUCT(
     (GMusicApi), Artist,
     (std::vector<GMusicApi::Album>, albums)
     (std::string, artistArtRef)

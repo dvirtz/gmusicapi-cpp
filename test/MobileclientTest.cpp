@@ -57,6 +57,7 @@ TEST_CASE("Song manipulation", "[Mobileclient]")
 {
     Mobileclient mc;
     mc.login(gm_user, gm_pass);
+
     auto song = mc.get_all_songs(true).front();
     
     auto songById = [&mc](const std::string& songId)
@@ -221,4 +222,16 @@ TEST_CASE("Radio stations sanity", "[Mobileclient][.All Access]")
     auto non_incremental = mc.get_all_stations(false);
 
     REQUIRE(boost::equal(incremental, non_incremental));
+}
+
+TEST_CASE("methods throw without AllAccess", "[Mobileclient]")
+{
+    Mobileclient mc;
+    mc.login(gm_user, gm_pass);
+
+    REQUIRE_THROWS_AS(mc.search_all_access(""), std::runtime_error);
+    REQUIRE_THROWS_AS(mc.get_artist_info(""), std::runtime_error);
+    REQUIRE_THROWS_AS(mc.get_album_info(""), std::runtime_error);
+    REQUIRE_THROWS_AS(mc.get_track_info(""), std::runtime_error);
+    REQUIRE_THROWS_AS(mc.get_genres(), std::runtime_error);
 }

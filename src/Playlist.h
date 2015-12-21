@@ -11,7 +11,7 @@ MSC_RESTORE_WARNINGS
 #include <string>
 #include <vector>
 
-BOOST_FUSION_DEFINE_STRUCT(
+GMUSICAPI_DEFINE_STRUCT(
     (GMusicApi), PlaylistEntry,
     (std::string, kind)
     (bool, deleted)
@@ -25,7 +25,7 @@ BOOST_FUSION_DEFINE_STRUCT(
     (GMusicApi::identifier, id)
     )
 
-BOOST_FUSION_DEFINE_STRUCT(
+GMUSICAPI_DEFINE_STRUCT(
     (GMusicApi), Playlist,
     (std::string, type)
     (std::string, kind)

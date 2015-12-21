@@ -7,7 +7,7 @@ MSC_RESTORE_WARNINGS
 #include "genDefs.h"
 #include "typeConverters.h"
 
-BOOST_FUSION_DEFINE_STRUCT(
+GMUSICAPI_DEFINE_STRUCT(
     (GMusicApi), RadioSeed,
     (std::string, kind)
     (GMusicApi::identifier, albumId)
@@ -17,7 +17,7 @@ BOOST_FUSION_DEFINE_STRUCT(
     (GMusicApi::identifier, trackLockerId)
     )
 
-BOOST_FUSION_DEFINE_STRUCT(
+GMUSICAPI_DEFINE_STRUCT(
     (GMusicApi), RadioStation,
     (std::string, imageUrl)
     (std::string, kind)

@@ -7,7 +7,7 @@ MSC_RESTORE_WARNINGS
 #include "typeConverters.h"
 #include <string>
 
-BOOST_FUSION_DEFINE_STRUCT(
+GMUSICAPI_DEFINE_STRUCT(
     (GMusicApi), AlbumArt,
     (std::string, url)
     )

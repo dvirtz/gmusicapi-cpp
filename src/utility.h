@@ -23,6 +23,7 @@ MSC_RESTORE_WARNINGS
 #include <iostream>
 #include <vector>
 #include <stdexcept>
+#include <set>
 
 namespace GMusicApi
 {
@@ -58,12 +59,15 @@ inline void printList(const boost::python::list& list)
 }
 
 template<typename T>
-void getFromDict(const boost::python::dict& dict, const std::string& key, T& t)
+bool getFromDict(const boost::python::dict& dict, const std::string& key, T& t)
 {
 	if (dict.has_key(key))
 	{
 		t = boost::python::extract<T>(dict[key])();
+        return true;
 	}
+
+    return false;
 }
 
 template<typename T>
@@ -111,6 +115,8 @@ auto toVector(const Sequence& range)
 {
     return std::vector<typename Sequence::value_type>(range.begin(), range.end());
 }
+#define GMUSICAPI_DEFINE_STRUCT(NAMESPACE_SEQ, NAME, ATTRIBUTES)    \
+    BOOST_FUSION_DEFINE_STRUCT(NAMESPACE_SEQ, NAME, ATTRIBUTES(std::set<std::string>, isInitialized))
 
 } // namespace GMusicApi
 

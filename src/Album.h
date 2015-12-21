@@ -7,7 +7,7 @@ MSC_RESTORE_WARNINGS
 #include "genDefs.h"
 #include "typeConverters.h"
 
-BOOST_FUSION_DEFINE_STRUCT(
+GMUSICAPI_DEFINE_STRUCT(
     (GMusicApi), Album,
     (std::string, albumArtRef)
     (std::string, albumArtist)
@@ -17,6 +17,7 @@ BOOST_FUSION_DEFINE_STRUCT(
     (std::string, kind)
     (std::string, name)
     (int, year)
+    (std::vector<GMusicApi::Song>, tracks)
     )
 
 namespace GMusicApi

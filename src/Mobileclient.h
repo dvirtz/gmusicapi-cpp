@@ -6,6 +6,7 @@
 #include "Playlist.h"
 #include "RadioStation.h"
 #include "SearchResults.h"
+#include "Genre.h"
 #include <string>
 #include <vector>
 #include <boost/date_time.hpp>
@@ -68,7 +69,7 @@ public:
     */
     bool login(const std::string& email,
                const std::string& password,
-               const identifier& android_id = identifier()) const;
+               const identifier& android_id = {}) const;
 
     /*!
     Forgets local authentication in this instance.
@@ -395,6 +396,42 @@ public:
                            bool include_albums = true,
                            size_t max_top_tracks = 5,
                            size_t max_rel_artist = 5);
+
+    /*!
+    Retrieves details on an album.
+
+    \param album_id         an All Access album id (hint: they always start with 'B')
+    \param include_tracks   when `true`, fills the `'tracks'` fields
+
+    Using this method without an All Access subscription will always result in
+    CallFailure being raised.
+    */
+    Album get_album_info(const identifier& album_id, bool include_tracks = true);
+
+    /*!
+    Retrieves information about a store track.
+
+    \param store_track_id   an All Access track id (hint: they always start with 'T')
+
+    Using this method without an All Access subscription will always result in
+    CallFailure being raised.
+    */
+    Song get_track_info(const identifier& store_track_id);
+
+    /*!
+    Retrieves information on Google Music genres.
+
+    \param parent_genre_id  If provided, only child genres will be returned. 
+                            By default, all root genres are returned.
+                            If this id is invalid, an empty list will be returned.
+
+    Using this method without an All Access subscription will always result in
+    CallFailure being raised.
+
+    Note that the id can be used with create_station()
+    to seed an All Access radio station.
+    */
+    GenreRange get_genres(const boost::optional<identifier>& parent_genre_id = {});
 };
 
 

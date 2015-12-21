@@ -11,7 +11,7 @@ MSC_RESTORE_WARNINGS
 #include <string>
 #include <vector>
 
-BOOST_FUSION_DEFINE_STRUCT(
+GMUSICAPI_DEFINE_STRUCT(
     (GMusicApi), Song,
     (std::string, comment)
     (std::string, rating)
@@ -42,6 +42,10 @@ BOOST_FUSION_DEFINE_STRUCT(
     (GMusicApi::timestamp, lastModifiedTimestamp)
     (GMusicApi::identifier, clientId)
     (GMusicApi::timestamp, durationMillis)
+    (GMusicApi::identifier, storeId)
+    (bool, trackAvailableForPurchase)
+    (std::string, trackType)
+    (bool, albumAvailableForPurchase)
     )
 
 namespace GMusicApi

@@ -81,9 +81,12 @@ inline void pyConvert(PyObject* pObj, void* storage,
     auto d = bt::extract<bt::dict>(bt::object(hndl));
     auto& s = *new (storage) CType();
     
-    apply(bf::begin(s), bf::end(s), [&d](const std::string& name, auto& member)
+    apply(bf::begin(s), bf::end(s), [&d, &s](const std::string& name, auto& member)
     {
-        getFromDict(d, name, member);
+        if (getFromDict(d, name, member))
+        {
+            s.isInitialized.insert(name);
+        }
     });
 }
 
@@ -210,9 +213,12 @@ struct StructToPyDictConverter
         namespace bf = boost::fusion;
 
         bt::dict d;
-        apply(bf::begin(s), bf::end(s), [&d](const std::string& name, auto& member)
+        apply(bf::begin(s), bf::end(s), [&d, &s](const std::string& name, auto& member)
         {
-            setToDict(d, name, member);
+            if (s.isInitialized.find(name) != s.isInitialized.end())
+            {
+                setToDict(d, name, member);
+            }
         });
 
         return bt::incref(d.ptr());

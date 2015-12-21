@@ -12,7 +12,7 @@ MSC_RESTORE_WARNINGS
 #include "typeConverters.h"
 
 #define DEFINE_SEARCH_HIT_STRUCT(Type, name) \
-BOOST_FUSION_DEFINE_STRUCT( \
+GMUSICAPI_DEFINE_STRUCT( \
     (GMusicApi), Type ## Hit, \
     (GMusicApi:: Type , name ) \
     (bool, best_result) \
@@ -27,7 +27,7 @@ DEFINE_SEARCH_HIT_STRUCT(Playlist, playlist)
 
 #undef DEFINE_SEARCH_HIT_STRUCT
 
-BOOST_FUSION_DEFINE_STRUCT(
+GMUSICAPI_DEFINE_STRUCT(
     (GMusicApi), SearchResults,
     (std::vector<GMusicApi::AlbumHit>, album_hits)
     (std::vector<GMusicApi::ArtistHit>, artist_hits)
