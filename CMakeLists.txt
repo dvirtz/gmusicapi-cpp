@@ -3,7 +3,8 @@ cmake_minimum_required(VERSION 3.1.0)
 project(GMusicApi)
 
 # require C++11 support
-if(DEFINED TRAVIS)
+if("$ENV{TRAVIS}" STREQUAL "true")
+	set(TRAVIS ON)
 	# for some reason, Travis-CI doesn't support CMAKE_CXX_STANDARD variable
 	message(STATUS "on Travis-CI")
 	include(CheckCXXCompilerFlag)
@@ -16,6 +17,7 @@ if(DEFINED TRAVIS)
 else()
 	message(STATUS "not on Travis-CI")
 	set(CMAKE_CXX_STANDARD 14)
+	set(TRAVIS OFF)
 endif()
 
 # always include current dir

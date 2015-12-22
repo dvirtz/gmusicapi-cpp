@@ -39,6 +39,6 @@ install:
 script:
   - mkdir _build
   - cd _build
-  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DGM_U=$GM_U -DGM_P=$GM_P -DTRAVIS=True
-  - make VERBOSE=1
-  - make test ARGS="-V" 
+  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DGM_U=$GM_U -DGM_P=$GM_P
+  - make
+  - make test ARGS="-V || ~/.cache/gmusicapi/log/gmusicapi.log" 

@@ -33,9 +33,11 @@ find_package(PythonInterp REQUIRED)
 
 get_filename_component(PYTHON_PATH ${PYTHON_EXECUTABLE} DIRECTORY)
 
-add_custom_command(TARGET Tester 
-	POST_BUILD 
-	COMMAND ${CMAKE_COMMAND} -E env "PATH=${PYTHON_PATH}" $<TARGET_FILE:Tester>)
+if(NOT(TRAVIS))
+	add_custom_command(TARGET Tester 
+		POST_BUILD 
+		COMMAND ${CMAKE_COMMAND} -E env "PATH=${PYTHON_PATH}" $<TARGET_FILE:Tester>)
+endif()
 
 add_test(NAME RunTests COMMAND Tester)
 
