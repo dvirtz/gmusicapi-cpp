@@ -41,4 +41,4 @@ script:
   - cd _build
   - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DGM_U=$GM_U -DGM_P=$GM_P
   - make
-  - make test ARGS="-V || ~/.cache/gmusicapi/log/gmusicapi.log" 
+  - make test ARGS="-V || cat ~/.cache/gmusicapi/log/gmusicapi.log" 
