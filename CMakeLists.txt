@@ -41,7 +41,6 @@ add_definitions(-DBOOST_ALL_NO_LIB)
 macro(FIND_BOOST_PYTHON)
 find_package(Boost REQUIRED COMPONENTS python ${ARGN})
 find_package(PythonLibs REQUIRED)
-add_definitions(-DBOOST_DEBUG_PYTHON -DBOOST_PYTHON_STATIC_LIB)
 endmacro()
 
 # the following resolves the issue in
@@ -59,6 +58,8 @@ endif()
 include(doxygen.cmake)
 
 enable_testing()
+
+add_definitions(-DBOOST_DEBUG_PYTHON -DBOOST_PYTHON_STATIC_LIB)
 
 add_subdirectory(src)
 add_subdirectory(test)

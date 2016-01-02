@@ -74,8 +74,9 @@ template<typename PyType, typename CType>
 inline void pyConvert(PyObject* pObj, void* storage,
                       typename std::enable_if<std::is_same<PyType, boost::python::dict>::value>::type* = nullptr)
 {
-    namespace bt  = boost::python;
-    namespace bf  = boost::fusion;
+    namespace bt = boost::python;
+    namespace bf = boost::fusion;
+    using PythonHelper::getFromDict;
 
     bt::handle<> hndl(bt::borrowed(pObj));
     auto d = bt::extract<bt::dict>(bt::object(hndl));
@@ -211,6 +212,7 @@ struct StructToPyDictConverter
 	{
         namespace bt = boost::python;
         namespace bf = boost::fusion;
+        using PythonHelper::setToDict;
 
         bt::dict d;
         apply(bf::begin(s), bf::end(s), [&d, &s](const std::string& name, auto& member)

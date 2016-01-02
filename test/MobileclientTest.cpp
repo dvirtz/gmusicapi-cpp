@@ -8,6 +8,7 @@
 #include <boost/range/algorithm.hpp>
 
 using namespace GMusicApi;
+using namespace PythonHelper;
 
 TEST_CASE("Mobileclient constructed", "[Mobileclient]")
 {
@@ -116,9 +117,9 @@ TEST_CASE("Song manipulation", "[Mobileclient]")
 TEST_CASE("can change validate", "[Mobileclient]")
 {
     Mobileclient mc;
-    REQUIRE(mc.validate());
-    mc.set_validate(false);
-    REQUIRE_FALSE(mc.validate());
+    REQUIRE(mc.validate);
+    mc.validate = false;
+    REQUIRE_FALSE(mc.validate);
 }
 
 TEST_CASE("Promoted songs empty", "[Mobileclient][NoAllAccess]")

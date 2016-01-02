@@ -25,7 +25,7 @@ MSC_RESTORE_WARNINGS
 #include <stdexcept>
 #include <set>
 
-namespace GMusicApi
+namespace PythonHelper
 {
 
 inline void printDict(const boost::python::dict& dict)
@@ -115,12 +115,10 @@ auto toVector(const Sequence& range)
 {
     return std::vector<typename Sequence::value_type>(range.begin(), range.end());
 }
-#define GMUSICAPI_DEFINE_STRUCT(NAMESPACE_SEQ, NAME, ATTRIBUTES)    \
-    BOOST_FUSION_DEFINE_STRUCT(NAMESPACE_SEQ, NAME, ATTRIBUTES(std::set<std::string>, isInitialized))
 
-} // namespace GMusicApi
+} // namespace PythonHelper
 
 namespace std
 {
-using GMusicApi::operator<<;
+using PythonHelper::operator<<;
 }

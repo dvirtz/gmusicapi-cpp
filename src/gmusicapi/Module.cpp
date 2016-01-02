@@ -7,51 +7,21 @@
 #include "RadioStation.h"
 #include "SearchResults.h"
 #include <iostream>
+#include <mutex>
 
 namespace GMusicApi
 {
 
-using namespace boost::python;
-
-Module& Module::instance()
-{
-	static Module instance;
-	return instance;
-}
-
 Module::Module()
+    : PythonHelper::ModuleBase<Module>("gmusicapi", gmusicapi_path)
 {
-	// must be called before dealing with python
-	Py_Initialize();
-    // need to be called before dealing with python's datetime
-    PyDateTime_IMPORT;
-
-	try
-	{
-		// add gmusicapi module to path
-		auto sys = import("sys");
-		list path = extract<list>(sys.attr("path"));
-		path.append(gmusicapi_path);
-
-		// import gmusicapi module
-		auto module = import("gmusicapi");
-		m_dict = module.attr("__dict__");
-	}
-	catch (const error_already_set&)
-	{
-		handlePythonException();
-	}
-
-	registerTypeConverters();
-}
-
-
-Module::~Module()
-{
+    registerTypeConverters();
 }
 
 void Module::registerTypeConverters()
 {
+    using namespace boost::python;
+
 	// Python to C++ converters
 	PySequenceToCppContainerConverter<std::vector<std::string>>::registerConverter();
 	PyToCppConverter<str, std::string>::registerConverter();

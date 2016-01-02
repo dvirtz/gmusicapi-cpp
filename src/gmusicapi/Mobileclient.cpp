@@ -8,7 +8,9 @@ namespace py = boost::python;
 namespace GMusicApi
 {
 
-Mobileclient::Mobileclient(bool debug_logging /*= true*/, bool validate /*= true*/, bool verify_ssl /*= true*/)
+Mobileclient::Mobileclient(bool debug_logging /*= true*/, 
+                           bool validate /*= true*/, 
+                           bool verify_ssl /*= true*/)
     : ClientBase("Mobileclient", debug_logging, validate, verify_ssl)
 {}
 

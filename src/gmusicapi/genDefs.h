@@ -26,4 +26,7 @@ using identifier    = std::string;
 using identifiers   = std::vector<identifier>;
 using timestamp     = std::string;
 
+#define GMUSICAPI_DEFINE_STRUCT(NAMESPACE_SEQ, NAME, ATTRIBUTES)    \
+    BOOST_FUSION_DEFINE_STRUCT(NAMESPACE_SEQ, NAME, ATTRIBUTES(std::set<std::string>, isInitialized))
+
 } // namepsace GMusicApi
