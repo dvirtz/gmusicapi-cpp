@@ -60,6 +60,8 @@ TEST_CASE("Song manipulation", "[Mobileclient]")
     mc.login(gm_user, gm_pass);
 
     auto song = mc.get_all_songs(true).front();
+
+    CAPTURE(song);
     
     auto songById = [&mc](const std::string& songId)
     {
@@ -74,15 +76,6 @@ TEST_CASE("Song manipulation", "[Mobileclient]")
 
     SECTION("stream url not empty")
     {
-        //auto registeredDevices = mc.get_registered_devices();
-
-        //auto registeredDeviceIt
-        //    = std::find_if(registeredDevices.begin(), registeredDevices.end(), [](const RegisteredDevice& device)
-        //{
-        //    return device.type == "ANDROID";
-        //});
-        //REQUIRE(registeredDeviceIt != registeredDevices.end());
-        //REQUIRE_FALSE(mc.get_stream_url(songId, registeredDeviceIt->id).empty());
         REQUIRE_FALSE(mc.get_stream_url(songId).empty());
     }
 
@@ -162,8 +155,12 @@ TEST_CASE("Playlists", "[Mobileclient]")
     auto it = findPlaylist(all_playlists_vec);
     REQUIRE(it != all_playlists_vec.end());
 
+    CAPTURE(*it);
+
     auto all_songs = mc.get_all_songs(true);
     auto& song = all_songs.front();
+
+    CAPTURE(song);
     
     auto entry_ids = mc.add_songs_to_playlist(list_id, { song.id });
     REQUIRE(entry_ids.size() == 1);

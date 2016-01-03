@@ -19,11 +19,13 @@ __pragma(warning(pop))
 MSC_DISABLE_WARNINGS
 #include <boost/python.hpp>
 #include <boost/python/stl_iterator.hpp>
+#include <boost/fusion/sequence/io.hpp>
 MSC_RESTORE_WARNINGS
 #include <iostream>
 #include <vector>
 #include <stdexcept>
 #include <set>
+#include <type_traits>
 
 namespace PythonHelper
 {
@@ -95,14 +97,27 @@ inline void handlePythonException()
     throw std::runtime_error(extract<std::string>(formatted));
 }
 
+template<typename T>
+struct is_sequence : public std::false_type {};
+
+template<typename T>
+struct is_sequence<std::vector<T>> : public std::true_type {};
+
+template<typename T>
+struct is_sequence<std::set<T>> : public std::true_type {};
+
 /*!
-print vectors
+print sequences
 */
-template <typename T>
-std::ostream& operator<<(std::ostream& out, const std::vector<T>& v)
+template <typename Sequence>
+inline typename
+boost::enable_if<
+    is_sequence<Sequence>
+    , std::ostream&
+>::type operator<<(std::ostream& out, const Sequence& s)
 {
     out << '[';
-    std::copy(v.begin(), v.end(), std::ostream_iterator<T>(out, ", "));
+    std::copy(s.begin(), s.end(), std::ostream_iterator<typename Sequence::value_type>(out, ", "));
     out << "\b\b]"; // erase last comma
     return out;
 }
