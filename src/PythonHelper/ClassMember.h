@@ -9,13 +9,13 @@ define PythonHelper::ClassBase member variable
 #define CLASS_MEMBER(type, name, parent) \
     struct name##_s \
     { \
-        name##_s(parent##& p) : m_p(p) {} \
-        parent##& m_p; \
+        name##_s(parent & p) : m_p(p) {} \
+        parent & m_p; \
         operator type () const\
         { \
             return m_p.getMember<type>(#name); \
         } \
-        name##_s operator=(const type##& val) \
+        name##_s operator=(const type & val) \
         { \
             m_p.setMember(#name, val); \
             return *this; \
