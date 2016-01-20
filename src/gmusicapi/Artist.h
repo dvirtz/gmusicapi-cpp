@@ -24,9 +24,11 @@ namespace GMusicApi
 inline void registerArtistConverters()
 {
     namespace bp = boost::python;
+    namespace ph = PythonHelper;
+
     // Python to C++ converters
-    PyToCppConverter<bp::dict, Artist>::registerConverter();
-    PySequenceToCppContainerConverter<std::vector<Artist>>::registerConverter();
+    ph::PyToCppConverter<bp::dict, Artist>::registerConverter();
+    ph::PySequenceToCppContainerConverter<std::vector<Artist>>::registerConverter();
 
     // C++ to Python converters
 }

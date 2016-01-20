@@ -18,13 +18,15 @@ namespace GMusicApi
 inline void registerAlbumArtConverters()
 {
     namespace bp = boost::python;
+    namespace ph = PythonHelper;
+
     // Python to C++ converters
-	PyToCppConverter<bp::dict, AlbumArt>::registerConverter();
-    PySequenceToCppContainerConverter<std::vector<AlbumArt>>::registerConverter();
+    ph::PyToCppConverter<bp::dict, AlbumArt>::registerConverter();
+    ph::PySequenceToCppContainerConverter<std::vector<AlbumArt>>::registerConverter();
 
     // C++ to Python converters
-	bp::to_python_converter<std::vector<AlbumArt>, CppContainerToPyListConverter<std::vector<AlbumArt>>>();
-    bp::to_python_converter<AlbumArt, StructToPyDictConverter<AlbumArt>>();
+	bp::to_python_converter<std::vector<AlbumArt>, ph::CppContainerToPyListConverter<std::vector<AlbumArt>>>();
+    bp::to_python_converter<AlbumArt, ph::StructToPyDictConverter<AlbumArt>>();
 }
 
 } // namespace GMusicApi

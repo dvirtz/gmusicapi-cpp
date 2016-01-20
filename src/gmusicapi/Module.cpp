@@ -2,12 +2,11 @@
 #include "RegisteredDevice.h"
 #include "gmusicapiPath.h"
 #include "Song.h"
-#include "typeConverters.h"
 #include "Playlist.h"
 #include "RadioStation.h"
 #include "SearchResults.h"
-#include <iostream>
-#include <mutex>
+#include "Genre.h"
+#include "typeConverters.h"
 
 namespace GMusicApi
 {
@@ -20,20 +19,15 @@ Module::Module()
 
 void Module::registerTypeConverters()
 {
-    using namespace boost::python;
+    namespace bp = boost::python;
+    namespace ph = PythonHelper;
 
-	// Python to C++ converters
-	PySequenceToCppContainerConverter<std::vector<std::string>>::registerConverter();
-	PyToCppConverter<str, std::string>::registerConverter();
+    ph::PyToCppConverter<bp::dict, UploadResult>::registerConverter();
+    ph::PyToCppConverter<bp::tuple, UploadResult::value_type>::registerConverter();
+    ph::PyToCppConverter<bp::tuple, UploadResults>::registerConverter();
+    ph::PyToCppConverter<bp::tuple, DownloadResult>::registerConverter();
 
-	// C++ to Python converters
-	to_python_converter<nullptr_t, NullptrToNoneConverter>();
-	to_python_converter<std::vector<std::string>, CppContainerToPyListConverter<std::vector<std::string>>>();
-    to_python_converter<boost::posix_time::ptime, BoostPTimeToPyDateTimeConverter>();
-    to_python_converter<boost::optional<std::string>, BoostOptionalToPyConverter<std::string>>();
-    to_python_converter<boost::optional<bool>, BoostOptionalToPyConverter<bool>>();
-    to_python_converter<boost::optional<boost::posix_time::ptime>, BoostOptionalToPyConverter<boost::posix_time::ptime>>();
-    to_python_converter<boost::optional<identifiers>, BoostOptionalToPyConverter<identifiers>>();
+    bp::to_python_converter<boost::optional<identifiers>, ph::BoostOptionalToPyConverter<identifiers>>();
 
     //call other registeration methods
     registerSongConverters();
@@ -43,6 +37,7 @@ void Module::registerTypeConverters()
     registerRadioStationConverters();
     registerAlbumConverters();
     registerArtistConverters();
+    registerGenreConverters();
     registerSearchResultsConverters();
 }
 

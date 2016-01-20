@@ -7,11 +7,12 @@ namespace GMusicApi
 
 class Module : public PythonHelper::ModuleBase<Module>
 {
-public:
+protected:
     Module();
 
-private:
-	void registerTypeConverters();
+    void registerTypeConverters();
+
+    friend class PythonHelper::ModuleBase<Module>;
 };
 
 } // namespace GMusicApi

@@ -24,9 +24,12 @@ using GenreRange = GeneratedRange<Genre>;
 inline void registerGenreConverters()
 {
     namespace bp = boost::python;
+    namespace ph = PythonHelper;
+
     // Python to C++ converters
-    PyToCppConverter<bp::dict, Genre>::registerConverter();
-    PySequenceToCppContainerConverter<GenreRange>::registerConverter();
+    ph::PyToCppConverter<bp::dict, Genre>::registerConverter();
+    ph::PySequenceToCppContainerConverter<GenreRange>::registerConverter();
+
     PyGeneratorToGeneratedRangeConverter<Genre>::registerConverter();
 
     // C++ to Python converters

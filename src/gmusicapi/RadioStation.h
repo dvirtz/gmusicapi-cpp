@@ -38,11 +38,14 @@ using RadioStationRange = GeneratedRange<RadioStation>;
 inline void registerRadioStationConverters()
 {
     namespace bp = boost::python;
+    namespace ph = PythonHelper;
+
     // Python to C++ converters
-    PyToCppConverter<bp::dict, RadioStation>::registerConverter();
-    PyToCppConverter<bp::dict, RadioSeed>::registerConverter();
+    ph::PyToCppConverter<bp::dict, RadioStation>::registerConverter();
+    ph::PyToCppConverter<bp::dict, RadioSeed>::registerConverter();
+    ph::PySequenceToCppContainerConverter<RadioStationRange>::registerConverter();
+
     PyGeneratorToGeneratedRangeConverter<RadioStation>::registerConverter();
-    PySequenceToCppContainerConverter<RadioStationRange>::registerConverter();
 
     // C++ to Python converters
 }

@@ -8,10 +8,16 @@ if ((NOT DEFINED GM_U)
 endif()
 
 set(USER_CRED_H userCredentials.h)
-configure_file("${USER_CRED_H}.in" ${CMAKE_CURRENT_BINARY_DIR}/${USER_CRED_H})
+configure_file("${USER_CRED_H}.in" ${USER_CRED_H})
+set(AUDIOTEST_PATH_H audiotestPath.h)
+set(AUDIOTEST_PATH ${CMAKE_CURRENT_SOURCE_DIR}/audiotest_small.mp3)
+if(WIN32)
+	string(REPLACE "/" "\\\\" AUDIOTEST_PATH ${AUDIOTEST_PATH})
+endif()
+configure_file("${AUDIOTEST_PATH_H}.in" ${AUDIOTEST_PATH_H})
 
-set(HEADERS ${CMAKE_CURRENT_BINARY_DIR}/${USER_CRED_H})
-set(SOURCES MobileclientTest.cpp TesterMain.cpp WebclientTester.cpp)
+set(HEADERS ${CMAKE_CURRENT_BINARY_DIR}/${USER_CRED_H} ${CMAKE_CURRENT_BINARY_DIR}/${AUDIOTEST_PATH_H})
+set(SOURCES MobileclientTest.cpp TesterMain.cpp WebclientTester.cpp MusicmanagerTest.cpp)
 
 FIND_BOOST_PYTHON(date_time)
 
@@ -26,6 +32,7 @@ target_include_directories(Tester PUBLIC ${Catch_INCLUDE_DIR}
 
 target_link_libraries(Tester PUBLIC
 	GMusicApi
+	PythonHelper
 	${Boost_LIBRARIES}
 	${PYTHON_LIBRARIES})
 

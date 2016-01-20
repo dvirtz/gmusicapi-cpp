@@ -227,9 +227,9 @@ TEST_CASE("methods throw without AllAccess", "[Mobileclient]")
     Mobileclient mc;
     mc.login(gm_user, gm_pass);
 
-    REQUIRE_THROWS_AS(mc.search_all_access(""), std::runtime_error);
     REQUIRE_THROWS_AS(mc.get_artist_info(""), std::runtime_error);
     REQUIRE_THROWS_AS(mc.get_album_info(""), std::runtime_error);
     REQUIRE_THROWS_AS(mc.get_track_info(""), std::runtime_error);
     REQUIRE_THROWS_AS(mc.get_genres(), std::runtime_error);
+    REQUIRE_THROWS_AS(mc.search_all_access(""), std::runtime_error);
 }

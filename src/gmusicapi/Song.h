@@ -56,15 +56,18 @@ using SongRange = GeneratedRange<Song>;
 inline void registerSongConverters()
 {
     namespace bp = boost::python;
+    namespace ph = PythonHelper;
+
     // Python to C++ converters
-    PySequenceToCppContainerConverter<SongRange>::registerConverter();
+    ph::PySequenceToCppContainerConverter<SongRange>::registerConverter();
+    ph::PyToCppConverter<bp::dict, Song>::registerConverter();
+    ph::PySequenceToCppContainerConverter<std::vector<Song>>::registerConverter();
+
     PyGeneratorToGeneratedRangeConverter<Song>::registerConverter();
-    PyToCppConverter<bp::dict, Song>::registerConverter();
-    PySequenceToCppContainerConverter<std::vector<Song>>::registerConverter();
 
     // C++ to Python converters
-    bp::to_python_converter<std::vector<Song>, CppContainerToPyListConverter<std::vector<Song>>>();
-    bp::to_python_converter<Song, StructToPyDictConverter<Song>>();
+    bp::to_python_converter<std::vector<Song>, ph::CppContainerToPyListConverter<std::vector<Song>>>();
+    bp::to_python_converter<Song, ph::StructToPyDictConverter<Song>>();
 }
 
 } // namespace GMusicApi

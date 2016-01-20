@@ -49,16 +49,19 @@ using PlaylistRange = GeneratedRange<Playlist>;
 inline void registerPlaylistConverters()
 {
     namespace bp = boost::python;
+    namespace ph = PythonHelper;
+
     // Python to C++ converters
-    PyToCppConverter<bp::dict, Playlist>::registerConverter();
-    PySequenceToCppContainerConverter<PlaylistRange>::registerConverter();
+    ph::PyToCppConverter<bp::dict, Playlist>::registerConverter();
+    ph::PySequenceToCppContainerConverter<PlaylistRange>::registerConverter();
+    ph::PyToCppConverter<bp::dict, PlaylistEntry>::registerConverter();
+    ph::PySequenceToCppContainerConverter<std::vector<PlaylistEntry>>::registerConverter();
+
     PyGeneratorToGeneratedRangeConverter<Playlist>::registerConverter();
-    PyToCppConverter<bp::dict, PlaylistEntry>::registerConverter();
-    PySequenceToCppContainerConverter<std::vector<PlaylistEntry>>::registerConverter();
 
     // C++ to Python converters
-    bp::to_python_converter<PlaylistEntry, StructToPyDictConverter<PlaylistEntry>>();
-    bp::to_python_converter<boost::optional<PlaylistEntry>, BoostOptionalToPyConverter<PlaylistEntry>>();
+    bp::to_python_converter<PlaylistEntry, ph::StructToPyDictConverter<PlaylistEntry>>();
+    bp::to_python_converter<boost::optional<PlaylistEntry>, ph::BoostOptionalToPyConverter<PlaylistEntry>>();
 }
 
 } // namespace GMusicApi

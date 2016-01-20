@@ -30,3 +30,5 @@
 # Build folder
 _build
 /src/gmusicapi-clang
+/src/http
+/src/oauth

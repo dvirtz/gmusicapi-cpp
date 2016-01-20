@@ -6,10 +6,10 @@ configure_file("${GMUSICAPI_PATH_H}.in" ${CMAKE_CURRENT_BINARY_DIR}/${GMUSICAPI_
 set(HEADERS Module.h ClientBase.h Mobileclient.h Webclient.h Song.h 
 	GeneratedRange.h AlbumArt.h SongQuality.h RegisteredDevice.h 
 	genDefs.h Playlist.h RadioStation.h Album.h Artist.h SearchResults.h
-	Genre.h Musicmanager.h
+	Genre.h Musicmanager.h Clients.h
 	${CMAKE_CURRENT_BINARY_DIR}/${GMUSICAPI_PATH_H})
 
-set(SOURCES Module.cpp Mobileclient.cpp Webclient.cpp ClientBase.cpp Musicmanager.cpp)
+set(SOURCES Module.cpp Mobileclient.cpp Webclient.cpp ClientBase.cpp Musicmanager.cpp Clients.cpp)
 
 add_library(GMusicApi ${SOURCES} ${HEADERS} ${INC_FILES})
 

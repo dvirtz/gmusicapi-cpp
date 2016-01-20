@@ -3,8 +3,6 @@
 #include <iostream>
 #include <regex>
 
-namespace py = boost::python;
-
 namespace GMusicApi
 {
 
@@ -18,8 +16,8 @@ bool Mobileclient::login(const std::string & email, const std::string & password
 {
     if (android_id.empty())
     {
-        auto fromMacAddress = getMember("FROM_MAC_ADDRESS");
-        return callMethod<bool>("login", email, password, fromMacAddress);
+        namespace bp = boost::python;
+        return callMethod<bool>("login", email, password, getMember<bp::object>("FROM_MAC_ADDRESS"));
     }
 
     return callMethod<bool>("login", email, password, android_id);
@@ -164,7 +162,6 @@ identifier Mobileclient::add_aa_track(const identifier& aa_song_id)
 {
     return callMethod<identifier>("add_aa_track", aa_song_id);
 }
-
 
 Artist Mobileclient::get_artist_info(const identifier& artist_id,
                                      bool include_albums,

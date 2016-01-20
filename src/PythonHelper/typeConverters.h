@@ -12,43 +12,71 @@ MSC_DISABLE_WARNINGS
 #include <datetime.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/optional.hpp>
+#include <boost/variant.hpp>
 MSC_RESTORE_WARNINGS
+#include <tuple>
 #include <type_traits>
 
 // convert python types to user defined C++ types
 // based on https://misspent.wordpress.com/2009/09/27/how-to-write-boost-python-converters/
 
-namespace GMusicApi
+namespace PythonHelper
 {
 
-template<typename PyType>
-bool isPyType(PyObject* pObj);
+template<typename PyType, typename CType>
+struct PyTypeChecker {};
 
-template<>
-inline bool isPyType<boost::python::dict>(PyObject* pObj)
+template<typename CType>
+struct PyTypeChecker<boost::python::dict, CType>
 {
-	return PyDict_Check(pObj);
-}
+    bool operator()(PyObject* pObj)
+    {
+        return PyDict_Check(pObj);
+    }
+};
 
-template<>
-inline bool isPyType<boost::python::str>(PyObject* pObj)
+template<typename CType>
+struct PyTypeChecker<boost::python::str, CType>
 {
-	return PyString_Check(pObj)
-		|| PyUnicode_Check(pObj);
-}
+    bool operator()(PyObject* pObj)
+    {
+        return PyString_Check(pObj)
+            || PyUnicode_Check(pObj);
+    }
+};
+
+template<typename CType>
+struct PyTypeChecker<boost::python::tuple, CType>
+{
+    bool operator()(PyObject* pObj)
+    {
+        return PyTuple_Check(pObj);
+    }
+};
+
+template<typename T, typename S>
+struct PyTypeChecker<boost::python::tuple, std::pair<T,S>>
+{
+    bool operator()(PyObject* pObj)
+    {
+        return PyTuple_Check(pObj)
+            && PyTuple_Size(pObj) == 2;
+    }
+};
 
 // add ability for preprocessing the python type
 // before converting to C type
 template<typename PyType, typename CType>
-inline void pyConvert(PyObject* pObj, void* storage,
-                      typename std::enable_if<!std::is_same<PyType, boost::python::str>::value
-                      && !std::is_same<PyType, boost::python::dict>::value>::type* = nullptr)
+struct PyConverter
 {
-	using namespace boost::python;
+    void operator()(PyObject* pObj, void* storage)
+    {
+        using namespace boost::python;
 
-	handle<> hndl(borrowed(pObj));
-	new (storage) CType(extract<PyType>(object(hndl)));
-}
+        handle<> hndl(borrowed(pObj));
+        new (storage) CType(extract<PyType>(object(hndl)));
+    }
+};
 
 template <typename First, typename F>
 inline void
@@ -70,39 +98,102 @@ apply(const First& first, const Last& last, F f)
     apply(boost::fusion::next(first), last, f);
 }
 
-template<typename PyType, typename CType>
-inline void pyConvert(PyObject* pObj, void* storage,
-                      typename std::enable_if<std::is_same<PyType, boost::python::dict>::value>::type* = nullptr)
+template<typename CType>
+struct PyConverter<boost::python::dict, CType>
 {
-    namespace bt = boost::python;
-    namespace bf = boost::fusion;
-    using PythonHelper::getFromDict;
-
-    bt::handle<> hndl(bt::borrowed(pObj));
-    auto d = bt::extract<bt::dict>(bt::object(hndl));
-    auto& s = *new (storage) CType();
-    
-    apply(bf::begin(s), bf::end(s), [&d, &s](const std::string& name, auto& member)
+    void operator()(PyObject* pObj, void* storage)
     {
-        if (getFromDict(d, name, member))
+        namespace bp = boost::python;
+        namespace bf = boost::fusion;
+        using PythonHelper::getFromDict;
+
+        bp::handle<> hndl(bp::borrowed(pObj));
+        auto d = bp::extract<bp::dict>(bp::object(hndl));
+        auto& s = *new (storage) CType();
+
+        apply(bf::begin(s), bf::end(s), [&d, &s](const std::string& name, auto& member)
         {
-            s.isInitialized.insert(name);
-        }
-    });
-}
-
-template<typename PyType, typename CType>
-inline void pyConvert(PyObject* pObj, void* storage,
-                      typename std::enable_if<std::is_same<PyType, boost::python::str>::value>::type* = nullptr)
-{
-    if (PyUnicode_Check(pObj))
-    {
-        pObj = PyUnicode_AsUTF8String(pObj);
+            if (getFromDict(d, name, member))
+            {
+                s.isInitialized.insert(name);
+            }
+        });
     }
+};
 
-    new (storage) std::string(PyString_AsString(pObj));
+template<typename Key, typename Value>
+struct PyConverter<boost::python::dict, std::map<Key, Value>>
+{
+    void operator()(PyObject* pObj, void* storage)
+    {
+        namespace bp = boost::python;
+
+        bp::handle<> hndl(bp::borrowed(pObj));
+        bp::dict d = bp::extract<bp::dict>(bp::object(hndl));
+
+        using it = bp::stl_input_iterator<typename std::map<Key, Value>::value_type>;
+
+        new(storage)std::map<Key, Value>(it(d.iteritems()), it());
+    }
+};
+
+template<>
+struct PyConverter<boost::python::str, std::string>
+{
+    void operator()(PyObject* pObj, void* storage)
+    {
+        if (PyUnicode_Check(pObj))
+        {
+            pObj = PyUnicode_AsUTF8String(pObj);
+        }
+
+        new (storage) std::string(PyString_AsString(pObj));
+    }
+};
+
+template<int...> struct seq {};
+template<int N, int... S> struct gens : gens<N - 1, N - 1, S...> {};
+template<int... S> struct gens<0, S...> { typedef seq<S...> type; };
+
+template <typename... Ts>
+inline std::tuple<Ts...> createTuple(const boost::python::tuple& t)
+{
+    return createTuple<Ts...>(t, typename gens<sizeof...(Ts)>::type());
 }
 
+template<typename... Ts, int... S>
+inline std::tuple<Ts...> createTuple(const boost::python::tuple& t, seq<S...>)
+{
+    return std::make_tuple((static_cast<Ts>(boost::python::extract<Ts>(t[S])))...);
+}
+
+template<typename... Ts>
+struct PyConverter<boost::python::tuple, std::tuple<Ts...>>
+{
+    void operator()(PyObject* pObj, void* storage)
+    {
+        namespace bp = boost::python;
+
+        bp::handle<> hndl(bp::borrowed(pObj));
+        bp::tuple t = bp::extract<bp::tuple>(bp::object(hndl));
+
+        new(storage) std::tuple<Ts...>(createTuple<Ts...>(t));
+    }
+};
+
+template<typename T, typename S>
+struct PyConverter<boost::python::tuple, std::pair<T, S>>
+{
+    void operator()(PyObject* pObj, void* storage)
+    {
+        namespace bp = boost::python;
+
+        bp::handle<> hndl(bp::borrowed(pObj));
+        bp::tuple t = bp::extract<bp::tuple>(bp::object(hndl));
+
+        new(storage) std::pair<T, S>(bp::extract<T>(t[0]), bp::extract<S>(t[1]));
+    }
+};
 
 template<typename PyType, typename CType>
 struct PyToCppConverter
@@ -117,7 +208,8 @@ struct PyToCppConverter
 
 	static void* convertible(PyObject* pObj)
 	{
-		if (!isPyType<PyType>(pObj))
+        PyTypeChecker<PyType, CType> checker;
+		if (!checker(pObj))
 			return nullptr;
 
 		return pObj;
@@ -132,7 +224,8 @@ struct PyToCppConverter
 			(boost::python::converter::rvalue_from_python_storage<CType>*)
 			data)->storage.bytes;
 
-		pyConvert<PyType, CType>(pObj, storage);
+        PyConverter<PyType, CType> converter;
+        converter(pObj, storage);
 
 		// Stash the memory chunk pointer for later use by boost.python
 		data->convertible = storage;
@@ -210,11 +303,11 @@ struct StructToPyDictConverter
 {
 	static PyObject* convert(const Struct& s)
 	{
-        namespace bt = boost::python;
+        namespace bp = boost::python;
         namespace bf = boost::fusion;
         using PythonHelper::setToDict;
 
-        bt::dict d;
+        bp::dict d;
         apply(bf::begin(s), bf::end(s), [&d, &s](const std::string& name, auto& member)
         {
             if (s.isInitialized.find(name) != s.isInitialized.end())
@@ -223,7 +316,7 @@ struct StructToPyDictConverter
             }
         });
 
-        return bt::incref(d.ptr());
+        return bp::incref(d.ptr());
 	}
 };
 
@@ -234,6 +327,8 @@ struct BoostPTimeToPyDateTimeConverter
         auto d = time.date();
         auto tod = time.time_of_day();
         auto usec = static_cast<int>(tod.total_microseconds() % 1000000);
+
+        PyDateTime_IMPORT;
         return PyDateTime_FromDateAndTime(static_cast<int>(d.year()), 
                                           static_cast<int>(d.month()), 
                                           static_cast<int>(d.day()), 
@@ -259,4 +354,25 @@ struct BoostOptionalToPyConverter
     }
 };
 
-} // namepsace GMusicApi
+/*!
+convert boost::variant to python
+from https://blind.guru/boost_python-and-boost_variant.html
+*/
+template<typename... Ts>
+struct BoostVariantToPyConverter : boost::static_visitor<PyObject *>
+{
+    static result_type convert(const boost::variant<Ts...>& v)
+    {
+        return boost::apply_visitor(BoostVariantToPyConverter(), v);
+    }
+
+    template<typename T>
+    result_type operator()(T const &t) const
+    {
+        namespace bp = boost::python;
+        return boost::python::incref(bp::converter::arg_to_python<T>(t).get());
+    }
+};
+
+
+} // namepsace PythonHelper
