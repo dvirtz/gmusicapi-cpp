@@ -8,6 +8,7 @@ MSC_DISABLE_WARNINGS
 #include <boost/fusion/include/for_each.hpp>
 #include <boost/fusion/include/at_c.hpp>
 #include <boost/fusion/include/iter_fold.hpp>
+#include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/mpl/range_c.hpp>
 #include <datetime.h>
 #include <boost/date_time/posix_time/posix_time.hpp>

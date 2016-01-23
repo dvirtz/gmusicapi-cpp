@@ -26,7 +26,7 @@ struct ClassMember
 
     operator T() const
     {
-        return m_p.getMember<T>(m_name);
+        return m_p.template getMember<T>(m_name);
     }
 
     ClassMember& operator=(const T& val)
