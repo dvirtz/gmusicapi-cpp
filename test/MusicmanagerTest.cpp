@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "Musicmanager.h"
 #include "Clients.h"
-#include "audiotestPath.h"
+#include "testFiles.h"
 #include "Mobileclient.h"
 #include "userCredentials.h"
 #include <regex>
@@ -36,7 +36,7 @@ TEST_CASE("Upload and Download", "[Musicmanager]")
     mc.login(gm_user, gm_pass);
 
     UploadResult uploaded, matched, failed;
-    std::tie(uploaded, matched, failed) = mm.upload({ audiotestPath });
+    std::tie(uploaded, matched, failed) = mm.upload({ audioTestPath });
 
     // extract song id from string
     auto songId = [](const std::string& str)
@@ -52,19 +52,19 @@ TEST_CASE("Upload and Download", "[Musicmanager]")
     // delete the song if it exists already because a previous test failed
     if (failed.size() == 1)
     {
-        auto it = failed.find(audiotestPath);
+        auto it = failed.find(audioTestPath);
         REQUIRE(it != failed.end());
         
         mc.delete_songs({ songId(it->second) });
 
-        std::tie(uploaded, matched, failed) = mm.upload({ audiotestPath });
+        std::tie(uploaded, matched, failed) = mm.upload({ audioTestPath });
     }
 
     REQUIRE(uploaded.size() == 1);
     REQUIRE(matched.size() == 0);
     REQUIRE(failed.size() == 0);
 
-    auto it = uploaded.find(audiotestPath);
+    auto it = uploaded.find(audioTestPath);
     REQUIRE(it != uploaded.end());
 
     auto id = it->second;
@@ -78,7 +78,8 @@ TEST_CASE("Upload and Download", "[Musicmanager]")
 
     REQUIRE(itt != uploadedSongs.end());
 
-    std::string filename, audio;
+    std::string filename;
+    BinaryStream audio;
     std::tie(filename, audio) = mm.download_song(id);
     REQUIRE(filename.empty() == false);
     REQUIRE(audio.empty() == false);

@@ -7,6 +7,7 @@
 #include "SearchResults.h"
 #include "Genre.h"
 #include "typeConverters.h"
+#include "SharedPlaylistInfo.h"
 
 namespace GMusicApi
 {
@@ -26,6 +27,7 @@ void Module::registerTypeConverters()
     ph::PyToCppConverter<bp::tuple, UploadResult::value_type>::registerConverter();
     ph::PyToCppConverter<bp::tuple, UploadResults>::registerConverter();
     ph::PyToCppConverter<bp::tuple, DownloadResult>::registerConverter();
+    ph::PyToCppConverter<bp::str, BinaryStream>::registerConverter();
 
     bp::to_python_converter<boost::optional<identifiers>, ph::BoostOptionalToPyConverter<identifiers>>();
 
@@ -39,6 +41,7 @@ void Module::registerTypeConverters()
     registerArtistConverters();
     registerGenreConverters();
     registerSearchResultsConverters();
+    registerSharedPlaylistInfoConverters();
 }
 
 } // namespace GMusicApi

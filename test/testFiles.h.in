@@ -1,0 +1,5 @@
+#pragma once
+#include <string>
+
+const std::string audioTestPath = "@AUDIO_TEST_PATH@";
+const std::string imageTestPath = "@IMAGE_TEST_PATH@";

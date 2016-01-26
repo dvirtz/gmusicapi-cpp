@@ -186,7 +186,7 @@ public:
     SongRange get_uploaded_songs(bool incremental = false);
 
     /*!
-    Returns a tuple ``(u'suggested_filename', 'audio_bytestring')``.
+    Returns a pair `{'suggested_filename', 'audio_bytestring'}`.
     The filename will be what the Music Manager would save the file as,
     presented as a unicode string with the proper file extension.
     You don't have to use it if you don't want.
@@ -195,13 +195,13 @@ public:
 
     To write the song to disk, use something like:
 
-        filename, audio = mm.download_song(an_id)
+        std::tie(filename, audio) = mm.download_song(an_id);
 
         # if open() throws a UnicodeEncodeError, either use
         #   filename.encode('utf-8')
         # or change your default encoding to something sane =)
-        with open(filename, 'wb') as f:
-            f.write(audio)
+        std::ofstream file(filename, std::ios::out | std::ios::binary);
+        file.write(audio.data(), audio.size());
 
     Unlike with Webclient::get_song_download_info() there is no download limit 
     when using this interface.

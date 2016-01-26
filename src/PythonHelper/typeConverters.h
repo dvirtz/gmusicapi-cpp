@@ -152,6 +152,21 @@ struct PyConverter<boost::python::str, std::string>
     }
 };
 
+template<>
+struct PyConverter<boost::python::str, std::vector<char>>
+{
+    void operator()(PyObject* pObj, void* storage)
+    {
+        if (PyUnicode_Check(pObj))
+        {
+            pObj = PyUnicode_AsUTF8String(pObj);
+        }
+
+        auto pChar = PyString_AsString(pObj);
+        new (storage) std::vector<char>(pChar, pChar + PyObject_Length(pObj));
+    }
+};
+
 template<int...> struct seq {};
 template<int N, int... S> struct gens : gens<N - 1, N - 1, S...> {};
 template<int... S> struct gens<0, S...> { typedef seq<S...> type; };

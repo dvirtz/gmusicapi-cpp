@@ -27,8 +27,19 @@ using identifier        = std::string;
 using identifiers       = std::vector<identifier>;
 using timestamp         = std::string;
 using UploadResult      = std::map<std::string, std::string>;
+/*!
+uploaded, matched, not_uploaded
+*/
 using UploadResults     = std::tuple<UploadResult, UploadResult, UploadResult>;
-using DownloadResult    = std::pair<std::string, std::string>;
+using BinaryStream      = std::vector<char>;
+/*!
+first is suggested filename, second is audio binary stream
+*/
+using DownloadResult    = std::pair<std::string, BinaryStream>;
+/*!
+first is <url>, second is <download count>
+*/
+using DownloadInfo      = std::pair<std::string, int>;
 
 #define GMUSICAPI_DEFINE_STRUCT(NAMESPACE_SEQ, NAME, ATTRIBUTES)    \
     BOOST_FUSION_DEFINE_STRUCT(NAMESPACE_SEQ, NAME, ATTRIBUTES(std::set<std::string>, isInitialized))
