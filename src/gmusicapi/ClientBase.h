@@ -1,6 +1,5 @@
 #pragma once
 #include "ClassBase.h"
-#include "ClassMember.h"
 
 namespace GMusicApi
 {
