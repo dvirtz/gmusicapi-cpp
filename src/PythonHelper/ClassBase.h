@@ -4,21 +4,20 @@
 namespace PythonHelper
 {
 
-template<typename Module>
 class ClassBase
 {
 public:
     template<typename... Args>
-    ClassBase(const std::string& name, Args&&... args);
-    
+    ClassBase(ModuleBase& module, const std::string& name, Args&&... args);
+
     virtual ~ClassBase() = default;
 
 protected:
 
     template<typename Ret, typename ...Args>
-    static Ret callStaticMethod(const std::string & className,
-                                const std::string& methodName, 
-                                Args&&... args);
+    Ret callStaticMethod(const std::string & className,
+                         const std::string& methodName,
+                         Args&&... args) const;
 
     template<typename Ret, typename ...Args>
     Ret callMethod(const std::string& methodName, Args&&... args) const;
@@ -29,30 +28,26 @@ protected:
     template <typename T>
     void setMember(const std::string& memberName, const T& value);
 
-    static Module& module();
-
+    ModuleBase&             m_module;
     std::string             m_name;
     boost::python::object   m_object;
 };
 
-template<typename Module>
 template<typename ...Args>
-inline ClassBase<Module>::ClassBase(const std::string & name, Args && ...args)
-    : m_name(name), m_object(module().createObject(name, std::forward<Args>(args)...))
+inline ClassBase::ClassBase(ModuleBase& module, const std::string & name, Args && ...args)
+    : m_module(module), m_name(name), m_object(module.createObject(name, std::forward<Args>(args)...))
 {}
 
-template<typename Module>
 template<typename Ret, typename ...Args>
-inline Ret ClassBase<Module>::callStaticMethod(const std::string & className, 
-                                               const std::string & methodName, 
-                                               Args && ...args)
+inline Ret ClassBase::callStaticMethod(const std::string & className,
+                                       const std::string & methodName,
+                                       Args && ...args) const
 {
-    return module().callStaticMethod<Ret>(className, methodName, std::forward<Args>(args)...);
+    return m_module.callStaticMethod<Ret>(className, methodName, std::forward<Args>(args)...);
 }
 
-template<typename Module>
 template<typename Ret, typename ...Args>
-inline Ret ClassBase<Module>::callMethod(const std::string& methodName, Args&& ...args) const
+inline Ret ClassBase::callMethod(const std::string& methodName, Args&& ...args) const
 {
     namespace bp = boost::python;
     try
@@ -65,9 +60,8 @@ inline Ret ClassBase<Module>::callMethod(const std::string& methodName, Args&& .
     }
 }
 
-template<typename Module>
 template<typename T>
-inline T ClassBase<Module>::getMember(const std::string & memberName) const
+inline T ClassBase::getMember(const std::string & memberName) const
 {
     namespace bp = boost::python;
     try
@@ -80,9 +74,8 @@ inline T ClassBase<Module>::getMember(const std::string & memberName) const
     }
 }
 
-template<typename Module>
 template<typename T>
-inline void ClassBase<Module>::setMember(const std::string & memberName, const T & value)
+inline void ClassBase::setMember(const std::string & memberName, const T & value)
 {
     namespace bp = boost::python;
     try
@@ -93,12 +86,6 @@ inline void ClassBase<Module>::setMember(const std::string & memberName, const T
     {
         handlePythonException();
     }
-}
-
-template<typename Module>
-inline Module & ClassBase<Module>::module()
-{
-    return Module::instance();
 }
 
 } // namespace PythonHelper

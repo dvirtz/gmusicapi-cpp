@@ -36,7 +36,8 @@ public:
                             Be wary of using this option; it's almost always better to fix the machine's SSL
                             configuration than to ignore errors.
     */
-    Webclient(bool debug_logging = true,
+    Webclient(Module& module,
+              bool debug_logging = true,
               bool validate = true,
               bool verify_ssl = true);
 

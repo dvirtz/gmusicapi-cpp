@@ -1,18 +1,20 @@
 #pragma once
 
 #include "ModuleBase.h"
+#include <mutex>
 
 namespace GMusicApi
 {
 
-class Module : public PythonHelper::ModuleBase<Module>
+class Module : public PythonHelper::ModuleBase
 {
-protected:
+public:
     Module();
 
-    void registerTypeConverters();
+protected:
+    static void registerTypeConverters();
 
-    friend class PythonHelper::ModuleBase<Module>;
+    static std::once_flag m_onceFlag;
 };
 
 } // namespace GMusicApi

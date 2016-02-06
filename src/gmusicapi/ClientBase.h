@@ -1,15 +1,16 @@
 #pragma once
-#include "Module.h"
 #include "ClassBase.h"
 #include "ClassMember.h"
 
 namespace GMusicApi
 {
 
+class Module;
+
 /*!
 Factors out common client setup.
 */
-class ClientBase : public PythonHelper::ClassBase<Module>
+class ClientBase : public PythonHelper::ClassBase
 {
 public:
     /*!
@@ -41,7 +42,8 @@ public:
                         Be wary of using this option; it's almost always better to fix the machine's SSL
                         configuration than to ignore errors.
     */
-    ClientBase(const std::string& client_name, 
+    ClientBase(Module& module,
+               const std::string& client_name, 
                bool debug_logging = true, 
                bool validate = true, 
                bool verify_ssl = true);
@@ -49,7 +51,9 @@ public:
     /*!
     get server response validation status
     */
-    CLASS_MEMBER(bool, validate, ClientBase);
+    bool validate();
+
+    void setValidate(bool val);
 };
 
 } // namespace GMusicApi

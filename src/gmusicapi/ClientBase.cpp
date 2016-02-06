@@ -1,13 +1,25 @@
 #include "ClientBase.h"
+#include "Module.h"
 
 namespace GMusicApi
 {
-ClientBase::ClientBase(const std::string & client_name, 
+ClientBase::ClientBase(Module& module,
+                       const std::string & client_name,
                        bool debug_logging, 
                        bool validate, 
                        bool verify_ssl)
-    : PythonHelper::ClassBase<Module>(client_name, debug_logging, validate, verify_ssl)
+    : PythonHelper::ClassBase(module, client_name, debug_logging, validate, verify_ssl)
 {
+}
+
+bool ClientBase::validate()
+{
+    return getMember<bool>("validate");
+}
+
+void ClientBase::setValidate(bool val)
+{
+    setMember("validate", val);
 }
 
 } // namespace GMusicApi

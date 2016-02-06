@@ -3,10 +3,11 @@
 namespace GMusicApi
 {
 
-Musicmanager::Musicmanager(bool debug_logging, 
+Musicmanager::Musicmanager(Module& module,
+                           bool debug_logging,
                            bool validate, 
                            bool verify_ssl)
-    : ClientBase("Musicmanager", debug_logging, validate, verify_ssl)
+    : ClientBase(module, "Musicmanager", debug_logging, validate, verify_ssl)
 {}
 
 void Musicmanager::perform_oauth(const boost::optional<std::string>& storage_filepath, 
@@ -15,7 +16,20 @@ void Musicmanager::perform_oauth(const boost::optional<std::string>& storage_fil
     callStaticMethod<void>("Musicmanager", "perform_oauth", storage_filepath, open_browser);
 }
 
-bool Musicmanager::login(const std::string& oauth_credentials, 
+bool Musicmanager::login(const boost::optional<std::string>& oauth_credentials, 
+                         const boost::optional<identifier>& uploader_id, 
+                         const boost::optional<std::string>& uploader_name)
+{
+    auto credentials = oauth_credentials ? *oauth_credentials : []()
+    {
+        Clients c;
+        return c.OAUTH_FILEPATH();
+    }();
+
+    return callMethod<bool>("login", oauth_credentials, uploader_id, uploader_name);
+}
+
+bool Musicmanager::login(const OAuth2Credentials & oauth_credentials, 
                          const boost::optional<identifier>& uploader_id, 
                          const boost::optional<std::string>& uploader_name)
 {

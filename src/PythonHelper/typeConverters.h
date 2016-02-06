@@ -163,7 +163,7 @@ struct PyConverter<boost::python::str, std::vector<char>>
         }
 
         auto pChar = PyString_AsString(pObj);
-        new (storage) std::vector<char>(pChar, pChar + PyObject_Length(pObj));
+        new (storage) std::vector<char>(pChar, std::next(pChar, PyObject_Length(pObj)));
     }
 };
 
@@ -236,9 +236,8 @@ struct PyToCppConverter
 						  boost::python::converter::rvalue_from_python_stage1_data* data)
 	{
 		// Grab pointer to memory into which to construct the new CType
-		void* storage = (
-			(boost::python::converter::rvalue_from_python_storage<CType>*)
-			data)->storage.bytes;
+		void* storage = 
+            reinterpret_cast<boost::python::converter::rvalue_from_python_storage<CType>*>(data)->storage.bytes;
 
         PyConverter<PyType, CType> converter;
         converter(pObj, storage);

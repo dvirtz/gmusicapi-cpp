@@ -1,5 +1,5 @@
-set(HEADERS ModuleBase.h ClassBase.h typeConverters.h utility.h ClassMember.h Initializer.h)
-set(SOURCES Initializer.cpp)
+set(HEADERS ModuleBase.h ClassBase.h typeConverters.h utility.h Initializer.h)
+set(SOURCES ModuleBase.cpp Initializer.cpp)
 
 FIND_BOOST_PYTHON()
 

@@ -1,42 +1,58 @@
 #include "catch.hpp"
+#include "TestFixture.h"
 #include "Musicmanager.h"
-#include "Clients.h"
 #include "testFiles.h"
 #include "Mobileclient.h"
 #include "userCredentials.h"
+#include "gmusicapiPath.h"
 #include <regex>
 
 using namespace GMusicApi;
 
-TEST_CASE("Musicmanager constructed", "[Musicmanager]")
+class MusicmanagerTestFixture : public TestFixture
 {
-    REQUIRE_NOTHROW(Musicmanager mm);
+    class MusicmanagerProtocol : public PythonHelper::ModuleBase
+    {
+    public:
+        MusicmanagerProtocol()
+            : PythonHelper::ModuleBase("gmusicapi.protocol.musicmanager", gmusicapi_path)
+        {}
+
+        OAuth2Credentials credentials_from_refresh_token(const std::string& token)
+        {
+            return callGlobalMethod<OAuth2Credentials>("credentials_from_refresh_token", token);
+        }
+    };
+
+public:
+    MusicmanagerTestFixture()
+        : m_mm(m_module)
+    {
+        m_credentials = m_protocol.credentials_from_refresh_token(gm_refresh);
+    }
+ 
+
+protected:
+    Musicmanager m_mm;
+    MusicmanagerProtocol m_protocol;
+    OAuth2Credentials m_credentials;
+};
+
+TEST_CASE_METHOD(MusicmanagerTestFixture, "Musicmanager login", "[Musicmanager]")
+{
+    REQUIRE(m_mm.login(m_credentials));
+    REQUIRE(m_mm.logout());
 }
 
-TEST_CASE("OAUTH_FILEPATH is not empty", "[Musicmanager]")
+TEST_CASE_METHOD(MusicmanagerTestFixture, "Upload and Download", "[Musicmanager]")
 {
-    std::string oauthFilepath;
-    REQUIRE_NOTHROW(oauthFilepath = Clients::instance().OAUTH_FILEPATH);
-    REQUIRE_FALSE(oauthFilepath.empty());
-}
+    m_mm.login(m_credentials);
 
-TEST_CASE("Login logout", "[Musicmanager]")
-{
-    Musicmanager mm;
-    REQUIRE(mm.login());
-    REQUIRE(mm.logout());
-}
-
-TEST_CASE("Upload and Download", "[Musicmanager]")
-{
-    Musicmanager mm;
-    mm.login();
-
-    Mobileclient mc;
+    Mobileclient mc(m_module);
     mc.login(gm_user, gm_pass);
 
     UploadResult uploaded, matched, failed;
-    std::tie(uploaded, matched, failed) = mm.upload({ audioTestPath });
+    std::tie(uploaded, matched, failed) = m_mm.upload({ audioTestPath });
 
     // extract song id from string
     auto songId = [](const std::string& str)
@@ -57,7 +73,7 @@ TEST_CASE("Upload and Download", "[Musicmanager]")
         
         mc.delete_songs({ songId(it->second) });
 
-        std::tie(uploaded, matched, failed) = mm.upload({ audioTestPath });
+        std::tie(uploaded, matched, failed) = m_mm.upload({ audioTestPath });
     }
 
     REQUIRE(uploaded.size() == 1);
@@ -69,7 +85,7 @@ TEST_CASE("Upload and Download", "[Musicmanager]")
 
     auto id = it->second;
 
-    auto uploadedSongs = PythonHelper::toVector(mm.get_uploaded_songs());
+    auto uploadedSongs = PythonHelper::toVector(m_mm.get_uploaded_songs());
 
     auto itt = std::find_if(uploadedSongs.begin(), uploadedSongs.end(), [id](const Song& song)
     {
@@ -80,7 +96,7 @@ TEST_CASE("Upload and Download", "[Musicmanager]")
 
     std::string filename;
     BinaryStream audio;
-    std::tie(filename, audio) = mm.download_song(id);
+    std::tie(filename, audio) = m_mm.download_song(id);
     REQUIRE(filename.empty() == false);
     REQUIRE(audio.empty() == false);
 

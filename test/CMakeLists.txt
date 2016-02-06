@@ -18,8 +18,10 @@ if(WIN32)
 endif()
 configure_file("${TEST_FILES_H}.in" ${TEST_FILES_H})
 
+set(CONFIGURE_FILES ${USER_CRED_H}.in ${TEST_FILES_H}.in)
+source_group("Configure Files" FILES ${CONFIGURE_FILES})
 set(HEADERS ${CMAKE_CURRENT_BINARY_DIR}/${USER_CRED_H} ${CMAKE_CURRENT_BINARY_DIR}/${TEST_FILES_H})
-set(SOURCES MobileclientTest.cpp TesterMain.cpp WebclientTester.cpp MusicmanagerTest.cpp)
+set(SOURCES MobileclientTest.cpp TesterMain.cpp WebclientTester.cpp MusicmanagerTest.cpp ClientsTest.cpp)
 
 FIND_BOOST_PYTHON(date_time)
 
@@ -27,7 +29,7 @@ if(MSVC)
 	set_source_files_properties(TesterMain.cpp PROPERTIES COMPILE_FLAGS /wd4702)
 endif()
 
-add_executable(Tester ${HEADERS} ${SOURCES} ${TEST_FILES_H}.in)
+add_executable(Tester ${HEADERS} ${SOURCES} ${CONFIGURE_FILES})
 
 target_include_directories(Tester PUBLIC ${Catch_INCLUDE_DIR} 
 	$<TARGET_PROPERTY:GMusicApi,INTERFACE_INCLUDE_DIRECTORIES>)

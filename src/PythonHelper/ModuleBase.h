@@ -5,7 +5,6 @@ MSC_DISABLE_WARNINGS
 #include <boost/python/detail/wrap_python.hpp>
 #include <boost/python.hpp>
 #include <boost/optional.hpp>
-#include <boost/noncopyable.hpp>
 MSC_RESTORE_WARNINGS
 #include "Initializer.h"
 #include <string>
@@ -13,12 +12,10 @@ MSC_RESTORE_WARNINGS
 namespace PythonHelper
 {
 
-template<typename Derived>
-class ModuleBase : private boost::noncopyable
+class ModuleBase
 {
 public:
-    static Derived& instance();
-
+    ModuleBase(const std::string& name, const boost::optional<std::string>& path = {});
     virtual ~ModuleBase();
 
     template<typename... Args>
@@ -29,8 +26,11 @@ public:
                          const std::string& methodName,
                          Args&&... args) const;
 
+    template<typename Ret, typename... Args>
+    Ret callGlobalMethod(const std::string& methodName,
+                         Args&&... args) const;
+
 protected:
-    ModuleBase(const std::string& name, const boost::optional<std::string>& path = {});
     
     template<typename T = boost::python::object>
     T getMember(const std::string& memberName) const;
@@ -42,42 +42,8 @@ protected:
 	boost::python::object m_dict;
 };
 
-template<typename Derived>
-inline Derived& ModuleBase<Derived>::instance()
-{
-    static Initializer initializer;
-    static Derived theInstance;
-    return theInstance;
-}
-
-template<typename Derived>
-ModuleBase<Derived>::ModuleBase(const std::string & name, const boost::optional<std::string>& path)
-{
-    namespace bp = boost::python;
-
-    try
-    {
-        if (path)
-        {
-            // add module to path
-            auto sys = bp::import("sys");
-            bp::list pythonPath = bp::extract<bp::list>(sys.attr("path"));
-            pythonPath.append(*path);
-        }
-
-        // import gmusicapi module
-        auto module = bp::import(name.c_str());
-        m_dict = module.attr("__dict__");
-    }
-    catch (const bp::error_already_set&)
-    {
-        handlePythonException();
-    }
-}
-
-template<typename Derived>
 template<typename ...Args>
-inline boost::python::object ModuleBase<Derived>::createObject(const std::string & name, Args&& ...args) const
+inline boost::python::object ModuleBase::createObject(const std::string & name, Args&& ...args) const
 {
     namespace bp = boost::python;
     try
@@ -91,9 +57,8 @@ inline boost::python::object ModuleBase<Derived>::createObject(const std::string
     }
 }
 
-template<typename Derived>
 template<typename Ret, typename... Args>
-inline Ret ModuleBase<Derived>::callStaticMethod(const std::string& className,
+inline Ret ModuleBase::callStaticMethod(const std::string& className,
                                                  const std::string& methodName,
                                                  Args&&... args) const
 {
@@ -111,12 +76,8 @@ inline Ret ModuleBase<Derived>::callStaticMethod(const std::string& className,
     }
 }
 
-template<typename Derived>
-ModuleBase<Derived>::~ModuleBase() = default;
-
-template<typename Derived>
 template<typename T>
-inline T ModuleBase<Derived>::getMember(const std::string & memberName) const
+inline T ModuleBase::getMember(const std::string & memberName) const
 {
     namespace bp = boost::python;
     try
@@ -129,14 +90,28 @@ inline T ModuleBase<Derived>::getMember(const std::string & memberName) const
     }
 }
 
-template<typename Derived>
 template<typename T>
-inline void ModuleBase<Derived>::setMember(const std::string & memberName, const T & value)
+inline void ModuleBase::setMember(const std::string & memberName, const T & value)
 {
     namespace bp = boost::python;
     try
     {
         m_dict[memberName] = value;
+    }
+    catch (const bp::error_already_set&)
+    {
+        handlePythonException();
+    }
+}
+
+template<typename Ret, typename ...Args>
+inline Ret ModuleBase::callGlobalMethod(const std::string & methodName, Args && ...args) const
+{
+    namespace bp = boost::python;
+    try
+    {
+        bp::object methodObject = m_dict[methodName];
+        return bp::call<Ret>(methodObject.ptr(), std::forward<Args>(args)...);
     }
     catch (const bp::error_already_set&)
     {

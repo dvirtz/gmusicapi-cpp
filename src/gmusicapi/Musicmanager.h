@@ -49,7 +49,8 @@ public:
                             Be wary of using this option; it's almost always better to fix the machine's SSL
                             configuration than to ignore errors.
     */
-    Musicmanager(bool debug_logging = true,
+    Musicmanager(Module& module,
+                 bool debug_logging = true,
                  bool validate = true,
                  bool verify_ssl = true);
 
@@ -70,8 +71,8 @@ public:
                             default web browser.
                             The url will be printed regardless of this param's setting.
     */
-    static void perform_oauth(const boost::optional<std::string>& storage_filepath = {},
-                              bool open_browser = false);
+    void perform_oauth(const boost::optional<std::string>& storage_filepath = {},
+                       bool open_browser = false);
 
     /*!
     Authenticates the Music Manager using OAuth.
@@ -87,6 +88,42 @@ public:
                                 By default, the same default path used by perform_oauth() is used.
                                 Endusers will likely call perform_oauth() once to write credentials
                                 to disk and then ignore this parameter.
+
+    \param uploader_id          a unique id as a MAC address, e.g. `'00:11:22:33:AA:BB'`.
+                                This should only be provided in cases where the default
+                                (host MAC address incremented by 1) will not work.
+                                Upload behavior is undefined if a Music Manager uses the same id, especially when
+                                reporting bad matches.
+                                `ValueError` will be raised if this is provided but not in the proper form.
+                                `OSError` will be raised if this is not provided and a real MAC could not be
+                                determined (most common when running on a VPS).
+                                If provided, use the same id on all future runs for this machine,
+                                because of the upload device limit explained below.
+
+    \param uploader_name        human-readable non-unique id; default is `"<hostname> (gmusicapi-{version})"`.
+                                This doesn't appear to be a part of authentication at all.
+                                Registering with (id, name = X, Y) and logging in with (id, name = X, Z)
+                                works, and does not change the server-stored uploader_name.
+
+    There are hard limits on how many upload devices can be registered; refer to
+    [Google's docs](http://support.google.com/googleplay/bin/answer.py?hl=en&answer=1230356).
+    There have been limits on deauthorizing devices in the past, so it's smart not to register
+    more devices than necessary.
+    */
+    bool login(const boost::optional<std::string>& oauth_credentials = {},
+               const boost::optional<identifier>& uploader_id = {},
+               const boost::optional<std::string>& uploader_name = {});
+    /*!
+    Authenticates the Music Manager using OAuth.
+    Returns `true` on success, `false` on failure.
+
+    Unlike the Webclient, OAuth allows authentication without
+    providing plaintext credentials to the application.
+
+    In most cases, the default parameters should be acceptable. Users on
+    virtual machines will want to provide `uploader_id`.
+
+    \param oauth_credentials    an OAuth2Credentials instance;
                                 This param is mostly intended to allow flexibility for developers of a
                                 3rd party service who intend to perform their own OAuth flow
                                 (e.g. on their website).
@@ -112,7 +149,7 @@ public:
     There have been limits on deauthorizing devices in the past, so it's smart not to register
     more devices than necessary.
     */
-    bool login(const std::string& oauth_credentials = Clients::instance().OAUTH_FILEPATH,
+    bool login(const OAuth2Credentials& oauth_credentials = {},
                const boost::optional<identifier>& uploader_id = {},
                const boost::optional<std::string>& uploader_name = {});
 
@@ -180,7 +217,7 @@ public:
     only tracks uploaded/matched by the user.
 
     \param incremental  if `true`, return a generator that yields lists
-                        of at most 1000 songs as they are retrieved from the server. 
+                        of at most 1000 songs as they are retrieved from the server.
                         This can be useful for presenting a loading bar to a user.
     */
     SongRange get_uploaded_songs(bool incremental = false);
@@ -190,7 +227,7 @@ public:
     The filename will be what the Music Manager would save the file as,
     presented as a unicode string with the proper file extension.
     You don't have to use it if you don't want.
-    
+
     \param song_id  a single song id.
 
     To write the song to disk, use something like:
@@ -203,7 +240,7 @@ public:
         std::ofstream file(filename, std::ios::out | std::ios::binary);
         file.write(audio.data(), audio.size());
 
-    Unlike with Webclient::get_song_download_info() there is no download limit 
+    Unlike with Webclient::get_song_download_info() there is no download limit
     when using this interface.
 
     Also unlike the Webclient, downloading a track requires authentication.

@@ -5,7 +5,12 @@ namespace GMusicApi
 {
 
 Clients::Clients()
-    : PythonHelper::ModuleBase<Clients>("gmusicapi.clients", gmusicapi_path)
+    : PythonHelper::ModuleBase("gmusicapi.clients", gmusicapi_path)
 {}
+
+std::string Clients::OAUTH_FILEPATH()
+{
+    return getMember<std::string>("OAUTH_FILEPATH");
+}
 
 } // namespace GMusicApi

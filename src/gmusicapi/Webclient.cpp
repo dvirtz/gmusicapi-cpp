@@ -13,8 +13,11 @@
 namespace GMusicApi
 {
 
-Webclient::Webclient(bool debug_logging, bool validate, bool verify_ssl)
-    : ClientBase("Webclient", debug_logging, validate, verify_ssl)
+Webclient::Webclient(Module& module,
+                     bool debug_logging, 
+                     bool validate, 
+                     bool verify_ssl)
+    : ClientBase(module, "Webclient", debug_logging, validate, verify_ssl)
 {}
 
 bool Webclient::login(const std::string & email, const std::string & password)

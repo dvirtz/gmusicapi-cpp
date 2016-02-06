@@ -12,10 +12,16 @@
 namespace GMusicApi
 {
 
+std::once_flag Module::m_onceFlag;
+
 Module::Module()
-    : PythonHelper::ModuleBase<Module>("gmusicapi", gmusicapi_path)
+    : PythonHelper::ModuleBase("gmusicapi", gmusicapi_path)
 {
-    registerTypeConverters();
+    // execute this code only once
+    std::call_once(m_onceFlag, []()
+    {
+        Module::registerTypeConverters();
+    });
 }
 
 void Module::registerTypeConverters()

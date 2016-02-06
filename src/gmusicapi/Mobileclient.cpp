@@ -6,10 +6,11 @@
 namespace GMusicApi
 {
 
-Mobileclient::Mobileclient(bool debug_logging /*= true*/, 
+Mobileclient::Mobileclient(Module& module,
+                           bool debug_logging /*= true*/,
                            bool validate /*= true*/, 
                            bool verify_ssl /*= true*/)
-    : ClientBase("Mobileclient", debug_logging, validate, verify_ssl)
+    : ClientBase(module, "Mobileclient", debug_logging, validate, verify_ssl)
 {}
 
 bool Mobileclient::login(const std::string & email, const std::string & password, const identifier & android_id) const

@@ -1,4 +1,5 @@
 #include "catch.hpp"
+#include "TestFixture.h"
 #include "Webclient.h"
 #include "userCredentials.h"
 #include "Mobileclient.h"
@@ -7,85 +8,85 @@
 
 using namespace GMusicApi;
 
-static Song getSong()
+class WebclientTestFixture : public TestFixture
 {
-    Mobileclient mc;
-    mc.login(gm_user, gm_pass);
+public:
+    WebclientTestFixture()
+        : m_wc(m_module)
+    {}
 
-    return *mc.get_all_songs().begin();
+protected:
+
+    Song getSong()
+    {
+        Mobileclient mc(m_module);
+        mc.login(gm_user, gm_pass);
+
+        return *mc.get_all_songs().begin();
+    }
+
+    Webclient m_wc;
+};
+
+TEST_CASE_METHOD(WebclientTestFixture, "Webclient empty login fails", "[Webclient]")
+{
+    REQUIRE_FALSE(m_wc.login("", ""));
 }
 
-TEST_CASE("Webclient constructed", "[Webclient]")
+TEST_CASE_METHOD(WebclientTestFixture, "Webclient login logout", "[Webclient]")
 {
-	REQUIRE_NOTHROW(Webclient wc);
+    REQUIRE(m_wc.login(gm_user, gm_pass));
+    REQUIRE(m_wc.logout());
 }
 
-TEST_CASE("Webclient empty login fails", "[Webclient]")
+TEST_CASE_METHOD(WebclientTestFixture, "download info received", "[Webclient]")
 {
-    Webclient wc;
-    REQUIRE_FALSE(wc.login("", ""));
-}
-
-TEST_CASE("Webclient login logout", "[Webclient]")
-{
-    Webclient wc;
-    REQUIRE(wc.login(gm_user, gm_pass));
-    REQUIRE(wc.logout());
-}
-
-TEST_CASE("download info received", "[Webclient]")
-{
-    Webclient wc;
-    wc.login(gm_user, gm_pass);
+    m_wc.login(gm_user, gm_pass);
 
     auto song = getSong();
 
-    auto downloadInfo = wc.get_song_download_info(song.id);
+    auto downloadInfo = m_wc.get_song_download_info(song.id);
     REQUIRE_FALSE(downloadInfo.first.empty());
     REQUIRE(downloadInfo.second <= 2);
 }
 
-TEST_CASE("audio stream received", "[Webclient]")
+TEST_CASE_METHOD(WebclientTestFixture, "audio stream received", "[Webclient]")
 {
-    Webclient wc;
-    wc.login(gm_user, gm_pass);
+    m_wc.login(gm_user, gm_pass);
 
     auto song = getSong();
 
-    auto stream = wc.get_stream_audio(song.id);
+    auto stream = m_wc.get_stream_audio(song.id);
     REQUIRE_FALSE(stream.empty());
 }
 
-TEST_CASE("stream URL received", "[Webclient]")
+TEST_CASE_METHOD(WebclientTestFixture, "stream URL received", "[Webclient]")
 {
-    Webclient wc;
-    wc.login(gm_user, gm_pass);
+    m_wc.login(gm_user, gm_pass);
 
     auto song = getSong();
 
-    auto urls = wc.get_stream_urls(song.id);
+    auto urls = m_wc.get_stream_urls(song.id);
     REQUIRE(urls.size() == 1);
 }
 
-TEST_CASE("report incorrect match doesn't throw", "[Webclient]")
+TEST_CASE_METHOD(WebclientTestFixture, "report incorrect match doesn't throw", "[Webclient]")
 {
-    Webclient wc;
-    wc.login(gm_user, gm_pass);
+    m_wc.login(gm_user, gm_pass);
 
     auto song = getSong();
     auto ids = identifiers{ song.id };
     identifiers ret_ids;
-    REQUIRE_NOTHROW(ret_ids = wc.report_incorrect_match(ids));
+    REQUIRE_NOTHROW(ret_ids = m_wc.report_incorrect_match(ids));
     REQUIRE(ret_ids == ids);
 }
 
-TEST_CASE("album art uploaded", "[Webclient]")
+TEST_CASE_METHOD(WebclientTestFixture, "album art uploaded", "[Webclient]")
 {
-    Webclient wc;
-    wc.login(gm_user, gm_pass);
+    m_wc.login(gm_user, gm_pass);
 
     auto song = getSong();
 
-    auto url = wc.upload_album_art({ song.id }, imageTestPath);
+    auto url = m_wc.upload_album_art({ song.id }, imageTestPath);
     REQUIRE_FALSE(url.empty());
 }

@@ -5,15 +5,12 @@
 namespace GMusicApi
 {
 
-class Clients : public PythonHelper::ModuleBase<Clients>
+class Clients : public PythonHelper::ModuleBase
 {
 public:
-    CONST_CLASS_MEMBER(std::string, OAUTH_FILEPATH, Clients);
-
-protected:
     Clients();
 
-    friend class PythonHelper::ModuleBase<Clients>;
+    std::string OAUTH_FILEPATH();
 };
 
 } // namespace GMusicApi
