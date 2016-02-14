@@ -40,7 +40,7 @@ protected:
 
 TEST_CASE_METHOD(MusicmanagerTestFixture, "Musicmanager login", "[Musicmanager]")
 {
-    REQUIRE(m_mm.login(m_credentials));
+    REQUIRE(m_mm.login());
     REQUIRE(m_mm.logout());
 }
 

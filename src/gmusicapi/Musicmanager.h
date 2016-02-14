@@ -149,7 +149,7 @@ public:
     There have been limits on deauthorizing devices in the past, so it's smart not to register
     more devices than necessary.
     */
-    bool login(const OAuth2Credentials& oauth_credentials = {},
+    bool login(const OAuth2Credentials& oauth_credentials,
                const boost::optional<identifier>& uploader_id = {},
                const boost::optional<std::string>& uploader_name = {});
 
