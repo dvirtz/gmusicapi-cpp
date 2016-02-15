@@ -156,7 +156,7 @@ TEST_CASE_METHOD(MobileclientTestFixture, "Playlists", "[Mobileclient]")
     CAPTURE(*it);
 
     auto all_songs = m_mc.get_all_songs(true);
-    const auto& song = all_songs.front();
+    auto& song = all_songs.front();
 
     CAPTURE(song);
     

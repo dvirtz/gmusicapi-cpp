@@ -79,15 +79,13 @@ private:
 	input_iterator<T>					m_currentEnd;
 };
 
-//template<typename T>
-//using GeneratedRange = boost::any_range<
-//	typename GeneratorIterator<T>::value_type,
-//	typename boost::iterator_category_to_traversal<typename GeneratorIterator<T>::iterator_category>::type,
-//	// need to be const due to boost bug https://svn.boost.org/trac/boost/ticket/10493
-//	typename std::add_const<typename GeneratorIterator<T>::reference>::type,
-//	typename GeneratorIterator<T>::difference_type>;
 template<typename T>
-using GeneratedRange = boost::iterator_range<GeneratorIterator<T>>;
+using GeneratedRange = boost::any_range<
+	typename GeneratorIterator<T>::value_type,
+	typename boost::iterator_category_to_traversal<typename GeneratorIterator<T>::iterator_category>::type,
+	// need to be const due to boost bug https://svn.boost.org/trac/boost/ticket/10493
+	typename std::add_const<typename GeneratorIterator<T>::reference>::type,
+	typename GeneratorIterator<T>::difference_type>;
 
 
 template<typename T>
