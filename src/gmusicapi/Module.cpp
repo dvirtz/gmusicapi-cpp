@@ -34,6 +34,7 @@ void Module::registerTypeConverters()
     ph::PyToCppConverter<bp::tuple, UploadResults>::registerConverter();
     ph::PyToCppConverter<bp::tuple, DownloadResult>::registerConverter();
     ph::PyToCppConverter<bp::str, BinaryStream>::registerConverter();
+    ph::PyToCppConverter<bp::tuple, DownloadInfo>::registerConverter();
 
     bp::to_python_converter<boost::optional<identifiers>, ph::BoostOptionalToPyConverter<identifiers>>();
 
