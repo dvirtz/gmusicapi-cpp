@@ -13,7 +13,7 @@ Musicmanager::Musicmanager(Module& module,
 void Musicmanager::perform_oauth(const boost::optional<std::string>& storage_filepath, 
                                  bool open_browser)
 {
-    callStaticMethod<void>("Musicmanager", "perform_oauth", storage_filepath, open_browser);
+    callMethod<void>("perform_oauth", storage_filepath, open_browser);
 }
 
 bool Musicmanager::login(const boost::optional<std::string>& oauth_credentials, 
