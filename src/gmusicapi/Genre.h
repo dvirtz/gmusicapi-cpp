@@ -7,6 +7,7 @@ MSC_RESTORE_WARNINGS
 #include "genDefs.h"
 #include "typeConverters.h"
 #include "AlbumArt.h"
+#include "GeneratedRange.h"
 
 GMUSICAPI_DEFINE_STRUCT(
     (GMusicApi), Genre,

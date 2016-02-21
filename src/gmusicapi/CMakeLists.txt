@@ -13,6 +13,9 @@ set(SOURCES Module.cpp Mobileclient.cpp Webclient.cpp ClientBase.cpp Musicmanage
 
 add_library(GMusicApi ${SOURCES} ${HEADERS} ${INC_FILES})
 
+target_compile_definitions(GMusicApi PUBLIC
+	$<TARGET_PROPERTY:PythonHelper,INTERFACE_COMPILE_DEFINITIONS>)
+
 if(MSVC)
 	set_source_files_properties(GMusicApi.cpp PROPERTIES COMPILE_FLAGS /wd4172)
 	target_compile_options(GMusicApi PUBLIC /Wv:18)

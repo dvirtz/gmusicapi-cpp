@@ -32,7 +32,6 @@ set(BOOST_ROOT "" CACHE PATH "Boost location")
 set(GM_U "" CACHE STRING "Google Music user name")
 set(GM_P "" CACHE STRING "Google Music password")
 
-set(Boost_USE_DEBUG_PYTHON ON)
 set(Boost_USE_STATIC_LIBS ON)
 # disable boost auto-link
 add_definitions(-DBOOST_ALL_NO_LIB)
@@ -59,7 +58,7 @@ include(doxygen.cmake)
 
 enable_testing()
 
-add_definitions(-DBOOST_DEBUG_PYTHON -DBOOST_PYTHON_STATIC_LIB)
+add_definitions(-DBOOST_PYTHON_STATIC_LIB)
 
 add_subdirectory(src)
 add_subdirectory(test)

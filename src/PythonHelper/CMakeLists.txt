@@ -3,7 +3,12 @@ set(SOURCES ModuleBase.cpp Initializer.cpp)
 
 FIND_BOOST_PYTHON()
 
+string(REGEX MATCH "[0-9]+" PYTHON_MAJOR ${PYTHONLIBS_VERSION_STRING})
+
 add_library(PythonHelper ${HEADERS} ${SOURCES})
+
+target_compile_definitions(PythonHelper PUBLIC
+	PYTHON_MAJOR=${PYTHON_MAJOR})
 
 target_include_directories(PythonHelper SYSTEM PUBLIC
 	${Boost_INCLUDE_DIR}

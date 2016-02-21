@@ -41,8 +41,12 @@ struct PyTypeChecker<boost::python::str, CType>
 {
     bool operator()(PyObject* pObj)
     {
+#if PYTHON_MAJOR == 2
         return PyString_Check(pObj)
             || PyUnicode_Check(pObj);
+#else
+        return PyUnicode_Check(pObj);
+#endif
     }
 };
 
@@ -143,12 +147,18 @@ struct PyConverter<boost::python::str, std::string>
 {
     void operator()(PyObject* pObj, void* storage)
     {
+#if PYTHON_MAJOR == 2
         if (PyUnicode_Check(pObj))
         {
             pObj = PyUnicode_AsUTF8String(pObj);
         }
 
         new (storage) std::string(PyString_AsString(pObj));
+#else
+        pObj = PyUnicode_AsASCIIString(pObj);
+
+        new (storage) std::string(PyByteArray_AsString(pObj));
+#endif
     }
 };
 
@@ -157,12 +167,18 @@ struct PyConverter<boost::python::str, std::vector<char>>
 {
     void operator()(PyObject* pObj, void* storage)
     {
+#if PYTHON_MAJOR == 2
         if (PyUnicode_Check(pObj))
         {
             pObj = PyUnicode_AsUTF8String(pObj);
         }
 
         auto pChar = PyString_AsString(pObj);
+#else
+        pObj = PyUnicode_AsASCIIString(pObj);
+
+        auto pChar = PyByteArray_AsString(pObj);
+#endif
         new (storage) std::vector<char>(pChar, std::next(pChar, PyObject_Length(pObj)));
     }
 };

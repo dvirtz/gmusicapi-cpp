@@ -38,7 +38,7 @@ target_link_libraries(Tester PUBLIC
 	GMusicApi
 	PythonHelper
 	${Boost_LIBRARIES}
-	${PYTHON_LIBRARIES})
+	${PYTHON_LIBRARY_RELEASE})
 
 find_package(PythonInterp REQUIRED)
 
