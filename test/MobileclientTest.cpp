@@ -18,6 +18,20 @@ public:
         : m_mc(m_module)
     {}
 
+    bool login()
+    {
+        return m_mc.login(gm_user, gm_pass, gm_android_id);
+    }
+
+    template<typename Func>
+    void retry(Func&& f, size_t retries)
+    {
+        for (size_t i = 0; i < retries; ++i)
+        {
+            f();
+        }
+    }
+
 protected:
     Mobileclient m_mc;
 };
@@ -26,12 +40,12 @@ TEST_CASE_METHOD(MobileclientTestFixture, "Mobileclient login", "[Mobileclient]"
 {
     SECTION("empty login failes")
     {
-        REQUIRE_FALSE(m_mc.login("", ""));
+        REQUIRE_FALSE(m_mc.login("", "", gm_android_id));
     }
 
     SECTION("login succeeds")
     {
-        REQUIRE(m_mc.login(gm_user, gm_pass));
+        REQUIRE(login());
 
         SECTION("logout succeeds")
         {
@@ -42,7 +56,7 @@ TEST_CASE_METHOD(MobileclientTestFixture, "Mobileclient login", "[Mobileclient]"
 
 TEST_CASE_METHOD(MobileclientTestFixture, "Mobileclient song list sanity", "[Mobileclient]")
 {
-    m_mc.login(gm_user, gm_pass);
+    login();
 
     auto incremental = m_mc.get_all_songs(true);
     auto non_incremental = m_mc.get_all_songs(false);
@@ -52,14 +66,14 @@ TEST_CASE_METHOD(MobileclientTestFixture, "Mobileclient song list sanity", "[Mob
 
 TEST_CASE_METHOD(MobileclientTestFixture, "registered devices list not empty", "[Mobileclient]")
 {
-    m_mc.login(gm_user, gm_pass);
+    login();
 
     REQUIRE_FALSE(m_mc.get_registered_devices().empty());
 }
 
 TEST_CASE_METHOD(MobileclientTestFixture, "Song manipulation", "[Mobileclient]")
 {
-    m_mc.login(gm_user, gm_pass);
+    login();
 
     auto song = m_mc.get_all_songs(true).front();
 
@@ -118,14 +132,14 @@ TEST_CASE_METHOD(MobileclientTestFixture, "can change validate", "[Mobileclient]
 
 TEST_CASE_METHOD(MobileclientTestFixture, "Promoted songs empty", "[Mobileclient][NoAllAccess]")
 {
-    m_mc.login(gm_user, gm_pass);
+    login();
 
     REQUIRE(m_mc.get_promoted_songs().empty());
 }
 
 TEST_CASE_METHOD(MobileclientTestFixture, "Playlists sanity", "[Mobileclient]")
 {
-    m_mc.login(gm_user, gm_pass);
+    login();
 
     auto incremental = m_mc.get_all_playlists(true);
     auto non_incremental = m_mc.get_all_playlists();
@@ -135,7 +149,7 @@ TEST_CASE_METHOD(MobileclientTestFixture, "Playlists sanity", "[Mobileclient]")
 
 TEST_CASE_METHOD(MobileclientTestFixture, "Playlists", "[Mobileclient]")
 {
-    m_mc.login(gm_user, gm_pass);
+    login();
 
     auto all_playlists_vec = toVector(m_mc.get_all_playlists());
     auto playlist_count = all_playlists_vec.size();
@@ -211,7 +225,7 @@ TEST_CASE_METHOD(MobileclientTestFixture, "Playlists", "[Mobileclient]")
 
 TEST_CASE_METHOD(MobileclientTestFixture, "Radio stations sanity", "[Mobileclient][.All Access]")
 {
-    m_mc.login(gm_user, gm_pass);
+    login();
 
     auto incremental = m_mc.get_all_stations(true);
     auto non_incremental = m_mc.get_all_stations(false);
@@ -221,11 +235,11 @@ TEST_CASE_METHOD(MobileclientTestFixture, "Radio stations sanity", "[Mobileclien
 
 TEST_CASE_METHOD(MobileclientTestFixture, "methods throw without AllAccess", "[Mobileclient]")
 {
-    m_mc.login(gm_user, gm_pass);
+    login();
 
-    REQUIRE_THROWS_AS(m_mc.get_artist_info(""), std::runtime_error);
-    REQUIRE_THROWS_AS(m_mc.get_album_info(""), std::runtime_error);
-    REQUIRE_THROWS_AS(m_mc.get_track_info(""), std::runtime_error);
-    REQUIRE_THROWS_AS(m_mc.get_genres(), std::runtime_error);
-    REQUIRE_THROWS_AS(m_mc.search_all_access(""), std::runtime_error);
+    REQUIRE_THROWS_AS(retry([this] { m_mc.get_artist_info(""); }, 5), std::runtime_error);
+    REQUIRE_THROWS_AS(retry([this] { m_mc.get_album_info(""); }, 5), std::runtime_error);
+    REQUIRE_THROWS_AS(retry([this] { m_mc.get_track_info(""); }, 5), std::runtime_error);
+    REQUIRE_THROWS_AS(retry([this] { m_mc.get_genres(); }, 5), std::runtime_error);
+    REQUIRE_THROWS_AS(retry([this] { m_mc.search_all_access(""); }, 5), std::runtime_error);
 }

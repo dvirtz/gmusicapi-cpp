@@ -28,7 +28,7 @@
 *.app
 
 # Build folder
-_build
+_build*
 /src/gmusicapi-clang
 /src/http
 /src/oauth

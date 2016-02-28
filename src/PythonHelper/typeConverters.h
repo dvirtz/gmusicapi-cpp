@@ -69,6 +69,19 @@ struct PyTypeChecker<boost::python::tuple, std::pair<T,S>>
     }
 };
 
+template<>
+struct PyTypeChecker<boost::python::object, std::vector<char>>
+{
+    bool operator()(PyObject* pObj)
+    {
+#if PYTHON_MAJOR == 2
+        return PyByteArray_Check(pObj);
+#else
+        return PyBytes_Check(pObj);
+#endif // PYTHON_MAJOR == 2
+    }
+};
+
 // add ability for preprocessing the python type
 // before converting to C type
 template<typename PyType, typename CType>
@@ -138,7 +151,11 @@ struct PyConverter<boost::python::dict, std::map<Key, Value>>
 
         using it = bp::stl_input_iterator<typename std::map<Key, Value>::value_type>;
 
+#if PYTHON_MAJOR == 2
         new(storage)std::map<Key, Value>(it(d.iteritems()), it());
+#else
+        new(storage)std::map<Key, Value>(it(d.items()), it());
+#endif // #if PYTHON_MAJOR == 2
     }
 };
 
@@ -224,6 +241,26 @@ struct PyConverter<boost::python::tuple, std::pair<T, S>>
         bp::tuple t = bp::extract<bp::tuple>(bp::object(hndl));
 
         new(storage) std::pair<T, S>(bp::extract<T>(t[0]), bp::extract<S>(t[1]));
+    }
+};
+
+template<>
+struct PyConverter<boost::python::object, std::vector<char>>
+{
+    void operator()(PyObject* pObj, void* storage)
+    {
+        namespace bp = boost::python;
+
+        bp::handle<> hndl(bp::borrowed(pObj));
+#if PYTHON_MAJOR == 2
+        auto pChar = PyByteArray_AS_STRING(pObj);
+        auto size = PyByteArray_GET_SIZE(pObj);
+#else
+        auto pChar = PyBytes_AS_STRING(pObj);
+        auto size = PyBytes_GET_SIZE(pObj);
+#endif // PYTHON_MAJOR == 2
+
+        new (storage) std::vector<char>(pChar, pChar + size);
     }
 };
 

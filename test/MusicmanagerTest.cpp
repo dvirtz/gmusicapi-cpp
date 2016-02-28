@@ -24,6 +24,25 @@ class MusicmanagerTestFixture : public TestFixture
         }
     };
 
+    class Utils : public PythonHelper::ModuleBase
+    {
+    public:
+        Utils()
+            : PythonHelper::ModuleBase("gmusicapi.utils.utils", gmusicapi_path)
+        {}
+
+        /*!
+        Return the mac address interpretation of num, in the form eg '00:11:22:33:AA:BB'.
+
+        \param num      a 48-bit integer (eg from uuid.getnode)
+        \param splitter a string to join the hex pairs with
+        */
+        std::string create_mac_string(uint64_t num, const std::string& splitter = ":")
+        {
+            return callGlobalMethod<std::string>("create_mac_string", num, splitter);
+        }
+    };
+
 public:
     MusicmanagerTestFixture()
         : m_mm(m_module)
@@ -31,6 +50,12 @@ public:
         m_credentials = m_protocol.credentials_from_refresh_token(gm_refresh);
     }
  
+    bool login()
+    {
+        Utils utils;
+        auto mac = utils.create_mac_string(std::stoull(gm_android_id, nullptr, 16));
+        return m_mm.login(m_credentials, mac);
+    }
 
 protected:
     Musicmanager m_mm;
@@ -40,16 +65,16 @@ protected:
 
 TEST_CASE_METHOD(MusicmanagerTestFixture, "Musicmanager login", "[Musicmanager]")
 {
-    REQUIRE(m_mm.login());
+    REQUIRE(login());
     REQUIRE(m_mm.logout());
 }
 
 TEST_CASE_METHOD(MusicmanagerTestFixture, "Upload and Download", "[Musicmanager]")
 {
-    m_mm.login(m_credentials);
+    login();
 
     Mobileclient mc(m_module);
-    mc.login(gm_user, gm_pass);
+    mc.login(gm_user, gm_pass, gm_android_id);
 
     UploadResult uploaded, matched, failed;
     std::tie(uploaded, matched, failed) = m_mm.upload({ audioTestPath });
