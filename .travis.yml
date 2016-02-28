@@ -3,7 +3,7 @@ language: cpp
 compiler:
 - gcc
 python:
-- '2.7'
+- '2.7.11'
 - '3.5'
 addons:
   apt:
