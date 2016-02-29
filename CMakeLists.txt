@@ -40,7 +40,7 @@ add_definitions(-DBOOST_ALL_NO_LIB)
 # find boost and python
 macro(FIND_BOOST_PYTHON)
 find_package(Boost REQUIRED COMPONENTS python ${ARGN})
-find_package(PythonLibs REQUIRED)
+find_package(PythonLibs $ENV{PYTHON_VERSION} REQUIRED)
 endmacro()
 
 # the following resolves the issue in
