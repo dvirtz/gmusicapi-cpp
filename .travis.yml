@@ -21,7 +21,7 @@ addons:
     - george-edison55-precise-backports
     - ubuntu-toolchain-r-test
     - boost-latest
-    - fkrull-deadsnakes
+    - deadsnakes
     packages:
     - g++-4.9
     - gcc-4.9
