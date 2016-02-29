@@ -63,3 +63,4 @@ add_definitions(-DBOOST_PYTHON_STATIC_LIB)
 
 add_subdirectory(src)
 add_subdirectory(test)
+add_subdirectory(example)
