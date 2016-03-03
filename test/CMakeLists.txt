@@ -40,10 +40,7 @@ target_link_libraries(Tester PUBLIC
 	${Boost_LIBRARIES}
 	${PYTHON_LIBRARY_RELEASE})
 
-find_package(PythonInterp REQUIRED)
-
 get_filename_component(PYTHON_PATH ${PYTHON_EXECUTABLE} DIRECTORY)
-#file(TO_NATIVE_PATH ${PYTHON_PATH} PYTHON_PATH)
 
 set(PATH_FOR_TEST ${PYTHON_PATH})
 if(NOT(${USE_STATIC_BOOST}))

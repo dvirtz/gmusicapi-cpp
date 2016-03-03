@@ -52,9 +52,16 @@ public:
  
     bool login()
     {
-        Utils utils;
-        auto mac = utils.create_mac_string(std::stoull(gm_android_id, nullptr, 16));
-        return m_mm.login(m_credentials, mac);
+        if (gm_android_id.empty())
+	{
+            return m_mm.login(m_credentials);        
+        }
+        else
+        {
+            Utils utils;
+            auto mac = utils.create_mac_string(std::stoull(gm_android_id, nullptr, 16));
+            return m_mm.login(m_credentials, mac);
+        }
     }
 
 protected:
@@ -127,3 +134,4 @@ TEST_CASE_METHOD(MusicmanagerTestFixture, "Upload and Download", "[Musicmanager]
 
     mc.delete_songs({ id });
 }
+

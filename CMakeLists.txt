@@ -39,7 +39,13 @@ add_definitions(-DBOOST_ALL_NO_LIB)
 
 # find boost and python
 macro(FIND_BOOST_PYTHON)
-find_package(Boost REQUIRED COMPONENTS python ${ARGN})
+if("$ENV{PYTHON_VERSION}" STREQUAL "2.7")
+    set(BOOST_PYTHON python)
+else()
+    set(BOOST_PYTHON python3)
+endif()
+find_package(Boost REQUIRED COMPONENTS ${BOOST_PYTHON} ${ARGN})
+find_package(PythonInterp $ENV{PYTHON_VERSION} REQUIRED)
 find_package(PythonLibs $ENV{PYTHON_VERSION} REQUIRED)
 endmacro()
 
