@@ -38,18 +38,18 @@ addons:
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
   - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.8" CC="clang-3.8"; fi
+  - cp scripts/user-config.jam $HOME
   - bash scripts/install-boost.sh
   - ls -R $HOME/boost_1_60_0
   - if [ "$PYTHON_VERSION" = "3.5" ]; then bash scripts/install-pip3.sh; fi
-  - cd gmusicapi
   - if [ "$PYTHON_VERSION" = "3.5" ]; then pip3 install --upgrade --user gmusicapi; else pip install --upgrade --user gmusicapi; fi
 
 script:
   - mkdir _build
   - cd _build
-  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DGM_U=$GM_U -DGM_P=$GM_P -DGM_R=$GM_R
+  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DGM_U=$GM_U -DGM_P=$GM_P -DGM_R=$GM_R -DBOOST_ROOT=$HOME/boost_1_60_0
   - make
-  - make test ARGS="-V
+  - make test ARGS="-V"
 
 after_failure:
-  - cat ~/.cache/gmusicapi/log/gmusicapi.log"
+  - cat ~/.cache/gmusicapi/log/gmusicapi.log
