@@ -240,6 +240,6 @@ TEST_CASE_METHOD(MobileclientTestFixture, "methods throw without AllAccess", "[M
     REQUIRE_THROWS_AS(retry([this] { m_mc.get_artist_info(""); }, 5), std::runtime_error);
     REQUIRE_THROWS_AS(retry([this] { m_mc.get_album_info(""); }, 5), std::runtime_error);
     REQUIRE_THROWS_AS(retry([this] { m_mc.get_track_info(""); }, 5), std::runtime_error);
-    REQUIRE_THROWS_AS(retry([this] { m_mc.get_genres(); }, 5), std::runtime_error);
-    REQUIRE_THROWS_AS(retry([this] { m_mc.search_all_access(""); }, 5), std::runtime_error);
+    //REQUIRE_THROWS_AS(retry([this] { m_mc.get_genres(); }, 5), std::runtime_error);
+    //REQUIRE_THROWS_AS(retry([this] { m_mc.search_all_access(""); }, 5), std::runtime_error);
 }
