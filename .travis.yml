@@ -42,7 +42,10 @@ install:
   - bash scripts/install-boost.sh
   - ls -R $HOME/boost_1_60_0
   - if [ "$PYTHON_VERSION" = "3.5" ]; then bash scripts/install-pip3.sh; fi
-  - if [ "$PYTHON_VERSION" = "3.5" ]; then pip3 install --upgrade --user gmusicapi; else pip install --upgrade --user gmusicapi; fi
+  # - if [ "$PYTHON_VERSION" = "3.5" ]; then pip3 install --upgrade --user gmusicapi; else pip install --upgrade --user gmusicapi; fi
+  - cd gmusicapi
+  - python$PYTHON_VERSION setup.py sdist --formats=zip -k
+  - cd ..
 
 script:
   - mkdir _build
