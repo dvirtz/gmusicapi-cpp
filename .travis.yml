@@ -46,7 +46,7 @@ install:
   - if [ "$PYTHON_VERSION" = "3.5" ]; then alias pip="pip3"; fi
   - cd gmusicapi
   - python$PYTHON_VERSION setup.py sdist --formats=zip -k
-  - find ./dist -iname "*.zip" -print0 | xargs -0 pip install
+  - find ./dist -iname "*.zip" -print0 | xargs -0 pip install --user
   - cd ..
 
 script:
