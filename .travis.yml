@@ -8,9 +8,9 @@ compiler:
 env:
   matrix:
     - PYTHON_VERSION=2.7 BUILD_TYPE=Release
-    - PYTHON_VERSION=3.5 BUILD_TYPE=Release
+    - PYTHON_VERSION=3.4 BUILD_TYPE=Release
   global:
-    - secure: g+iZw5iuBztrlPegctYgoANAmuQnOM60zAN6XsGswkuRN076WC7J8q1ZoxPfRsk54trWqx3v5o5KZwu9AapvSNiIiaY9KVVoVRNFAP9298GOmN9lTPdkVp/qNBSU5G52mi9ZAy9uzl8Ri31xQbWhg2sfF+kAZV6xh5CMSpHwfXnCYObA/Yn1lvdmwARW6EBEtzheKZf57HBD9FensnhKRgZqw+BcfwcYx2YCTIecywPR4GsxBxNabQdojgUrBRxwNmKixCUjyMoX3WPjbJvoeDTVXoXBRe3QDmIK5QaSa+JGkbw8Hx9BGKuYEUXhJ4xkH3Zqrd5CBAI1k4YFHsSDu+MXmkj0l5/NyvTuhc9SS3NrbNUXJeDSHJqfHPPKT9QjNixwObvrpJcdT4LHH4B/JvMVPfLBDN2XfdoaKtMPAm4i9CabaqhZbQXqKLfV/O3Ai2s0oOLCFBmpxYqIsn+bTD4+Ga8nHUqVIV6+MUF1jWZueP8/RfohHrHC9BqbBeRSG6hKpk/Y3TGvSu25vXt2vNl01mZetdm4Sa7wpQ6BN9YOQqYgBcokGDdqdQQQWSDKtte3wDKOQby27Oo1GrSfWNhLSEKZXjWLrRVya1UO8/JtzaDoRhVjJ5W4Rj4gfpwV8ghsQQKQ/NbmOLtlvfDn+CRtVbG46tTGrDPW3nh538k=
+    - secure: g+iZw5iuBztrlPegctYgoANAmuQnOM60zAN6XsGswkuRN076WC7J8q1ZoxPfRsk54trWqx3.4o5KZwu9AapvSNiIiaY9KVVoVRNFAP9298GOmN9lTPdkVp/qNBSU5G52mi9ZAy9uzl8Ri31xQbWhg2sfF+kAZV6xh5CMSpHwfXnCYObA/Yn1lvdmwARW6EBEtzheKZf57HBD9FensnhKRgZqw+BcfwcYx2YCTIecywPR4GsxBxNabQdojgUrBRxwNmKixCUjyMoX3WPjbJvoeDTVXoXBRe3QDmIK5QaSa+JGkbw8Hx9BGKuYEUXhJ4xkH3Zqrd5CBAI1k4YFHsSDu+MXmkj0l5/NyvTuhc9SS3NrbNUXJeDSHJqfHPPKT9QjNixwObvrpJcdT4LHH4B/JvMVPfLBDN2XfdoaKtMPAm4i9CabaqhZbQXqKLfV/O3Ai2s0oOLCFBmpxYqIsn+bTD4+Ga8nHUqVIV6+MUF1jWZueP8/RfohHrHC9BqbBeRSG6hKpk/Y3TGvSu25vXt2vNl01mZetdm4Sa7wpQ6BN9YOQqYgBcokGDdqdQQQWSDKtte3wDKOQby27Oo1GrSfWNhLSEKZXjWLrRVya1UO8/JtzaDoRhVjJ5W4Rj4gfpwV8ghsQQKQ/NbmOLtlvfDn+CRtVbG46tTGrDPW3nh538k=
     - secure: QSS8aCzBwgA8NwXa0SIFRj2L1//fTXRGLr1utGEzSK+iIQ0R3i3SpRakl22JhnHBCXULmW9A0UCgejbn7uM8NtDPBYleldpe+3Yqxk/2a9VO91ETUc6agcpwrGz9B+V03NwpR9G5m9eLaTW5BmgbtrTf0wNOX1ekZF0khb7/bY+EABPrl8ELAQ9VokXy9sDJJmqdjKe3xIPUGs9USgd94g2eHCd7BOvVx2+jMmiXyiu3N4xJipy4XXkihrOqUDP/tbdsYursKBrlE4fXsbI4wq1dF9HeGTugq8glIg417ZaxlkziuBt1qqWf+doCwOnQcYXy4u8aU+4ryRdq6CsvqMCQpS6BTaudgu+PxBtynEHQcx+htEZ3fDkVxHIcZJ/EYbTRAooIWZd5Xx5tSXkQ2c6PC9GmoylBebARf810khpqLNL1q00MvUNlm2ZIQ90Zszsmp3eW566Fnk1nccjviothBYUpX/IedR7URj+qxZj2ozkS1V5YAt6Okg7hb7i4unIcteKxzUiK4twtHIap7fXottYiohsYmn/OXj+MJeX1DbzNOSNNxLFXg8BD/VrRG+4kk6Qr5CIQvh9uhaEtN5kjl/91nfRU0yh5xhPCUsNHC79Kjdc0DWnRFEBfYD1HryfowqcTqwIGhE1Rd4kELB52OIrbxh4ARHKAbtl6QU8=
     - secure: "Kh6JZff8btqwdRt8QBzmXAVWqlFdcGxwwJ9FvQQQClIOlyXYz9DxwBmLVSwVsPHBJ6bu4c9dRu8p5WGiGAGWJZJTAu8pudeJ8aMdMH4djU8Bphwz+vQECnlQ/lbeq8TEpOz2K9EU95tJh+dA8SMEB4BS/drDeUYfyM73VScNGvxZhpmsD02MwsKwKqGltLH2yrIGIp1a16WzHe4QcAdt7fEerwvquswgaP0N0QYvi6vl5BeiJwRHD5u70Satul+yuNNZ9sUf4uYd0Oa3boVBMEE8vStRtiyun5sSe3FvlQkyLGX6tSkij6FGWPvSAABgvniNvo7N8Ahy2UAvpeh+jyNxp7SrFEzjJlAiutYkKctr5gLqqXonzzH0olYVyQGZFKZTJOj4VqAcWC2rsex9zrFhESAiWLHX4xS+qTnstukvccGkvt0jNpNMpVxT/rcxtyX4ETN7hotaSuFkiK0jFh4baA9Pr3XOoTERczgs7mqDKZuPEUUnPG8jmrL8kpQrkOeGS3b6RUdjN7TzsiCgzhrcm7kNxQWvls/YS5X6al2oWpX9YnIochkcYTIwWGiRzhfbmUwo/Pca7vV8u4TUThQSKXgFvty2a2Vb4w8r/tsSsTRnMgewChmLVjUDiSCmlqMN+WNprp8VAeZjmeEZ7sA+dy9es5ZWaEtIBliyWp8="
     - secure: "nQpGSekh2pNxvLu2aAJ2Wljs+jjvSj8DVZ9ruSifPyaRuThEDuOAbdulvhvl+pSFu3wMycg1wANKFffVkEA+qP6AT6jVR2F857FF2unUdpXLin+1ebeE6V1Fd9Ffk4em4DfcpDJBMeUJU1sFafeOYAxOthWGBJidXZN29CmX28+yK7r8UH17fGFZfdl5S1T0Og58DdJotHjtmI6JI0Dt06CC7n1wsT2hZDanwM1CRK7dsLFQBei5cSxTmmdBHr5ShNMkPrtiAi0kXXI5jYx9AnJllprdeYPagTYaLFbRD/0US52BHjpHFXe4zZrgo9Hm/PRO16llssy4itjCYDsfdSRbCVeTPxXp7ShPemuDqf1WImDh67YwAK3EiHY0y/UX74HrDNvq1pIRZ1d6JFIk9Ovz5A/TYipdTerfQjA9MK4KMRgdJBHPGKJ9pjrR/PmjPxpPmD+ZQAQDvlyY8ig1BIS6Uw2owiONumE3ZWkIrK2v5u796i5iuuckIYocTrTeF02tb2kv72PMV0QKUwc3efKghJ5Kb0V1e2J4VUP2OKQ9CdKek09JHOwenWa2kVc5xiDbAGqZtQSvoUW7LsEp4OyAuJzKcNCFxlTZANbhjmMUtEaWRwTGgo+ZXclwVl1Yy80FnHY6OP+NGq4GHDcPBzaUSsynwLNxbTyl2SODVJY="
@@ -33,7 +33,7 @@ addons:
     - cmake
     - cmake-data
     - python2.7-dev
-    - python3.5-dev
+    - python3.4-dev
     
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
@@ -41,9 +41,9 @@ install:
   - cp scripts/user-config.jam $HOME
   - bash scripts/install-boost.sh
   - ls -R $HOME/boost_1_60_0
-  - if [ "$PYTHON_VERSION" = "3.5" ]; then bash scripts/install-pip3.sh; fi
-  # - if [ "$PYTHON_VERSION" = "3.5" ]; then pip3 install --upgrade --user gmusicapi; else pip install --upgrade --user gmusicapi; fi
-  - if [ "$PYTHON_VERSION" = "3.5" ]; then alias pip="pip3"; fi
+  - if [ "$PYTHON_VERSION" = "3.4" ]; then bash scripts/install-pip3.sh; fi
+  # - if [ "$PYTHON_VERSION" = "3.4" ]; then pip3 install --upgrade --user gmusicapi; else pip install --upgrade --user gmusicapi; fi
+  - if [ "$PYTHON_VERSION" = "3.4" ]; then alias pip="pip3"; fi
   - cd gmusicapi
   - python$PYTHON_VERSION setup.py sdist --formats=zip -k
   - find ./dist -iname "*.zip" -print0 | xargs -0 pip install --user
