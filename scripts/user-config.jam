@@ -1,4 +1,4 @@
 using python : 2.7 ;  # Make both versions of Python available
 
-using python : 3.5 ;  # To build with python 3.4, add python=3.5
+using python : 3.4 ;  # To build with python 3.4, add python=3.4
                       # to your command line.
