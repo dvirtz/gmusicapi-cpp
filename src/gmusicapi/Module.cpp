@@ -1,13 +1,13 @@
-#include "Module.h"
-#include "RegisteredDevice.h"
+#include "gmusicapi/Module.h"
+#include "gmusicapi/RegisteredDevice.h"
+#include "gmusicapi/Song.h"
+#include "gmusicapi/Playlist.h"
+#include "gmusicapi/RadioStation.h"
+#include "gmusicapi/SearchResults.h"
+#include "gmusicapi/Genre.h"
+#include "PythonHelper/typeConverters.h"
+#include "gmusicapi/SharedPlaylistInfo.h"
 #include "gmusicapiPath.h"
-#include "Song.h"
-#include "Playlist.h"
-#include "RadioStation.h"
-#include "SearchResults.h"
-#include "Genre.h"
-#include "typeConverters.h"
-#include "SharedPlaylistInfo.h"
 
 namespace GMusicApi
 {

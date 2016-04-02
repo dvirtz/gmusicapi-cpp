@@ -20,12 +20,8 @@ else()
 	set(TRAVIS OFF)
 endif()
 
-# always include current dir
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
-
 # Includes Catch in the project:
-set(Catch_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/Catch/include)
+set(Catch_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Catch/include)
 
 # default Cache values
 set(BOOST_ROOT "" CACHE PATH "Boost location")
@@ -37,16 +33,20 @@ set(Boost_USE_STATIC_LIBS ${USE_STATIC_BOOST})
 # disable boost auto-link
 add_definitions(-DBOOST_ALL_NO_LIB)
 
+if($ENV{PYTHON_VERSION})
+	set(PYTHON_VERSION $ENV{PYTHON_VERSION} CACHE STRING "python version")
+endif()
+
 # find boost and python
 macro(FIND_BOOST_PYTHON)
-if("$ENV{PYTHON_VERSION}" STREQUAL "2.7")
+if("${PYTHON_VERSION}" STREQUAL "2.7")
     set(BOOST_PYTHON python)
 else()
     set(BOOST_PYTHON python3)
 endif()
 find_package(Boost REQUIRED COMPONENTS ${BOOST_PYTHON} ${ARGN})
-find_package(PythonInterp $ENV{PYTHON_VERSION} REQUIRED)
-find_package(PythonLibs $ENV{PYTHON_VERSION} REQUIRED)
+find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
+find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
 endmacro()
 
 # the following resolves the issue in

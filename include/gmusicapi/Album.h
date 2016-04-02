@@ -1,11 +1,11 @@
 #pragma once
 
-#include "utility.h"
+#include "PythonHelper/utility.h"
 MSC_DISABLE_WARNINGS
 #include <boost/fusion/include/define_struct.hpp>
 MSC_RESTORE_WARNINGS
-#include "genDefs.h"
-#include "typeConverters.h"
+#include "gmusicapi/genDefs.h"
+#include "PythonHelper/typeConverters.h"
 
 GMUSICAPI_DEFINE_STRUCT(
     (GMusicApi), Album,

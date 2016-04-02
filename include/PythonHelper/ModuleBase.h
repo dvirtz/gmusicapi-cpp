@@ -1,12 +1,12 @@
 #pragma once
 
-#include "utility.h"
+#include "PythonHelper/utility.h"
 MSC_DISABLE_WARNINGS
 #include <boost/python/detail/wrap_python.hpp>
 #include <boost/python.hpp>
 #include <boost/optional.hpp>
 MSC_RESTORE_WARNINGS
-#include "Initializer.h"
+#include "PythonHelper/Initializer.h"
 #include <string>
 
 namespace PythonHelper

@@ -1,10 +1,10 @@
-#include "Initializer.h"
-#include "utility.h"
+#include "PythonHelper/Initializer.h"
+#include "PythonHelper/utility.h"
 MSC_DISABLE_WARNINGS
 #include <boost/python/detail/wrap_python.hpp>
 #include <boost/python.hpp>
 MSC_RESTORE_WARNINGS
-#include "typeConverters.h"
+#include "PythonHelper/typeConverters.h"
 
 namespace PythonHelper
 {

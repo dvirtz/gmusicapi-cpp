@@ -1,5 +1,5 @@
-#include "ClientBase.h"
-#include "Module.h"
+#include "gmusicapi/ClientBase.h"
+#include "gmusicapi/Module.h"
 
 namespace GMusicApi
 {

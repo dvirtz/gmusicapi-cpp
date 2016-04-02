@@ -1,8 +1,8 @@
 #include "catch.hpp"
 #include "TestFixture.h"
-#include "Musicmanager.h"
+#include "gmusicapi/Musicmanager.h"
 #include "testFiles.h"
-#include "Mobileclient.h"
+#include "gmusicapi/Mobileclient.h"
 #include "userCredentials.h"
 #include "gmusicapiPath.h"
 #include <regex>

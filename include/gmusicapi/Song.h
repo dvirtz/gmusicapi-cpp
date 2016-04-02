@@ -1,13 +1,13 @@
 #pragma once
 
-#include "utility.h"
+#include "PythonHelper/utility.h"
 MSC_DISABLE_WARNINGS
 #include <boost/fusion/include/define_struct.hpp>
 MSC_RESTORE_WARNINGS
-#include "AlbumArt.h"
-#include "GeneratedRange.h"
-#include "genDefs.h"
-#include "typeConverters.h"
+#include "gmusicapi/AlbumArt.h"
+#include "gmusicapi/GeneratedRange.h"
+#include "gmusicapi/genDefs.h"
+#include "PythonHelper/typeConverters.h"
 #include <string>
 #include <vector>
 

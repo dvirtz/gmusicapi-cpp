@@ -1,5 +1,5 @@
 #pragma once
-#include "Module.h"
+#include "gmusicapi/Module.h"
 
 class TestFixture
 {

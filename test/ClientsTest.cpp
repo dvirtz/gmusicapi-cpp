@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "TestFixture.h"
-#include "Clients.h"
+#include "gmusicapi/Clients.h"
 
 using namespace GMusicApi;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ModuleBase.h"
+#include "PythonHelper/ModuleBase.h"
 #include <mutex>
 
 namespace GMusicApi

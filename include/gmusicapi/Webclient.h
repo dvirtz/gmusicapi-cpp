@@ -1,8 +1,8 @@
 #pragma once
-#include "ClientBase.h"
-#include "genDefs.h"
-#include "SharedPlaylistInfo.h"
-#include "RegisteredDevice.h"
+#include "gmusicapi/ClientBase.h"
+#include "gmusicapi/genDefs.h"
+#include "gmusicapi/SharedPlaylistInfo.h"
+#include "gmusicapi/RegisteredDevice.h"
 
 namespace GMusicApi
 {

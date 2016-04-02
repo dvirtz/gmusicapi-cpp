@@ -1,10 +1,10 @@
 #include "TestFixture.h"
-#include "utility.h"
+#include "PythonHelper/utility.h"
 #include "catch.hpp"
-#include "Mobileclient.h"
+#include "gmusicapi/Mobileclient.h"
 #include "userCredentials.h"
-#include "Song.h"
-#include "Playlist.h"
+#include "gmusicapi/Song.h"
+#include "gmusicapi/Playlist.h"
 #include <boost/range.hpp>
 #include <boost/range/algorithm.hpp>
 

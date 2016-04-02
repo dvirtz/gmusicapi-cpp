@@ -1,4 +1,4 @@
-#include "Musicmanager.h"
+#include "gmusicapi/Musicmanager.h"
 
 namespace GMusicApi
 {
