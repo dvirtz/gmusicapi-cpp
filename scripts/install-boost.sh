@@ -6,7 +6,7 @@ if [ ! -d "$HOME/boost_1_60_0/lib" ]; then
 	tar --bzip2 -xf /tmp/boost_1_60_0.tar.bz2;
 	cd boost_1_60_0;
 	./bootstrap.sh --prefix=$HOME/boost_1_60_0;
-	./b2 install;
+	./b2 -j2 link=shared variant=release cxxflags=-fPIC --with-date_time --with-python install
 else
   echo 'Using cached boost.';
 fi
