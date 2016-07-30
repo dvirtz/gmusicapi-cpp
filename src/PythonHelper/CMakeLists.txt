@@ -1,7 +1,7 @@
 set(HEADERS ModuleBase.h ClassBase.h typeConverters.h utility.h Initializer.h)
 set(SOURCES ModuleBase.cpp Initializer.cpp)
 
-FIND_BOOST_PYTHON()
+find_package(Boost REQUIRED COMPONENTS ${BOOST_PYTHON})
 
 string(REGEX MATCH "[0-9]+" PYTHON_MAJOR ${PYTHONLIBS_VERSION_STRING})
 

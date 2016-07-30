@@ -23,7 +23,7 @@ source_group("Configure Files" FILES ${CONFIGURE_FILES})
 set(HEADERS ${CMAKE_CURRENT_BINARY_DIR}/${USER_CRED_H} ${CMAKE_CURRENT_BINARY_DIR}/${TEST_FILES_H})
 set(SOURCES MobileclientTest.cpp TesterMain.cpp WebclientTester.cpp MusicmanagerTest.cpp ClientsTest.cpp)
 
-FIND_BOOST_PYTHON(date_time)
+find_package(Boost REQUIRED COMPONENTS ${BOOST_PYTHON} date_time)
 
 if(MSVC)
 	set_source_files_properties(TesterMain.cpp PROPERTIES COMPILE_FLAGS /wd4702)

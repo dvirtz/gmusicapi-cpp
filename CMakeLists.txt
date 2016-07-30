@@ -37,17 +37,15 @@ set(Boost_USE_STATIC_LIBS ${USE_STATIC_BOOST})
 # disable boost auto-link
 add_definitions(-DBOOST_ALL_NO_LIB)
 
+find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
+find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
+
 # find boost and python
-macro(FIND_BOOST_PYTHON)
-if("$ENV{PYTHON_VERSION}" STREQUAL "2.7")
-    set(BOOST_PYTHON python)
-else()
+if(${PYTHON_VERSION_MAJOR} EQUAL 3)
     set(BOOST_PYTHON python3)
+else()
+    set(BOOST_PYTHON python)
 endif()
-find_package(Boost REQUIRED COMPONENTS ${BOOST_PYTHON} ${ARGN})
-find_package(PythonInterp $ENV{PYTHON_VERSION} REQUIRED)
-find_package(PythonLibs $ENV{PYTHON_VERSION} REQUIRED)
-endmacro()
 
 # the following resolves the issue in
 # http://stackoverflow.com/questions/10660524/error-building-boost-1-49-0-with-gcc-4-7-0

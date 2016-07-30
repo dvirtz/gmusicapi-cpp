@@ -2,7 +2,7 @@ set(SOURCES Example.cpp)
 
 add_executable(Example ${SOURCES})
 
-FIND_BOOST_PYTHON()
+find_package(Boost REQUIRED COMPONENTS ${BOOST_PYTHON})
 
 target_include_directories(Example PUBLIC
 	$<TARGET_PROPERTY:GMusicApi,INTERFACE_INCLUDE_DIRECTORIES>)
