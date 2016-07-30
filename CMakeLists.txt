@@ -20,12 +20,8 @@ else()
 	set(TRAVIS OFF)
 endif()
 
-# always include current dir
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
-
 # Includes Catch in the project:
-set(Catch_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/Catch/include)
+set(Catch_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Catch/include)
 
 # default Cache values
 set(BOOST_ROOT "" CACHE PATH "Boost location")

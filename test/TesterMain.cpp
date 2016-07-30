@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_RUNNER
 #include "catch.hpp"
-#include "Module.h"
-#include "Musicmanager.h"
+#include "gmusicapi/Module.h"
+#include "gmusicapi/Musicmanager.h"
 
 int main(int argc, char* argv[])
 {

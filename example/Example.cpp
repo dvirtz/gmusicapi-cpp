@@ -1,5 +1,5 @@
-#include "Module.h"
-#include "Mobileclient.h"
+#include "gmusicapi/Module.h"
+#include "gmusicapi/Mobileclient.h"
 #include <algorithm>
 #include <iostream>
 #ifdef WIN32

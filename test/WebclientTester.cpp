@@ -1,9 +1,9 @@
 #include "catch.hpp"
 #include "TestFixture.h"
-#include "Webclient.h"
+#include "gmusicapi/Webclient.h"
 #include "userCredentials.h"
-#include "Mobileclient.h"
-#include "Song.h"
+#include "gmusicapi/Mobileclient.h"
+#include "gmusicapi/Song.h"
 #include "testFiles.h"
 
 using namespace GMusicApi;

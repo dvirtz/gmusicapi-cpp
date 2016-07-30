@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ClientBase.h"
-#include "genDefs.h"
-#include "Clients.h"
-#include "Song.h"
+#include "gmusicapi/ClientBase.h"
+#include "gmusicapi/genDefs.h"
+#include "gmusicapi/Clients.h"
+#include "gmusicapi/Song.h"
 #include <boost/variant.hpp>
 
 namespace GMusicApi

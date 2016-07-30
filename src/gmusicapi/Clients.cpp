@@ -1,4 +1,4 @@
-#include "Clients.h"
+#include "gmusicapi/Clients.h"
 #include "gmusicapiPath.h"
 
 namespace GMusicApi

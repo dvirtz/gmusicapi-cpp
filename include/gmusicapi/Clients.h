@@ -1,5 +1,5 @@
 #pragma once
-#include "ModuleBase.h"
+#include "PythonHelper/ModuleBase.h"
 
 namespace GMusicApi
 {

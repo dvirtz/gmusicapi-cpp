@@ -1,5 +1,5 @@
-#include "Mobileclient.h"
-#include "utility.h"
+#include "PythonHelper/utility.h"
+#include "gmusicapi/Mobileclient.h"
 #include <iostream>
 #include <regex>
 
