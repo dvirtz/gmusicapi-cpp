@@ -22,7 +22,6 @@ add_library(GMusicApi ${SOURCES} ${HEADERS} ${INCLUDE_HEADERS})
 target_include_directories(GMusicApi PUBLIC
 	${INCLUDE_DIR}
 	$<TARGET_PROPERTY:PythonHelper,INTERFACE_INCLUDE_DIRECTORIES>
-	PRIVATE
 	${CMAKE_CURRENT_BINARY_DIR})
 
 target_compile_definitions(GMusicApi PUBLIC
