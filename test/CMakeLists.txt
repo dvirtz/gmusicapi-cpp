@@ -55,6 +55,10 @@ if(NOT(TRAVIS))
 		COMMAND ${CMAKE_COMMAND} -E env PATH=${PATH_FOR_TEST} PYTHONPATH=${PYTHON_PATH}/DLLs\;${PYTHON_PATH}/lib $<TARGET_FILE:Tester> "~[Webclient]")
 endif()
 
-add_test(NAME RunTests COMMAND Tester "~[Webclient]")
+if(TRAVIS)
+	add_test(NAME RunTests COMMAND Tester "[Mobileclient]")
+else()
+	add_test(NAME RunTests COMMAND Tester "~[Webclient]")
+endif()
 
 set_tests_properties(RunTests PROPERTIES ENVIRONMENT "PATH=${PATH_FOR_TEST};$ENV{PATH}")
