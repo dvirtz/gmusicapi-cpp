@@ -1,12 +1,12 @@
 #!/bin/sh
 set -e	
 # check to see if boost folder is empty
-if [ ! -d "$HOME/boost_1_60_0/lib" ]; then
-	wget https://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.tar.bz2 -O /tmp/boost_1_60_0.tar.bz2;
-	tar --bzip2 -xf /tmp/boost_1_60_0.tar.bz2;
-	cd boost_1_60_0;
-	./bootstrap.sh --prefix=$HOME/boost_1_60_0;
+if [ ! -d "$BOOST_ROOT/lib" ]; then
+	wget https://sourceforge.net/projects/boost/files/boost/$BOOST_DOT_VERSION/boost_$BOOST_VERSION.tar.bz2 -O /tmp/boost_$BOOST_VERSION.tar.bz2;
+	tar jxf /tmp/boost_$BOOST_VERSION.tar.bz2
+	cd boost_$BOOST_VERSION
+	./bootstrap.sh --prefix=$BOOST_ROOT
 	./b2 -j2 link=shared variant=release cxxflags=-fPIC --with-date_time --with-python install
 else
-  echo 'Using cached boost.';
+  echo 'Using cached boost.'
 fi
