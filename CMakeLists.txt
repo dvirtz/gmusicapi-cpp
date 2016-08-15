@@ -34,6 +34,20 @@ set(Boost_USE_STATIC_LIBS ${USE_STATIC_BOOST})
 add_definitions(-DBOOST_ALL_NO_LIB)
 
 find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
+if (UNIX)
+	find_program(PYTHON_CONFIG_EXECUTABLE python-config)
+	if (NOT PYTHON_CONFIG_EXECUTABLE)
+	    message(SEND_ERROR "python-config executable not found, but python is required.")
+	endif()
+	# using "python-config --prefix" so that cmake always uses the python that is
+	# in the user's path, this is a fix for homebrew on Mac:
+	# https://github.com/Homebrew/homebrew/issues/25118 [^]
+	execute_process(COMMAND ${PYTHON_CONFIG_EXECUTABLE} --prefix OUTPUT_VARIABLE python_prefix OUTPUT_STRIP_TRAILING_WHITESPACE)
+	set(PYTHON_INCLUDE_DIR ${python_prefix}/include/python2.7 CACHE STRING "Python include dir")
+	get_filename_component(python_dir ${PYTHON_EXECUTABLE} DIRECTORY)
+	string(REPLACE /bin /lib python_lib_dir ${python_dir})
+	set(PYTHON_LIBRARY ${python_lib_dir}/libpython2.7${CMAKE_SHARED_LIBRARY_SUFFIX} CACHE STRING "Python library path")
+endif()
 find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
 
 # find boost and python
@@ -59,7 +73,9 @@ include(doxygen.cmake)
 
 enable_testing()
 
-add_definitions(-DBOOST_PYTHON_STATIC_LIB)
+if(USE_STATIC_BOOST)
+	add_definitions(-DBOOST_PYTHON_STATIC_LIB)
+endif()
 
 add_subdirectory(src)
 add_subdirectory(test)

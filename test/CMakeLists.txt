@@ -42,7 +42,7 @@ target_link_libraries(Tester PUBLIC
 	${Boost_LIBRARIES}
 	${PYTHON_LIBRARY_RELEASE})
 
-get_filename_component(PYTHON_PATH ${PYTHON_EXECUTABLE} DIRECTORY)
+get_filename_component(PYTHON_PATH ${PYTHON_LIBRARIES} DIRECTORY)
 
 set(PATH_FOR_TEST ${PYTHON_PATH})
 if(NOT(${USE_STATIC_BOOST}))
@@ -61,4 +61,8 @@ else()
 	add_test(NAME RunTests COMMAND Tester "~[Webclient]")
 endif()
 
-set_tests_properties(RunTests PROPERTIES ENVIRONMENT "PATH=${PATH_FOR_TEST};$ENV{PATH}")
+if(UNIX)
+	set_tests_properties(RunTests PROPERTIES ENVIRONMENT "PATH=${PATH_FOR_TEST};$ENV{PATH}")
+else()
+	set_tests_properties(RunTests PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=${PATH_FOR_TEST}:$ENV{LD_LIBRARY_PATH}")
+endif()
