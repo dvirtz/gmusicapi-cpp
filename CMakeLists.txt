@@ -12,7 +12,7 @@ if("$ENV{TRAVIS}" STREQUAL "true")
 	if(COMPILER_SUPPORTS_CXX14)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")
 	else()
-			message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
+		message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
 	endif()
 else()
 	message(STATUS "not on Travis-CI")
@@ -35,15 +35,16 @@ add_definitions(-DBOOST_ALL_NO_LIB)
 
 find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
 if (TRAVIS)
-	find_program(PYTHON_CONFIG_EXECUTABLE python-config)
-	if (NOT PYTHON_CONFIG_EXECUTABLE)
-	    message(SEND_ERROR "python-config executable not found, but python is required.")
-	endif()
-	# using "python-config --prefix" so that cmake always uses the python that is
-	# in the user's path, this is a fix for homebrew on Mac:
-	# https://github.com/Homebrew/homebrew/issues/25118 [^]
-	execute_process(COMMAND ${PYTHON_CONFIG_EXECUTABLE} --prefix OUTPUT_VARIABLE python_prefix OUTPUT_STRIP_TRAILING_WHITESPACE)
-	set(PYTHON_INCLUDE_DIR ${python_prefix}/include/python2.7 CACHE STRING "Python include dir")
+	find_path(PYTHON_INCLUDE_DIR 
+		NAMES Python.h
+		PATHS $ENV{VIRTUAL_ENV}/include
+		PATH_SUFFIXES
+		python${PYTHON_VERSION}mu
+		python${PYTHON_VERSION}m
+		python${PYTHON_VERSION}u
+		python${PYTHON_VERSION}
+	)
+	set(PYTHON_INCLUDE_DIR ${PYTHON_INCLUDE_DIR} CACHE STRING "Python include dir")
 	execute_process(COMMAND ldd ${PYTHON_EXECUTABLE} COMMAND grep python OUTPUT_VARIABLE python_libraries OUTPUT_STRIP_TRAILING_WHITESPACE)
 	string(REGEX REPLACE ".* => (.*) .*" "\\1" python_libraries ${python_libraries})
 	set(PYTHON_LIBRARY ${python_libraries} CACHE STRING "Python library path")

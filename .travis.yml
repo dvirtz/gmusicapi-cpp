@@ -4,6 +4,7 @@ language: python
 
 python:
   - 2.7
+  - 3.4
 
 env:
   matrix:
@@ -34,8 +35,7 @@ addons:
     - libssl-dev
     - cmake
     - cmake-data
-    # - python2.7-dev
-    # - python3.4-dev
+    - python3.4-dev
 
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
