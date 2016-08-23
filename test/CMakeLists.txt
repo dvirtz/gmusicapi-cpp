@@ -41,18 +41,17 @@ target_link_libraries(Tester PUBLIC
 	PythonHelper
 	${Boost_LIBRARIES}
 	${PYTHON_LIBRARY_RELEASE})
+message("PYTHON_LIBRARY_RELEASE=${PYTHON_LIBRARY_RELEASE}")
 
-get_filename_component(PYTHON_PATH ${PYTHON_LIBRARIES} DIRECTORY)
+if(UNIX)
+	get_filename_component(PYTHON_PATH ${PYTHON_LIBRARY_RELEASE} DIRECTORY)
+else()
+	get_filename_component(PYTHON_PATH ${PYTHON_EXECUTABLE} DIRECTORY)
+endif()
 
 set(PATH_FOR_TEST ${PYTHON_PATH})
 if(NOT(${USE_STATIC_BOOST}))
-list(APPEND PATH_FOR_TEST ${Boost_LIBRARY_DIRS})
-endif()
-
-if(NOT(TRAVIS))
-	add_custom_command(TARGET Tester 
-		POST_BUILD 
-		COMMAND ${CMAKE_COMMAND} -E env PATH=${PATH_FOR_TEST} PYTHONPATH=${PYTHON_PATH}/DLLs\;${PYTHON_PATH}/lib $<TARGET_FILE:Tester> "~[Webclient]")
+	set(PATH_FOR_TEST "${PATH_FOR_TEST}\;${Boost_LIBRARY_DIRS}")
 endif()
 
 if(TRAVIS)
@@ -64,5 +63,17 @@ endif()
 if(UNIX)
 	set_tests_properties(RunTests PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=${PATH_FOR_TEST}:$ENV{LD_LIBRARY_PATH}")
 else()
-	set_tests_properties(RunTests PROPERTIES ENVIRONMENT "PATH=${PATH_FOR_TEST};$ENV{PATH}")
+	set_tests_properties(RunTests PROPERTIES ENVIRONMENT "PATH=${PATH_FOR_TEST}\;$ENV{PATH};PYTHONPATH=${PYTHON_PATH}/DLLs\;${PYTHON_PATH}/lib")
+endif()
+
+if(NOT(TRAVIS))
+	if(UNIX)
+		add_custom_command(TARGET Tester 
+			POST_BUILD 
+			COMMAND ${CMAKE_CTEST_COMMAND} -V)
+	else()
+		add_custom_command(TARGET Tester 
+			POST_BUILD 
+			COMMAND ${CMAKE_CTEST_COMMAND} -C ${CMAKE_CFG_INTDIR} -V)
+	endif()
 endif()

@@ -9,12 +9,10 @@ endforeach()
 
 find_package(Boost REQUIRED COMPONENTS ${BOOST_PYTHON})
 
-string(REGEX MATCH "[0-9]+" PYTHON_MAJOR ${PYTHONLIBS_VERSION_STRING})
-
 add_library(PythonHelper ${SOURCES} ${INCLUDE_HEADERS})
 
 target_compile_definitions(PythonHelper PUBLIC
-	PYTHON_MAJOR=${PYTHON_MAJOR})
+	PYTHON_MAJOR=${PYTHON_VERSION_MAJOR})
 	
 target_include_directories(PythonHelper PUBLIC
 	${INCLUDE_DIR})
