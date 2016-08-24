@@ -42,14 +42,18 @@ install:
   - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.8" CC="clang-3.8"; fi
   - python scripts/travis.py
   - bash scripts/install-boost.sh
-  - pip install gmusicapi
+  - pushd gmusicapi
+  - python setup.py sdist --formats=zip -k
+  - find ./dist -iname "*.zip" -print0 | xargs -0 pip install
+  - popd
 
 script:
   - mkdir _build
-  - cd _build
+  - pushd _build
   - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DGM_U=$GM_U -DGM_P=$GM_P -DGM_R=$GM_R -DBOOST_ROOT=$BOOST_ROOT
   - make
   - make test ARGS="-V"
+  - popd
 
 after_failure:
   - cat ~/.cache/gmusicapi/log/gmusicapi.log
