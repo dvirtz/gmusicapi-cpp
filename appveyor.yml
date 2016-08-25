@@ -24,9 +24,8 @@ install:
   - if "%platform%"=="Win32" set PYTHON_URL=https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi
   - if "%platform%"=="x64" set PYTHON_URL=https://www.python.org/ftp/python/2.7.10/python-2.7.10.amd64.msi
   - ps: (new-object net.webclient).DownloadFile($env:PYTHON_URL, 'python2710.msi')
-  - ps: msiexec /i python2710.msi /qn /norestart TARGETDIR=$env:PYTHON
+  - ps: msiexec /i python2710.msi /qn /norestart /log install.log TARGETDIR=$env:PYTHON
   - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
-  - path
   - call scripts\install-gmusicapi.bat 
 
 build_script:
@@ -42,4 +41,5 @@ test_script:
   - ctest -C %CONFIGURATION% -V
 
 on_failure:
+  - type install.log
   - type %LOCALAPPDATA%\Simon Weber\gmusicapi\Logs\gmusicapi.log
