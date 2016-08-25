@@ -17,9 +17,8 @@ configuration: Release
 
 install:
   - git submodule update --init --recursive
-# install gmusicapi
-  - call scripts\install-gmusicapi.bat 
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - call scripts\install-gmusicapi.bat 
 
 build_script:
   - mkdir _build
