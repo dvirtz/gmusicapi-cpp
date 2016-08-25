@@ -1,0 +1,38 @@
+environment:
+  GM_U:
+    secure: YqHTlbjExy8+GCV4dmswfn8MiR7ATBOSTJ+ymIQ+I0o=
+  GM_P:
+    secure: B5Z6Y7b6W5n7SiO0fXa2Kw==
+  GM_R:
+    secure: pnfZc6rMyfKi6UMBCNLhheHykTx/Yu5nr1xxQuX68YmiGXa30noifm8YZeKJRlkS
+  GM_AA_ID:
+    secure: lRWdgF+NYnKPwDzQBi4oaYeVkSJgGM+m4Jv5LrhAlgA=
+  
+  matrix:
+    - PYTHON: "C:\\Python27"
+      PYTHON_VERSION: "2.7"
+      BOOST_ROOT: C:\Libraries\boost_1_59_0
+      
+configuration: Release
+
+install:
+  - git submodule update --init --recursive
+# install gmusicapi
+  - pushd gmusicapi
+  - python setup.py sdist --formats=zip -k
+  - dir dist\*.zip /b > zips.txt
+  - for /f %k in (zips.txt) do pip install dist\%k
+  - popd
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+
+build_script:
+  - mkdir _build
+  - cd _build
+  - cmake .. -DGM_U=%GM_U% -DGM_P=%GM_P% -DGM_R=%GM_R% -DBOOST_ROOT=%BOOST_ROOT%
+  - cmake --build . --config %CONFIGURATION%
+  
+test_script:
+  - ctest -C %CONFIGURATION% -V
+
+on_failure:
+  - type %LOCALAPPDATA%\Simon Weber\gmusicapi\Logs\gmusicapi.log

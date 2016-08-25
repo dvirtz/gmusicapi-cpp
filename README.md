@@ -1,5 +1,6 @@
 # gmusicapi-cpp
-[![Build Status](https://travis-ci.org/dvirtz/gmusicapi-cpp.png?branch=master)](https://travis-ci.org/dvirtz/gmusicapi-cpp)
+[![Travis Status](https://travis-ci.org/dvirtz/gmusicapi-cpp.png?branch=master)](https://travis-ci.org/dvirtz/gmusicapi-cpp)
+[![AppVeyor status](https://ci.appveyor.com/api/projects/status/jbe7js8pvmo69txv?svg=true)](https://ci.appveyor.com/project/dvirtz/gmusicapi-cpp)
 
 A C++ wrapper for Simon Weber's [google music API library](https://github.com/simon-weber/gmusicapi).
 
