@@ -13,14 +13,16 @@ environment:
     secure: lRWdgF+NYnKPwDzQBi4oaYeVkSJgGM+m4Jv5LrhAlgA=
   
   matrix:
-    - PYTHON: "C:\\Python27"
-      PYTHON_VERSION: "2.7"
+    - PYTHON: "C:\\Python27.10"
+      PYTHON_VERSION: "2.7.10"
       BOOST_ROOT: C:\Libraries\boost_1_59_0
       
 configuration: Release
 
 install:
   - git submodule update --init --recursive
+  - ps: (new-object net.webclient).DownloadFile('https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi', 'python2710.msi')
+  - ps: msiexec /i python2710.msi /qn /norestart /log install.log TARGETDIR="C:\Python27.10"
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - call scripts\install-gmusicapi.bat 
 
@@ -29,7 +31,7 @@ build_script:
   - cd _build
   # We generate project files for Visual Studio 12 because the boost binaries installed on the test server are for Visual Studio 12.
   - if "%platform%"=="Win32" set "CMAKE_GENERATOR_NAME=Visual Studio 14 2015" & set "BOOST_LIBRARYDIR=%BOOST_ROOT%\lib32-msvc-14.0"
-  - if "%platform%"=="x64" set "CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64" & set "BOOST_LIBRARYDIR=%BOOST_ROOT%\lib32-msvc-14.0"
+  - if "%platform%"=="x64" set "CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64" & set "BOOST_LIBRARYDIR=%BOOST_ROOT%\lib64-msvc-14.0"
   - cmake .. -G "%CMAKE_GENERATOR_NAME%" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" -DGM_U=%GM_U% -DGM_P=%GM_P% -DGM_R=%GM_R% -DGM_AA_ID=%GM_AA_ID%
   - cmake --build . --config %CONFIGURATION%
   

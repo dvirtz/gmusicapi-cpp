@@ -54,7 +54,7 @@ if(NOT(${USE_STATIC_BOOST}))
 	set(PATH_FOR_TEST "${PATH_FOR_TEST}\;${Boost_LIBRARY_DIRS}")
 endif()
 
-if(TRAVIS)
+if(CI)
 	add_test(NAME RunTests COMMAND Tester "[Mobileclient]")
 else()
 	add_test(NAME RunTests COMMAND Tester "~[Webclient]")
@@ -66,7 +66,7 @@ else()
 	set_tests_properties(RunTests PROPERTIES ENVIRONMENT "PATH=${PATH_FOR_TEST}\;$ENV{PATH};PYTHONPATH=${PYTHON_PATH}/DLLs\;${PYTHON_PATH}/lib")
 endif()
 
-if(NOT(TRAVIS))
+if(NOT(CI))
 	if(UNIX)
 		add_custom_command(TARGET Tester 
 			POST_BUILD 
