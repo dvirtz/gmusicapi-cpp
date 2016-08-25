@@ -18,11 +18,7 @@ configuration: Release
 install:
   - git submodule update --init --recursive
 # install gmusicapi
-  - pushd gmusicapi
-  - python setup.py sdist --formats=zip -k
-  - dir dist\*.zip /b > zips.txt
-  - for /f %k in (zips.txt) do pip install dist\%k
-  - popd
+  - call scripts\install-gmusicapi.bat 
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
 
 build_script:
