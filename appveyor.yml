@@ -21,9 +21,12 @@ configuration: Release
 
 install:
   - git submodule update --init --recursive
-  - ps: (new-object net.webclient).DownloadFile('https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi', 'python2710.msi')
-  - ps: msiexec /i python2710.msi /qn /norestart /log install.log TARGETDIR="C:\Python27.10"
-  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - if "%platform%"=="Win32" set PYTHON_URL=https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi
+  - if "%platform%"=="x64" set PYTHON_URL=https://www.python.org/ftp/python/2.7.10/python-2.7.10.amd64.msi
+  - ps: (new-object net.webclient).DownloadFile($env:PYTHON_URL, 'python2710.msi')
+  - ps: msiexec /i python2710.msi /qn /norestart TARGETDIR=$env:PYTHON
+  - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
+  - path
   - call scripts\install-gmusicapi.bat 
 
 build_script:
