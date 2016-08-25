@@ -13,8 +13,8 @@ environment:
     secure: lRWdgF+NYnKPwDzQBi4oaYeVkSJgGM+m4Jv5LrhAlgA=
   
   matrix:
-    - PYTHON: "C:\\Python27.10"
-      PYTHON_VERSION: "2.7.10"
+    - PYTHON: C:\Python27.10
+      PYTHON_VERSION: 2.7.10
       BOOST_ROOT: C:\Libraries\boost_1_59_0
       
 configuration: Release
@@ -23,8 +23,10 @@ install:
   - git submodule update --init --recursive
   - if "%platform%"=="Win32" set PYTHON_URL=https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi
   - if "%platform%"=="x64" set PYTHON_URL=https://www.python.org/ftp/python/2.7.10/python-2.7.10.amd64.msi
-  - ps: (new-object net.webclient).DownloadFile($env:PYTHON_URL, 'python2710.msi')
-  - ps: msiexec /i python2710.msi /qn /norestart /log install.log TARGETDIR=$env:PYTHON
+  - appveyor DownloadFile %PYTHON_URL% -FileName python2710.msi
+  - msiexec /i python2710.msi /qn /norestart TARGETDIR=%PYTHON%
+  - appveyor DownloadFile https://bootstrap.pypa.io/get-pip.py
+  - %PYTHON%\python get-pip.py
   - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
   - call scripts\install-gmusicapi.bat 
 
@@ -41,5 +43,5 @@ test_script:
   - ctest -C %CONFIGURATION% -V
 
 on_failure:
-  - type install.log
-  - type %LOCALAPPDATA%\Simon Weber\gmusicapi\Logs\gmusicapi.log
+  - set GMUSICAPI_LOG=%LOCALAPPDATA%\Simon Weber\gmusicapi\Logs\gmusicapi.log
+  - if exist %GMUSICAPI_LOG% (type %GMUSICAPI_LOG%)
