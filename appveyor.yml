@@ -25,9 +25,9 @@ install:
   - if "%platform%"=="x64" set PYTHON_URL=https://www.python.org/ftp/python/2.7.10/python-2.7.10.amd64.msi
   - appveyor DownloadFile %PYTHON_URL% -FileName python2710.msi
   - msiexec /i python2710.msi /qn /norestart TARGETDIR=%PYTHON%
-  - appveyor DownloadFile https://bootstrap.pypa.io/get-pip.py
-  - %PYTHON%\python get-pip.py
   - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
+  - appveyor DownloadFile https://bootstrap.pypa.io/get-pip.py
+  - python get-pip.py
   - call scripts\install-gmusicapi.bat 
 
 build_script:
