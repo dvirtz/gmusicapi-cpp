@@ -41,7 +41,6 @@ target_link_libraries(Tester PUBLIC
 	PythonHelper
 	${Boost_LIBRARIES}
 	${PYTHON_LIBRARY_RELEASE})
-message("PYTHON_LIBRARY_RELEASE=${PYTHON_LIBRARY_RELEASE}")
 
 if(UNIX)
 	get_filename_component(PYTHON_PATH ${PYTHON_LIBRARY_RELEASE} DIRECTORY)
@@ -61,9 +60,9 @@ else()
 endif()
 
 if(UNIX)
-	set_tests_properties(RunTests PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=${PATH_FOR_TEST}:$ENV{LD_LIBRARY_PATH}")
+	set_tests_properties(RunTests PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=${PATH_FOR_TEST}")
 else()
-	set_tests_properties(RunTests PROPERTIES ENVIRONMENT "PATH=${PATH_FOR_TEST}\;$ENV{PATH};PYTHONPATH=${PYTHON_PATH}/DLLs\;${PYTHON_PATH}/lib")
+	set_tests_properties(RunTests PROPERTIES ENVIRONMENT "PATH=${PATH_FOR_TEST};PYTHONPATH=${PYTHON_PATH}/DLLs\\;${PYTHON_PATH}/lib")
 endif()
 
 if(NOT(CI))
