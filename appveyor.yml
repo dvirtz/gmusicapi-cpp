@@ -40,6 +40,7 @@ build_script:
   - cmake --build . --config %CONFIGURATION%
   
 test_script:
+  - python -c "import sys; print(sys.path)"
   - ctest -C %CONFIGURATION% -V
 
 on_failure:
