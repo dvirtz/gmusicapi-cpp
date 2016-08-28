@@ -54,7 +54,7 @@ if(NOT(${USE_STATIC_BOOST}))
 endif()
 
 if(CI)
-	add_test(NAME RunTests COMMAND Tester "[Mobileclient]")
+	add_test(NAME RunTests COMMAND Tester "Mobileclient login")
 else()
 	add_test(NAME RunTests COMMAND Tester "~[Webclient]")
 endif()
