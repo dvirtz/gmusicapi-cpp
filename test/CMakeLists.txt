@@ -62,7 +62,7 @@ endif()
 if(UNIX)
 	set_tests_properties(RunTests PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=${PATH_FOR_TEST}")
 else()
-	set_tests_properties(RunTests PROPERTIES ENVIRONMENT "PATH=${PATH_FOR_TEST}")
+	set_tests_properties(RunTests PROPERTIES ENVIRONMENT "PATH=${PATH_FOR_TEST};PYTHONPATH=${PYTHON_PATH}/lib/site-packages")
 endif()
 
 if(NOT(CI))
