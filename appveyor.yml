@@ -40,7 +40,7 @@ build_script:
   - cmake --build . --config %CONFIGURATION%
   
 test_script:
-  - python -c "import google.protobuf; print google.protobuf.__path__"
+  - python -c "import gmusicapi; print gmusicapi.__path__"
   - ctest -C %CONFIGURATION% -V
 
 on_failure:
