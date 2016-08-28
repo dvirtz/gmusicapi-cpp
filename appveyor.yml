@@ -28,7 +28,6 @@ install:
   - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
   - appveyor DownloadFile https://bootstrap.pypa.io/get-pip.py
   - python get-pip.py
-  - pip install --upgrade pip
   - call scripts\install-gmusicapi.bat 
 
 build_script:
@@ -41,6 +40,7 @@ build_script:
   - cmake --build . --config %CONFIGURATION%
   
 test_script:
+  - python -c "import google.protobuf; print google.protobuf.__path__"
   - ctest -C %CONFIGURATION% -V
 
 on_failure:
