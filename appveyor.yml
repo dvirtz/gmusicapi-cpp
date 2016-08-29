@@ -40,8 +40,9 @@ build_script:
   - cmake --build . --config %CONFIGURATION%
   
 test_script:
-  - python -c "import gmusicapi; print gmusicapi.__path__"
-  - ctest -C %CONFIGURATION% -V
+#  - python -c "import gmusicapi; print gmusicapi.__path__"
+#  - ctest -C %CONFIGURATION% -V
+  - Tester.exe "Mobileclient login"
 
 on_failure:
   - set GMUSICAPI_LOG=%LOCALAPPDATA%\Simon Weber\gmusicapi\Logs\gmusicapi.log
