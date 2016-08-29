@@ -29,11 +29,11 @@ install:
   - appveyor DownloadFile https://bootstrap.pypa.io/get-pip.py
   - python get-pip.py
   - call scripts\install-gmusicapi.bat 
-  - mkdir depends
-  - cd depends
-  - appveyor DownloadFile http://dependencywalker.com/depends22_x64.zip
-  - 7z e depends22_x64.zip
-  - cd ..
+  # - mkdir depends
+  # - cd depends
+  # - appveyor DownloadFile http://dependencywalker.com/depends22_x64.zip
+  # - 7z e depends22_x64.zip
+  # - cd ..
 
 build_script:
   - mkdir _build
@@ -46,11 +46,11 @@ build_script:
   - cd ..
   
 test_script:
-#  - python -c "import gmusicapi; print gmusicapi.__path__"
-#  - ctest -C %CONFIGURATION% -V
-  - depends\depends.exe /c /ot dependencies.txt C:\projects\gmusicapi-cpp\_build\test\Release\Tester.exe && exit 0
-  - type dependencies.txt
-  - C:\projects\gmusicapi-cpp\_build\test\Release\Tester.exe "Mobileclient login"
+  - python -c "import sys; print(sys.path)"
+  - ctest -C %CONFIGURATION% -V
+  # - depends\depends.exe /c /ot dependencies.txt C:\projects\gmusicapi-cpp\_build\test\Release\Tester.exe && exit 0
+  # - type dependencies.txt
+  # - C:\projects\gmusicapi-cpp\_build\test\Release\Tester.exe "Mobileclient login"
 
 on_failure:
   - set GMUSICAPI_LOG=%LOCALAPPDATA%\Simon Weber\gmusicapi\Logs\gmusicapi.log
