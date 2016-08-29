@@ -48,7 +48,7 @@ build_script:
 test_script:
 #  - python -c "import gmusicapi; print gmusicapi.__path__"
 #  - ctest -C %CONFIGURATION% -V
-  - depends\depends.exe /c /ot dependencies.txt C:\projects\gmusicapi-cpp\_build\test\Release\Tester.exe.
+  - depends\depends.exe /c /ot dependencies.txt C:\projects\gmusicapi-cpp\_build\test\Release\Tester.exe && exit 0
   - type dependencies.txt
   - C:\projects\gmusicapi-cpp\_build\test\Release\Tester.exe "Mobileclient login"
 
