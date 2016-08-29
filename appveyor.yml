@@ -42,7 +42,7 @@ build_script:
 test_script:
 #  - python -c "import gmusicapi; print gmusicapi.__path__"
 #  - ctest -C %CONFIGURATION% -V
-  - Tester.exe "Mobileclient login"
+  - C:\projects\gmusicapi-cpp\_build\test\Release\Tester.exe "Mobileclient login"
 
 on_failure:
   - set GMUSICAPI_LOG=%LOCALAPPDATA%\Simon Weber\gmusicapi\Logs\gmusicapi.log
