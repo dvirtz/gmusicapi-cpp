@@ -30,10 +30,10 @@ install:
   - python get-pip.py
   - call scripts\install-gmusicapi.bat 
   - mkdir depends
-  - pushd depends
+  - cd depends
   - appveyor DownloadFile http://dependencywalker.com/depends22_x64.zip
   - 7z e depends22_x64.zip
-  - popd
+  - cd ..
 
 build_script:
   - mkdir _build
