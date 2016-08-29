@@ -29,6 +29,7 @@ install:
   - appveyor DownloadFile https://bootstrap.pypa.io/get-pip.py
   - python get-pip.py
   - call scripts\install-gmusicapi.bat 
+  - mkdir depends
   - pushd depends
   - appveyor DownloadFile http://dependencywalker.com/depends22_x64.zip
   - 7z e depends22_x64.zip
