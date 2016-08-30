@@ -15,7 +15,9 @@ environment:
   matrix:
     - PYTHON: C:\Python27.10
       PYTHON_VERSION: 2.7.10
-      BOOST_ROOT: C:\Libraries\boost_1_59_0
+      BOOST_VERSION: 1_60_0
+      BOOST_DOT_VERSION: 1.60.0
+      BOOST_ROOT: C:\%BOOST_VERSION%
       
 configuration: Release
 
@@ -28,6 +30,7 @@ install:
   - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
   - appveyor DownloadFile https://bootstrap.pypa.io/get-pip.py
   - python get-pip.py
+  - call scripts\install-boost.bat
   - call scripts\install-gmusicapi.bat 
   # - mkdir depends
   # - cd depends
