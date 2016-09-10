@@ -3,7 +3,6 @@
 #include "gmusicapi/Musicmanager.h"
 #include "testFiles.h"
 #include "gmusicapi/Mobileclient.h"
-#include "userCredentials.h"
 #include "gmusicapiPath.h"
 #include <regex>
 

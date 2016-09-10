@@ -15,9 +15,9 @@ environment:
   matrix:
     - PYTHON: C:\Python27.10
       PYTHON_VERSION: 2.7.10
-      BOOST_VERSION: 1_60_0
-      BOOST_DOT_VERSION: 1.60.0
-      BOOST_ROOT: C:\%BOOST_VERSION%
+      # BOOST_VERSION: 1_60_0
+      # BOOST_DOT_VERSION: 1.60.0
+      # BOOST_ROOT: C:\%BOOST_VERSION%
       
 configuration: Release
 
@@ -30,30 +30,21 @@ install:
   - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
   - appveyor DownloadFile https://bootstrap.pypa.io/get-pip.py
   - python get-pip.py
-  - call scripts\install-boost.bat
+  # - call scripts\install-boost.bat
   - call scripts\install-gmusicapi.bat 
-  # - mkdir depends
-  # - cd depends
-  # - appveyor DownloadFile http://dependencywalker.com/depends22_x64.zip
-  # - 7z e depends22_x64.zip
-  # - cd ..
 
 build_script:
   - mkdir _build
   - cd _build
   # We generate project files for Visual Studio 12 because the boost binaries installed on the test server are for Visual Studio 12.
-  - if "%platform%"=="Win32" set "CMAKE_GENERATOR_NAME=Visual Studio 14 2015" & set "BOOST_LIBRARYDIR=%BOOST_ROOT%\lib32-msvc-14.0"
-  - if "%platform%"=="x64" set "CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64" & set "BOOST_LIBRARYDIR=%BOOST_ROOT%\lib64-msvc-14.0"
-  - cmake .. -G "%CMAKE_GENERATOR_NAME%" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" -DGM_U=%GM_U% -DGM_P=%GM_P% -DGM_R=%GM_R% -DGM_AA_ID=%GM_AA_ID%
+  - if "%platform%"=="Win32" set "CMAKE_GENERATOR_NAME=Visual Studio 14 2015"
+  - if "%platform%"=="x64" set "CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64"
+  - cmake .. -G "%CMAKE_GENERATOR_NAME%" -DCMAKE_BUILD_TYPE=%CONFIGURATION%
   - cmake --build . --config %CONFIGURATION%
   - cd ..
   
 test_script:
-  - python -c "import sys; print(sys.path)"
   - ctest -C %CONFIGURATION% -V
-  # - depends\depends.exe /c /ot dependencies.txt C:\projects\gmusicapi-cpp\_build\test\Release\Tester.exe && exit 0
-  # - type dependencies.txt
-  # - C:\projects\gmusicapi-cpp\_build\test\Release\Tester.exe "Mobileclient login"
 
 on_failure:
   - set GMUSICAPI_LOG=%LOCALAPPDATA%\Simon Weber\gmusicapi\Logs\gmusicapi.log

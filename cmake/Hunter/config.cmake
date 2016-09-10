@@ -1,0 +1,5 @@
+if(NOT DEFINED BOOST_VERSION)
+	set(BOOST_VERSION ${HUNTER_Boost_VERSION})
+endif()
+	
+hunter_config(Boost VERSION ${BOOST_VERSION})

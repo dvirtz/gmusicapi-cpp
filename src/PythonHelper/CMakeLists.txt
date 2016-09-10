@@ -7,7 +7,7 @@ foreach(header ${INCLUDE_HEADERS})
 	list(APPEND INCLUDE_HEADERS ${INCLUDE_DIR}/PythonHelper/${header})
 endforeach()
 
-find_package(Boost REQUIRED COMPONENTS ${BOOST_PYTHON})
+find_package(Boost CONFIG REQUIRED python)
 
 add_library(PythonHelper ${SOURCES} ${INCLUDE_HEADERS})
 

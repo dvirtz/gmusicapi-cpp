@@ -2,7 +2,6 @@
 #include "PythonHelper/utility.h"
 #include "catch.hpp"
 #include "gmusicapi/Mobileclient.h"
-#include "userCredentials.h"
 #include "gmusicapi/Song.h"
 #include "gmusicapi/Playlist.h"
 #include <boost/range.hpp>

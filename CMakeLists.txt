@@ -1,5 +1,17 @@
 cmake_minimum_required(VERSION 3.1.0)
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
+set(HUNTER_STATUS_DEBUG ON)
+
+include(HunterGate)
+
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.15.25.tar.gz"
+    SHA1 "74993ddf2cf8a6a4c3e0b9d58027a624bf3060e7"
+	LOCAL
+)
+
 project(GMusicApi)
 
 # require C++11 support
@@ -31,38 +43,28 @@ set(Catch_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Catch/include)
 
 # default Cache values
 set(BOOST_ROOT "" CACHE PATH "Boost location")
-set(GM_U "" CACHE STRING "Google Music user name")
-set(GM_P "" CACHE STRING "Google Music password")
-
-option(USE_STATIC_BOOST "Whether to use static boost libraries" FALSE)
-set(Boost_USE_STATIC_LIBS ${USE_STATIC_BOOST})
 # disable boost auto-link
 add_definitions(-DBOOST_ALL_NO_LIB)
 
-find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
-if (TRAVIS)
-	find_path(PYTHON_INCLUDE_DIR 
-		NAMES Python.h
-		PATHS $ENV{VIRTUAL_ENV}/include
-		PATH_SUFFIXES
-		python${PYTHON_VERSION}mu
-		python${PYTHON_VERSION}m
-		python${PYTHON_VERSION}u
-		python${PYTHON_VERSION}
-	)
-	set(PYTHON_INCLUDE_DIR ${PYTHON_INCLUDE_DIR} CACHE STRING "Python include dir")
-	execute_process(COMMAND ldd ${PYTHON_EXECUTABLE} COMMAND grep python OUTPUT_VARIABLE python_libraries OUTPUT_STRIP_TRAILING_WHITESPACE)
-	string(REGEX REPLACE ".* => (.*) .*" "\\1" python_libraries ${python_libraries})
-	set(PYTHON_LIBRARY ${python_libraries} CACHE STRING "Python library path")
-endif()
-find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
+find_package(PythonInterp REQUIRED)
+#if (TRAVIS)
+#	find_path(PYTHON_INCLUDE_DIR 
+#		NAMES Python.h
+#		PATHS $ENV{VIRTUAL_ENV}/include
+#		PATH_SUFFIXES
+#		python${PYTHON_VERSION}mu
+#		python${PYTHON_VERSION}m
+#		python${PYTHON_VERSION}u
+#		python${PYTHON_VERSION}
+#	)
+#	set(PYTHON_INCLUDE_DIR ${PYTHON_INCLUDE_DIR} CACHE STRING "Python include dir")
+#	execute_process(COMMAND ldd ${PYTHON_EXECUTABLE} COMMAND grep python OUTPUT_VARIABLE python_libraries OUTPUT_STRIP_TRAILING_WHITESPACE)
+#	string(REGEX REPLACE ".* => (.*) .*" "\\1" python_libraries ${python_libraries})
+#	set(PYTHON_LIBRARY ${python_libraries} CACHE STRING "Python library path")
+#endif()
+find_package(PythonLibsNew ${PYTHON_VERSION_STRING} REQUIRED)
 
-# find boost and python
-if(${PYTHON_VERSION_MAJOR} EQUAL 3)
-    set(BOOST_PYTHON python3)
-else()
-    set(BOOST_PYTHON python)
-endif()
+hunter_add_package(Boost COMPONENTS python date_time program_options)
 
 # the following resolves the issue in
 # http://stackoverflow.com/questions/10660524/error-building-boost-1-49-0-with-gcc-4-7-0
@@ -80,9 +82,9 @@ include(doxygen.cmake)
 
 enable_testing()
 
-if(USE_STATIC_BOOST)
-	add_definitions(-DBOOST_PYTHON_STATIC_LIB)
-endif()
+find_package(Boost CONFIG REQUIRED python)
+
+add_definitions(-DBOOST_PYTHON_STATIC_LIB)
 
 add_subdirectory(src)
 add_subdirectory(test)

@@ -1,7 +1,6 @@
 #include "catch.hpp"
 #include "TestFixture.h"
 #include "gmusicapi/Webclient.h"
-#include "userCredentials.h"
 #include "gmusicapi/Mobileclient.h"
 #include "gmusicapi/Song.h"
 #include "testFiles.h"

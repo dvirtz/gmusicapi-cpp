@@ -11,13 +11,11 @@ ModuleBase::ModuleBase(const std::string & name, const boost::optional<std::stri
 
     try
     {
-        auto sys = bp::import("sys");
-        bp::list pythonPath = bp::extract<bp::list>(sys.attr("path"));
-        std::cout << "sys.path = ";
-        printList(pythonPath);
-
         if (path)
         {
+            auto sys = bp::import("sys");
+            bp::list pythonPath = bp::extract<bp::list>(sys.attr("path"));
+
             // add module to path
             pythonPath.append(*path);
         }
