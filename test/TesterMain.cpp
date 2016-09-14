@@ -78,5 +78,5 @@ int main(int argc, char* argv[])
     {
         return str.c_str();
     });
-    return session.run(unusedOptionsToCatch.size(), unusedOptionsToCatch.data());
+    return session.run(static_cast<int>(unusedOptionsToCatch.size()), unusedOptionsToCatch.data());
 }
