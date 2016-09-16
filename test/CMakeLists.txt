@@ -32,7 +32,7 @@ target_link_libraries(Tester PUBLIC
 	${PYTHON_LIBRARIES})
 
 if(UNIX)
-	get_filename_component(PYTHON_PATH ${PYTHON_LIBRARY_RELEASE} DIRECTORY)
+	get_filename_component(PYTHON_PATH ${PYTHON_LIBRARIES} DIRECTORY)
 else()
 	get_filename_component(PYTHON_PATH ${PYTHON_EXECUTABLE} DIRECTORY)
 endif()
@@ -54,6 +54,8 @@ if(DEFINED $ENV{GM_AA_ID})
 endif()
 	
 add_test(NAME RunTests COMMAND ${TEST_COMMAND})
+
+message(STATUS "Added test ${TEST_COMMAND}")
 
 if(UNIX)
 	set_tests_properties(RunTests PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=${PATH_FOR_TEST}")
