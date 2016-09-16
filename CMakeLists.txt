@@ -7,7 +7,7 @@ set(HUNTER_STATUS_DEBUG ON)
 include(HunterGate)
 
 HunterGate(
-    URL "http://github.com/ruslo/hunter/archive/v0.15.25.tar.gz"
+    URL "https://github.com/ruslo/hunter/archive/v0.15.25.tar.gz"
     SHA1 "74993ddf2cf8a6a4c3e0b9d58027a624bf3060e7"
 	LOCAL
 )
