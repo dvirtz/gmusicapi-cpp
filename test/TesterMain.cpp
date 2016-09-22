@@ -6,27 +6,58 @@
 #include <boost/program_options.hpp>
 #include <algorithm>
 
+std::string getEnv(const char* envVar)
+{
+#ifdef _MSC_VER
+    size_t requiredSize;
+    getenv_s(&requiredSize, nullptr, 0, envVar);
+    if (requiredSize == 0)
+        return {};
+
+    // std::string doesn't need terminating null
+    std::string res(requiredSize - 1, 0);
+    getenv_s(&requiredSize, &res[0], requiredSize, envVar);
+    return res;
+#else
+    auto res = getenv(envVar);
+    return res ? res : {};
+#endif
+}
+
 int main(int argc, char* argv[])
 {
     namespace po = boost::program_options;
 
-    bool wait;
-    bool oauth;
+    struct gm_auth_token
+    {
+        const char*     m_name;
+        const char*     m_description;
+        const char*     m_environment;
+        std::string*    m_pVariable;
+        bool            m_isRequired;
+    };
+
+    static const std::vector<gm_auth_token> gm_auto_tokens =
+    {
+        {"username", "Google Music username", "GM_U", &TestFixture::gm_user, true},
+        {"password", "Google Music password", "GM_P", &TestFixture::gm_pass, true},
+        {"refresh_token", "Google Music refresh token", "GM_R", &TestFixture::gm_refresh, false},
+        {"android_id", "Google Music Android ID", "GM_AA_ID", &TestFixture::gm_user, false}
+    };
 
     po::options_description desc("Other options");
     desc.add_options()
         ("help,h", "produce help message")
-        ("username", po::value(&TestFixture::gm_user)->required(), "Google Music username")
-        ("password", po::value(&TestFixture::gm_pass)->required(), "Google Music password")
-        ("refresh_token", po::value(&TestFixture::gm_refresh), "Google Music refresh token")
-        ("android_id", po::value(&TestFixture::gm_user), "Google Music Android ID")
-        ("wait", po::value(&wait)->default_value(false), "Wait for keystroke before starting")
-        ("oauth", po::value(&oauth)->default_value(false), "Perform OAuth")
+        ("wait", "Wait for keystroke before starting")
+        ("oauth", "Perform OAuth")
         ;
+    for (auto& auth_token : gm_auto_tokens)
+    {
+        desc.add_options()
+            (auth_token.m_name, po::value(auth_token.m_pVariable), auth_token.m_description);
+    }
 
     po::variables_map vm;
-    auto parsedOptions = po::command_line_parser(argc, argv).options(desc).allow_unregistered().run();
-    po::store(parsedOptions, vm);
 
     Catch::Session session;
 
@@ -37,16 +68,22 @@ int main(int argc, char* argv[])
         Catch::cout() << desc << '\n';
     };
 
-    try
+    auto parsedOptions = [&]()
     {
-        po::notify(vm);
-    }
-    catch (std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-        usage();
-        return 1;
-    }
+        try
+        {
+            auto parsedOptions = po::command_line_parser(argc, argv).options(desc).allow_unregistered().run();
+            po::store(parsedOptions, vm);
+            po::notify(vm);
+            return parsedOptions;
+        }
+        catch (std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+            usage();
+            exit(1);
+        }
+    }();
 
     if (vm.count("help"))
     {
@@ -54,14 +91,30 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    if (wait)
+    for (auto& auth_token : gm_auto_tokens)
+    {
+        if (auth_token.m_isRequired && auth_token.m_pVariable->empty())
+        {
+            auth_token.m_pVariable->assign(getEnv(auth_token.m_environment));
+
+            if (auth_token.m_pVariable->empty())
+            {
+                std::cerr << "Auth token " << auth_token.m_name << " should be given either on the command line, "
+                    << " or set on the environment variable " << auth_token.m_environment << ".\n";
+                usage();
+                return 1;
+            }
+        }
+    }
+
+    if (vm.count("wait"))
     {
         std::string s;
         std::cout << "Press enter to start testing.\n";
         std::cin >> s;
     }
 
-    if (oauth)
+    if (vm.count("oauth"))
     {
         namespace gm = GMusicApi;
         gm::Module m;
@@ -69,7 +122,7 @@ int main(int argc, char* argv[])
         mm.perform_oauth();
     }
 
-    auto unusedOptions = collect_unrecognized(parsedOptions.options, po::include_positional);
+    auto unusedOptions = po::collect_unrecognized(parsedOptions.options, po::include_positional);
 
     // convert to const char*
     std::vector<const char*> unusedOptionsToCatch = { argv[0] };

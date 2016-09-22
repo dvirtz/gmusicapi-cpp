@@ -45,15 +45,7 @@ else()
 	set(TESTS "~[Webclient]")
 endif()
 
-set(TEST_COMMAND Tester --username $ENV{GM_U} --password $ENV{GM_P} ${TESTS})
-if(DEFINED $ENV{GM_R})
-	string(CONCAT TEST_COMMAND " --refresh_token $ENV{GM_R}")
-endif()
-if(DEFINED $ENV{GM_AA_ID})
-	string(CONCAT TEST_COMMAND " --android_id $ENV{GM_AA_ID}")
-endif()
-	
-add_test(NAME RunTests COMMAND ${TEST_COMMAND})
+add_test(NAME RunTests COMMAND Tester)
 
 message(STATUS "Added test ${TEST_COMMAND}")
 
