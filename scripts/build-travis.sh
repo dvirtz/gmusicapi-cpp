@@ -213,6 +213,7 @@ cd       $HOME/build
 travis_fold start system_info
   echo -e "\033[33;1mBuild system information\033[0m"
   echo -e "Build language: python"
+  echo -e "Build dist: trusty"
   echo -e "Build id: ''"
   echo -e "Job id: ''"
   if [[ -f /usr/share/travis/system_info ]]; then
@@ -322,9 +323,7 @@ export TRAVIS_LANGUAGE=python
 export TRAVIS_TAG=''
 echo
 echo -e "\033[33;1mSetting environment variables from .travis.yml\033[0m"
-travis_cmd export\ BOOST_VERSION\=1_60_0 --echo
-travis_cmd export\ BOOST_DOT_VERSION\=1.60.0 --echo
-travis_cmd export\ BOOST_ROOT\=\$\{HOME\}/boost_\$\{BOOST_VERSION\}_PY_\$\{TRAVIS_PYTHON_VERSION\} --echo
+travis_cmd export\ HUNTER_ROOT\=\$\{HOME\}/Hunter --echo
 echo
 export TRAVIS_PYTHON_VERSION=[2.7, 3.4]
 travis_cmd source\ \~/virtualenv/python\[2.7,\ 3.4\]/bin/activate --assert --echo --timing
@@ -341,11 +340,11 @@ travis_fold start cache.1
   fi
   if [[ -f $CASHER_DIR/bin/casher ]]; then
     travis_cmd type\ rvm\ \&\>/dev/null\ \|\|\ source\ \~/.rvm/scripts/rvm --timing
-    travis_cmd rvm\ 1.9.3\ --fuzzy\ do\ \$CASHER_DIR/bin/casher\ fetch\ https://s3.amazonaws.com/cache_bucket/1234567890//cache-51d7e27dfd971b510a6598578d1892ccd74c619760e20bbab9db3712b4c790a3--python-2.73.4.tgz\\\?X-Amz-Algorithm\\\=AWS4-HMAC-SHA256\\\&X-Amz-Credential\\\=abcdef0123456789\\\%2F20160816\\\%2Fus-east-1\\\%2Fs3\\\%2Faws4_request\\\&X-Amz-Date\\\=20160816T200406Z\\\&X-Amz-Expires\\\=60\\\&X-Amz-Signature\\\=b6320b0a62cfbbad1f2dab6b4817c0b5d53b2c04808c604e3548a73ba89c54c3\\\&X-Amz-SignedHeaders\\\=host\ https://s3.amazonaws.com/cache_bucket/1234567890//cache--python-2.73.4.tgz\\\?X-Amz-Algorithm\\\=AWS4-HMAC-SHA256\\\&X-Amz-Credential\\\=abcdef0123456789\\\%2F20160816\\\%2Fus-east-1\\\%2Fs3\\\%2Faws4_request\\\&X-Amz-Date\\\=20160816T200406Z\\\&X-Amz-Expires\\\=60\\\&X-Amz-Signature\\\=494bd29aef5109b2512e5aacc07e325f3c53c86f6f9aeefa57a2d61bc827924d\\\&X-Amz-SignedHeaders\\\=host\ https://s3.amazonaws.com/cache_bucket/1234567890/master/cache-51d7e27dfd971b510a6598578d1892ccd74c619760e20bbab9db3712b4c790a3--python-2.73.4.tgz\\\?X-Amz-Algorithm\\\=AWS4-HMAC-SHA256\\\&X-Amz-Credential\\\=abcdef0123456789\\\%2F20160816\\\%2Fus-east-1\\\%2Fs3\\\%2Faws4_request\\\&X-Amz-Date\\\=20160816T200406Z\\\&X-Amz-Expires\\\=60\\\&X-Amz-Signature\\\=0c350e926a9b74f4415f317370c130f3a3f184a1b30b550c8101b1d01a057b53\\\&X-Amz-SignedHeaders\\\=host\ https://s3.amazonaws.com/cache_bucket/1234567890/master/cache--python-2.73.4.tgz\\\?X-Amz-Algorithm\\\=AWS4-HMAC-SHA256\\\&X-Amz-Credential\\\=abcdef0123456789\\\%2F20160816\\\%2Fus-east-1\\\%2Fs3\\\%2Faws4_request\\\&X-Amz-Date\\\=20160816T200406Z\\\&X-Amz-Expires\\\=60\\\&X-Amz-Signature\\\=9f24e0c8caec0fa6c9ae1fe4624a65ee3ec5a563ecc3b26c3fa198f62d3d214f\\\&X-Amz-SignedHeaders\\\=host --timing
+    travis_cmd rvm\ 1.9.3\ --fuzzy\ do\ \$CASHER_DIR/bin/casher\ fetch\ https://s3.amazonaws.com/cache_bucket/1234567890//cache-trusty-920ead8735f7d8779bb78417e6e27b86c19e859712e3f3754e9c01a7ceafc31e--python-2.73.4.tgz\\\?X-Amz-Algorithm\\\=AWS4-HMAC-SHA256\\\&X-Amz-Credential\\\=abcdef0123456789\\\%2F20160917\\\%2Fus-east-1\\\%2Fs3\\\%2Faws4_request\\\&X-Amz-Date\\\=20160917T184613Z\\\&X-Amz-Expires\\\=60\\\&X-Amz-Signature\\\=04cf152fd56b79d410d5f8b9b5fe2e1b28d84685b33d0939842fb2fc1a36bd99\\\&X-Amz-SignedHeaders\\\=host\ https://s3.amazonaws.com/cache_bucket/1234567890//cache--python-2.73.4.tgz\\\?X-Amz-Algorithm\\\=AWS4-HMAC-SHA256\\\&X-Amz-Credential\\\=abcdef0123456789\\\%2F20160917\\\%2Fus-east-1\\\%2Fs3\\\%2Faws4_request\\\&X-Amz-Date\\\=20160917T184613Z\\\&X-Amz-Expires\\\=60\\\&X-Amz-Signature\\\=4d825fc64bd4dd52753096cd49e3fd15290d34cf8d614d1ecc0d9c84c4827d61\\\&X-Amz-SignedHeaders\\\=host\ https://s3.amazonaws.com/cache_bucket/1234567890/master/cache-trusty-920ead8735f7d8779bb78417e6e27b86c19e859712e3f3754e9c01a7ceafc31e--python-2.73.4.tgz\\\?X-Amz-Algorithm\\\=AWS4-HMAC-SHA256\\\&X-Amz-Credential\\\=abcdef0123456789\\\%2F20160917\\\%2Fus-east-1\\\%2Fs3\\\%2Faws4_request\\\&X-Amz-Date\\\=20160917T184613Z\\\&X-Amz-Expires\\\=60\\\&X-Amz-Signature\\\=995a4d979ca8005be92af1e39a33c68f2bbca487c14908ef8e7ac1691eaea940\\\&X-Amz-SignedHeaders\\\=host\ https://s3.amazonaws.com/cache_bucket/1234567890/master/cache--python-2.73.4.tgz\\\?X-Amz-Algorithm\\\=AWS4-HMAC-SHA256\\\&X-Amz-Credential\\\=abcdef0123456789\\\%2F20160917\\\%2Fus-east-1\\\%2Fs3\\\%2Faws4_request\\\&X-Amz-Date\\\=20160917T184613Z\\\&X-Amz-Expires\\\=60\\\&X-Amz-Signature\\\=a3c047cf9ad72bde4d0d14189d8d4ddcb8ed29d87b629ff0e47014ae1ea268fb\\\&X-Amz-SignedHeaders\\\=host --timing
   fi
   if [[ -f $CASHER_DIR/bin/casher ]]; then
     travis_cmd type\ rvm\ \&\>/dev/null\ \|\|\ source\ \~/.rvm/scripts/rvm --timing
-    travis_cmd rvm\ 1.9.3\ --fuzzy\ do\ \$CASHER_DIR/bin/casher\ add\ \$BOOST_ROOT --timing
+    travis_cmd rvm\ 1.9.3\ --fuzzy\ do\ \$CASHER_DIR/bin/casher\ add\ \$HUNTER_ROOT --timing
   fi
 travis_fold end cache.1
 
@@ -362,33 +361,39 @@ travis_fold start install.2
 travis_fold end install.2
 
 travis_fold start install.3
-  travis_cmd python\ scripts/travis.py --assert --echo --timing
+  travis_cmd pushd\ gmusicapi --assert --echo --timing
 travis_fold end install.3
 
 travis_fold start install.4
-  travis_cmd bash\ scripts/install-boost.sh --assert --echo --timing
+  travis_cmd python\ setup.py\ sdist\ --formats\=zip\ -k --assert --echo --timing
 travis_fold end install.4
 
 travis_fold start install.5
-  travis_cmd pip\ install\ gmusicapi --assert --echo --timing
+  travis_cmd find\ ./dist\ -iname\ \"\*.zip\"\ -print0\ \|\ xargs\ -0\ pip\ install --assert --echo --timing
 travis_fold end install.5
+
+travis_fold start install.6
+  travis_cmd popd --assert --echo --timing
+travis_fold end install.6
 
 travis_cmd mkdir\ _build --echo --timing
 travis_result $?
-travis_cmd cd\ _build --echo --timing
+travis_cmd pushd\ _build --echo --timing
 travis_result $?
-travis_cmd cmake\ ..\ -DCMAKE_BUILD_TYPE\=\$BUILD_TYPE\ -DGM_U\=\$GM_U\ -DGM_P\=\$GM_P\ -DGM_R\=\$GM_R\ -DBOOST_ROOT\=\$BOOST_ROOT --echo --timing
+travis_cmd cmake\ .. --echo --timing
 travis_result $?
 travis_cmd make --echo --timing
 travis_result $?
 travis_cmd make\ test\ ARGS\=\"-V\" --echo --timing
+travis_result $?
+travis_cmd popd --echo --timing
 travis_result $?
 
 travis_fold start cache.2
   echo -e "store build cache"
   if [[ -f $CASHER_DIR/bin/casher ]]; then
     travis_cmd type\ rvm\ \&\>/dev/null\ \|\|\ source\ \~/.rvm/scripts/rvm --timing
-    travis_cmd rvm\ 1.9.3\ --fuzzy\ do\ \$CASHER_DIR/bin/casher\ push\ https://s3.amazonaws.com/cache_bucket/1234567890//cache-51d7e27dfd971b510a6598578d1892ccd74c619760e20bbab9db3712b4c790a3--python-2.73.4.tgz\\\?X-Amz-Algorithm\\\=AWS4-HMAC-SHA256\\\&X-Amz-Credential\\\=abcdef0123456789\\\%2F20160816\\\%2Fus-east-1\\\%2Fs3\\\%2Faws4_request\\\&X-Amz-Date\\\=20160816T200406Z\\\&X-Amz-Expires\\\=60\\\&X-Amz-Signature\\\=f486e9827dac665d8168ead0614f26b1c41a2cd10561c08e77168e1503d681eb\\\&X-Amz-SignedHeaders\\\=host --timing
+    travis_cmd rvm\ 1.9.3\ --fuzzy\ do\ \$CASHER_DIR/bin/casher\ push\ https://s3.amazonaws.com/cache_bucket/1234567890//cache-trusty-920ead8735f7d8779bb78417e6e27b86c19e859712e3f3754e9c01a7ceafc31e--python-2.73.4.tgz\\\?X-Amz-Algorithm\\\=AWS4-HMAC-SHA256\\\&X-Amz-Credential\\\=abcdef0123456789\\\%2F20160917\\\%2Fus-east-1\\\%2Fs3\\\%2Faws4_request\\\&X-Amz-Date\\\=20160917T184613Z\\\&X-Amz-Expires\\\=60\\\&X-Amz-Signature\\\=7343b05946e64803d5bcfc35a3bb0baa29b79b6bc0316e0207b6a3a442970ccd\\\&X-Amz-SignedHeaders\\\=host --timing
   fi
 travis_fold end cache.2
 
