@@ -45,9 +45,7 @@ else()
 	set(TESTS "~[Webclient]")
 endif()
 
-add_test(NAME RunTests COMMAND Tester)
-
-message(STATUS "Added test ${TEST_COMMAND}")
+add_test(NAME RunTests COMMAND Tester ${TESTS})
 
 if(UNIX)
 	set_tests_properties(RunTests PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=${PATH_FOR_TEST}")

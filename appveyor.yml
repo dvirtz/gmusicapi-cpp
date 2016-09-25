@@ -34,17 +34,16 @@ install:
   - call scripts\install-gmusicapi.bat 
 
 build_script:
-  - mkdir _build
-  - cd _build
   # We generate project files for Visual Studio 12 because the boost binaries installed on the test server are for Visual Studio 12.
   - if "%platform%"=="Win32" set "CMAKE_GENERATOR_NAME=Visual Studio 14 2015"
   - if "%platform%"=="x64" set "CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64"
-  - cmake .. -G "%CMAKE_GENERATOR_NAME%" -DCMAKE_BUILD_TYPE=%CONFIGURATION%
-  - cmake --build . --config %CONFIGURATION%
-  - cd ..
+  - cmake . -B_build -G "%CMAKE_GENERATOR_NAME%" -DCMAKE_BUILD_TYPE=%CONFIGURATION%
+  - cmake --build _build --config %CONFIGURATION%
   
 test_script:
+  - cd _build
   - ctest -C %CONFIGURATION% -V
+  - cd ..
 
 on_failure:
   - set GMUSICAPI_LOG=%LOCALAPPDATA%\Simon Weber\gmusicapi\Logs\gmusicapi.log

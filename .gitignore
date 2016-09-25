@@ -31,7 +31,7 @@
 *.swp
 
 # Build folder
-_build*
+_*
 /src/gmusicapi-clang
 /src/http
 /src/oauth

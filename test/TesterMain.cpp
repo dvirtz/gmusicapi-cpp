@@ -12,7 +12,7 @@ std::string getEnv(const char* envVar)
     size_t requiredSize;
     getenv_s(&requiredSize, nullptr, 0, envVar);
     if (requiredSize == 0)
-        return {};
+        return std::string();
 
     // std::string doesn't need terminating null
     std::string res(requiredSize - 1, 0);
@@ -20,7 +20,7 @@ std::string getEnv(const char* envVar)
     return res;
 #else
     auto res = getenv(envVar);
-    return res ? res : {};
+    return res ? res : std::string();
 #endif
 }
 
@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
         catch (std::exception& e)
         {
             std::cerr << e.what() << '\n';
-            usage();
+            std::cerr << "run " << argv[0] << "-h" << " for more info.\n";
             exit(1);
         }
     }();
@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
             {
                 std::cerr << "Auth token " << auth_token.m_name << " should be given either on the command line, "
                     << " or set on the environment variable " << auth_token.m_environment << ".\n";
-                usage();
+                std::cerr << "run " << argv[0] << "-h" << " for more info.\n";
                 return 1;
             }
         }

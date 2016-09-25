@@ -47,21 +47,6 @@ set(BOOST_ROOT "" CACHE PATH "Boost location")
 add_definitions(-DBOOST_ALL_NO_LIB)
 
 find_package(PythonInterp REQUIRED)
-#if (TRAVIS)
-#	find_path(PYTHON_INCLUDE_DIR 
-#		NAMES Python.h
-#		PATHS $ENV{VIRTUAL_ENV}/include
-#		PATH_SUFFIXES
-#		python${PYTHON_VERSION}mu
-#		python${PYTHON_VERSION}m
-#		python${PYTHON_VERSION}u
-#		python${PYTHON_VERSION}
-#	)
-#	set(PYTHON_INCLUDE_DIR ${PYTHON_INCLUDE_DIR} CACHE STRING "Python include dir")
-#	execute_process(COMMAND ldd ${PYTHON_EXECUTABLE} COMMAND grep python OUTPUT_VARIABLE python_libraries OUTPUT_STRIP_TRAILING_WHITESPACE)
-#	string(REGEX REPLACE ".* => (.*) .*" "\\1" python_libraries ${python_libraries})
-#	set(PYTHON_LIBRARY ${python_libraries} CACHE STRING "Python library path")
-#endif()
 find_package(PythonLibsNew ${PYTHON_VERSION_STRING} REQUIRED)
 
 hunter_add_package(Boost COMPONENTS python date_time program_options)
