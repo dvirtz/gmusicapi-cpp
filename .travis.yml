@@ -41,16 +41,13 @@ install:
   - source scripts/install-cmake.sh
   - pushd gmusicapi
   - python setup.py sdist --formats=zip -k
-  - find ./dist -iname "*.zip" -print0 | xargs -0 pip install --user
+  - find ./dist -iname "*.zip" -print0 | xargs -0 pip install
   - popd
 
 script:
-  - mkdir _build
-  - pushd _build
-  - cmake ..
-  - make
-  - make test ARGS="-V"
-  - popd
+  - cmake . -B_build
+  - cmake --build _build
+  - cmake --build _build --target test -- ARGS=-V
 
 after_failure:
   - cat ~/.cache/gmusicapi/log/gmusicapi.log
