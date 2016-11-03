@@ -1,10 +1,9 @@
-sudo: required
-dist: trusty
+sudo: false
 
 language: python
 
 python:
-  - 2.7
+  - 2.7.10
   - 3.5-dev
 
 env:
@@ -22,7 +21,6 @@ env:
 
 cache:
   directories:
-  # - $BOOST_ROOT
   - $HUNTER_ROOT
 
 addons:
@@ -36,15 +34,14 @@ addons:
     - gcc-4.9
     - libffi-dev
     - libssl-dev
-    - cmake
-    - cmake-data
 
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
   - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.8" CC="clang-3.8"; fi
+  - source scripts/install-cmake.sh
   - pushd gmusicapi
   - python setup.py sdist --formats=zip -k
-  - find ./dist -iname "*.zip" -print0 | xargs -0 pip install
+  - find ./dist -iname "*.zip" -print0 | xargs -0 pip install --user
   - popd
 
 script:
