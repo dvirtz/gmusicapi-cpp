@@ -91,13 +91,22 @@ int main(int argc, char* argv[])
         return 0;
     }
 
+    if (vm.count("oauth"))
+    {
+        namespace gm = GMusicApi;
+        gm::Module m;
+        gm::Musicmanager mm(m);
+        mm.perform_oauth(gm::Clients().OAUTH_FILEPATH(), true);
+        return 0;
+    }
+
     for (auto& auth_token : gm_auto_tokens)
     {
-        if (auth_token.m_isRequired && auth_token.m_pVariable->empty())
+        if (auth_token.m_pVariable->empty())
         {
             auth_token.m_pVariable->assign(getEnv(auth_token.m_environment));
 
-            if (auth_token.m_pVariable->empty())
+            if (auth_token.m_isRequired && auth_token.m_pVariable->empty())
             {
                 std::cerr << "Auth token " << auth_token.m_name << " should be given either on the command line, "
                     << " or set on the environment variable " << auth_token.m_environment << ".\n";
@@ -109,17 +118,8 @@ int main(int argc, char* argv[])
 
     if (vm.count("wait"))
     {
-        std::string s;
         std::cout << "Press enter to start testing.\n";
-        std::cin >> s;
-    }
-
-    if (vm.count("oauth"))
-    {
-        namespace gm = GMusicApi;
-        gm::Module m;
-        gm::Musicmanager mm(m);
-        mm.perform_oauth();
+        std::cin.get();
     }
 
     auto unusedOptions = po::collect_unrecognized(parsedOptions.options, po::include_positional);

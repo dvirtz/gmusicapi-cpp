@@ -16,21 +16,3 @@ GMUSICAPI_DEFINE_STRUCT(
     (GMusicApi::timestamp, lastAccessedTimeMs)
     (bool, isSmartphone)
     )
-
-namespace GMusicApi
-{
-
-inline void registerRegisteredDeviceConverters()
-{
-    namespace bp = boost::python;
-    namespace ph = PythonHelper;
-
-    // Python to C++ converters
-	ph::PySequenceToCppContainerConverter<std::vector<RegisteredDevice>>::registerConverter();
-    ph::PyToCppConverter<bp::dict, RegisteredDevice>::registerConverter();
-
-    // C++ to Python converters
-	bp::to_python_converter<RegisteredDevice, ph::StructToPyDictConverter<RegisteredDevice>>();
-}
-
-} // namespace GMusicApi

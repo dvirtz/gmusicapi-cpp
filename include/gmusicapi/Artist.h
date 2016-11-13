@@ -17,20 +17,3 @@ GMUSICAPI_DEFINE_STRUCT(
     (std::vector<GMusicApi::Song>, topTracks)
     (int, total_albums)
     )
-
-namespace GMusicApi
-{
-
-inline void registerArtistConverters()
-{
-    namespace bp = boost::python;
-    namespace ph = PythonHelper;
-
-    // Python to C++ converters
-    ph::PyToCppConverter<bp::dict, Artist>::registerConverter();
-    ph::PySequenceToCppContainerConverter<std::vector<Artist>>::registerConverter();
-
-    // C++ to Python converters
-}
-
-} // namespace GMusicApi

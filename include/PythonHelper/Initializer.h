@@ -11,8 +11,6 @@ public:
     
 private:
 
-    static void registerTypeConverters();
-
     static std::once_flag m_onceFlag;
 };
 

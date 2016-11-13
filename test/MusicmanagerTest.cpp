@@ -46,27 +46,31 @@ public:
     MusicmanagerTestFixture()
         : m_mm(m_module)
     {
-        m_credentials = m_protocol.credentials_from_refresh_token(gm_refresh);
-    }
- 
-    bool login()
-    {
-        if (gm_android_id.empty())
-	{
-            return m_mm.login(m_credentials);        
+        if (gm_refresh.empty() == false)
+        {
+            m_credentials = m_protocol.credentials_from_refresh_token(gm_refresh);
         }
         else
         {
+            m_credentials = Clients().OAUTH_FILEPATH();
+        }
+        if (gm_android_id.empty() == false)
+        {
             Utils utils;
-            auto mac = utils.create_mac_string(std::stoull(gm_android_id, nullptr, 16));
-            return m_mm.login(m_credentials, mac);
+            m_uploaderId = utils.create_mac_string(std::stoull(gm_android_id, nullptr, 16));
         }
     }
 
+    bool login()
+    {
+        return m_mm.login(m_credentials, m_uploaderId);
+    }
+
 protected:
-    Musicmanager m_mm;
-    MusicmanagerProtocol m_protocol;
-    OAuth2Credentials m_credentials;
+    Musicmanager                                      m_mm;
+    MusicmanagerProtocol                              m_protocol;
+    boost::variant<OAuth2Credentials, std::string>    m_credentials;
+    boost::optional<identifier>                       m_uploaderId;
 };
 
 TEST_CASE_METHOD(MusicmanagerTestFixture, "Musicmanager login", "[Musicmanager]")
@@ -83,7 +87,7 @@ TEST_CASE_METHOD(MusicmanagerTestFixture, "Upload and Download", "[Musicmanager]
     mc.login(gm_user, gm_pass, gm_android_id);
 
     UploadResult uploaded, matched, failed;
-    std::tie(uploaded, matched, failed) = m_mm.upload({ audioTestPath });
+    std::tie(uploaded, matched, failed) = m_mm.upload({audioTestPath});
 
     // extract song id from string
     auto songId = [](const std::string& str)
@@ -101,10 +105,10 @@ TEST_CASE_METHOD(MusicmanagerTestFixture, "Upload and Download", "[Musicmanager]
     {
         auto it = failed.find(audioTestPath);
         REQUIRE(it != failed.end());
-        
-        mc.delete_songs({ songId(it->second) });
 
-        std::tie(uploaded, matched, failed) = m_mm.upload({ audioTestPath });
+        mc.delete_songs({songId(it->second)});
+
+        std::tie(uploaded, matched, failed) = m_mm.upload({audioTestPath});
     }
 
     REQUIRE(uploaded.size() == 1);
@@ -131,6 +135,6 @@ TEST_CASE_METHOD(MusicmanagerTestFixture, "Upload and Download", "[Musicmanager]
     REQUIRE(filename.empty() == false);
     REQUIRE(audio.empty() == false);
 
-    mc.delete_songs({ id });
+    mc.delete_songs({id});
 }
 

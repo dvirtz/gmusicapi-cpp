@@ -4,7 +4,7 @@
 namespace GMusicApi
 {
 ClientBase::ClientBase(Module& module,
-                       const std::string & client_name,
+                       const char* client_name,
                        bool debug_logging, 
                        bool validate, 
                        bool verify_ssl)

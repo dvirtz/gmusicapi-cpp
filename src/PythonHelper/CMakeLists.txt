@@ -7,7 +7,7 @@ foreach(header ${INCLUDE_HEADERS})
 	list(APPEND INCLUDE_HEADERS ${INCLUDE_DIR}/PythonHelper/${header})
 endforeach()
 
-find_package(Boost CONFIG REQUIRED python)
+find_package(Boost CONFIG REQUIRED)
 
 add_library(PythonHelper ${SOURCES} ${INCLUDE_HEADERS})
 
@@ -18,5 +18,8 @@ target_include_directories(PythonHelper PUBLIC
 	${INCLUDE_DIR})
 
 target_include_directories(PythonHelper SYSTEM PUBLIC
-	${Boost_INCLUDE_DIR}
+	${PyBind_INCLUDE_DIR}
 	${PYTHON_INCLUDE_DIRS})
+
+target_link_libraries(PythonHelper PUBLIC
+	Boost::boost)

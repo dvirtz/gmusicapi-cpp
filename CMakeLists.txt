@@ -39,7 +39,8 @@ else()
 endif()
 
 # Includes Catch in the project:
-set(Catch_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Catch/include)
+set(Catch_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/Catch/include)
+set(PyBind_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/pybind11/include)
 
 # default Cache values
 set(BOOST_ROOT "" CACHE PATH "Boost location")
@@ -49,7 +50,7 @@ add_definitions(-DBOOST_ALL_NO_LIB)
 find_package(PythonInterp REQUIRED)
 find_package(PythonLibsNew ${PYTHON_VERSION_STRING} REQUIRED)
 
-hunter_add_package(Boost COMPONENTS python date_time program_options)
+hunter_add_package(Boost COMPONENTS date_time program_options)
 
 # the following resolves the issue in
 # http://stackoverflow.com/questions/10660524/error-building-boost-1-49-0-with-gcc-4-7-0
@@ -58,7 +59,7 @@ if(MINGW)
 endif()
 
 if(MSVC)
-	add_definitions(/WX /W4)
+	add_definitions(/WX /W4 /wd4172)
 elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 	add_definitions(-Wall -Wpedantic -Werror)
 endif()
@@ -67,7 +68,7 @@ include(doxygen.cmake)
 
 enable_testing()
 
-find_package(Boost CONFIG REQUIRED python)
+find_package(Boost CONFIG REQUIRED)
 
 add_definitions(-DBOOST_PYTHON_STATIC_LIB)
 

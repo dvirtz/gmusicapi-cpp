@@ -44,7 +44,7 @@ first is <url>, second is <download count>
 */
 using DownloadInfo      = std::pair<std::string, int>;
 
-using OAuth2Credentials = boost::python::object;
+using OAuth2Credentials = pybind11::object;
 
 #define GMUSICAPI_DEFINE_STRUCT(NAMESPACE_SEQ, NAME, ATTRIBUTES)    \
     BOOST_FUSION_DEFINE_STRUCT(NAMESPACE_SEQ, NAME, ATTRIBUTES(std::set<std::string>, isInitialized))

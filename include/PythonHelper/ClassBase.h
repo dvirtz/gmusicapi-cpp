@@ -8,81 +8,82 @@ class ClassBase
 {
 public:
     template<typename... Args>
-    ClassBase(ModuleBase& module, const std::string& name, Args&&... args);
+    ClassBase(ModuleBase& module, const char* name, Args&&... args);
 
     virtual ~ClassBase() = default;
 
 protected:
 
     template<typename Ret, typename ...Args>
-    Ret callStaticMethod(const std::string & className,
-                         const std::string& methodName,
+    Ret callStaticMethod(const char* className,
+                         const char* methodName,
                          Args&&... args) const;
 
     template<typename Ret, typename ...Args>
-    Ret callMethod(const std::string& methodName, Args&&... args) const;
+    Ret callMethod(const char* methodName, Args&&... args) const;
 
-    template<typename T = boost::python::object>
-    T getMember(const std::string& memberName) const;
+    template<typename T = pybind11::object>
+    T getMember(const char* memberName) const;
 
     template <typename T>
-    void setMember(const std::string& memberName, const T& value);
+    void setMember(const char* memberName, const T& value);
 
     ModuleBase&             m_module;
     std::string             m_name;
-    boost::python::object   m_object;
+    pybind11::object   m_object;
 };
 
 template<typename ...Args>
-inline ClassBase::ClassBase(ModuleBase& module, const std::string & name, Args && ...args)
+inline ClassBase::ClassBase(ModuleBase& module, const char* name, Args && ...args)
     : m_module(module), m_name(name), m_object(module.createObject(name, std::forward<Args>(args)...))
 {}
 
 template<typename Ret, typename ...Args>
-inline Ret ClassBase::callStaticMethod(const std::string & className,
-                                       const std::string & methodName,
+inline Ret ClassBase::callStaticMethod(const char* className,
+                                       const char* methodName,
                                        Args && ...args) const
 {
     return m_module.callStaticMethod<Ret>(className, methodName, std::forward<Args>(args)...);
 }
 
 template<typename Ret, typename ...Args>
-inline Ret ClassBase::callMethod(const std::string& methodName, Args&& ...args) const
+inline Ret ClassBase::callMethod(const char* methodName, Args&& ...args) const
 {
-    namespace bp = boost::python;
+    namespace py = pybind11;
     try
     {
-        return bp::call_method<Ret>(m_object.ptr(), methodName.c_str(), std::forward<Args>(args)...);
+        py::function f {m_object.attr(methodName)};
+        return f(std::forward<Args>(args)...).template cast<Ret>();
     }
-    catch (const bp::error_already_set&)
+    catch (const py::error_already_set&)
     {
         handlePythonException();
     }
 }
 
 template<typename T>
-inline T ClassBase::getMember(const std::string & memberName) const
+inline T ClassBase::getMember(const char* memberName) const
 {
-    namespace bp = boost::python;
+    namespace py = pybind11;
     try
     {
-        return bp::extract<T>(m_object.attr(memberName.c_str()));
+        return m_object.attr(memberName).template cast<T>();
     }
-    catch (const bp::error_already_set&)
+    catch (const py::error_already_set&)
     {
         handlePythonException();
     }
 }
 
 template<typename T>
-inline void ClassBase::setMember(const std::string & memberName, const T & value)
+inline void ClassBase::setMember(const char* memberName, const T & value)
 {
-    namespace bp = boost::python;
+    namespace py = pybind11;
     try
     {
-        m_object.attr(memberName.c_str()) = value;
+        m_object.attr(memberName) = py::cast(value);
     }
-    catch (const bp::error_already_set&)
+    catch (const py::error_already_set&)
     {
         handlePythonException();
     }

@@ -1,52 +1,48 @@
 #pragma once
 #include "PythonHelper/utility.h"
 MSC_DISABLE_WARNINGS
-#include <boost/python/detail/wrap_python.hpp>
-#include <boost/python.hpp>
 #include <boost/range.hpp>
 #include <boost/range/any_range.hpp>
-#include <boost/python/stl_iterator.hpp>
 MSC_RESTORE_WARNINGS
-#include <type_traits>
+#include <pybind11/pybind11.h>
 
 namespace GMusicApi
 {
 
-template<typename T>
-using input_iterator = boost::python::stl_input_iterator<T>;
+namespace py = pybind11;
 
 // used when get_all_songs returns a generator
 template<typename T>
 class GeneratorIterator :
 	public boost::iterator_facade<
 	GeneratorIterator<T>,
-	typename input_iterator<T>::value_type, 
-	typename input_iterator<T>::iterator_category,
-	typename input_iterator<T>::reference>
+	T, 
+	boost::single_pass_traversal_tag,
+	T>
 {
 public:
 	GeneratorIterator()
 	{}
 
-	GeneratorIterator(const boost::python::object& generator)
+	GeneratorIterator(const pybind11::iterator& generator)
 		: m_generatorIt(generator)
 	{
 		if (m_generatorIt != m_generatorEnd)
 		{
-			m_currentIt = input_iterator<T>(*m_generatorIt);
+			m_currentIt = generatedIterator(m_generatorIt);
             skipEmpty();
 		}
 	}
 
 private:
 	friend class boost::iterator_core_access;
-
+    
     void skipEmpty()
     {
         while (m_currentIt == m_currentEnd
                && ++m_generatorIt != m_generatorEnd)
         {
-            m_currentIt = input_iterator<T>(*m_generatorIt);
+            m_currentIt = generatedIterator(m_generatorIt);
         }
     }
 
@@ -56,7 +52,7 @@ private:
 		{
 			if (++m_generatorIt != m_generatorEnd)
 			{
-				m_currentIt = input_iterator<T>(*m_generatorIt);
+				m_currentIt = generatedIterator(m_generatorIt);
                 skipEmpty();
 			}
 		}
@@ -68,63 +64,99 @@ private:
 			&& m_currentIt == other.m_currentIt;
 	}
 
-	typename input_iterator<T>::reference dereference() const
+	T dereference() const
 	{
-		return *m_currentIt;
+		return (*m_currentIt).template cast<T>();
 	}
 
-	input_iterator<boost::python::list>	m_generatorIt;
-	input_iterator<boost::python::list>	m_generatorEnd;
-	input_iterator<T>					m_currentIt;
-	input_iterator<T>					m_currentEnd;
+    py::iterator generatedIterator(const py::iterator& it) const
+    {
+        return (*it).begin();
+    }
+
+	py::iterator m_generatorIt;
+	py::iterator m_generatorEnd;
+	py::iterator m_currentIt;
+	py::iterator m_currentEnd;
 };
 
 template<typename T>
-using GeneratedRange = boost::any_range<
-	typename GeneratorIterator<T>::value_type,
-	typename boost::iterator_category_to_traversal<typename GeneratorIterator<T>::iterator_category>::type,
-	// need to be const due to boost bug https://svn.boost.org/trac/boost/ticket/10493
-	typename std::add_const<typename GeneratorIterator<T>::reference>::type,
-	typename GeneratorIterator<T>::difference_type>;
-
-
-template<typename T>
-struct PyGeneratorToGeneratedRangeConverter
+class TypedIterator :
+public boost::iterator_facade<
+    TypedIterator<T>,
+    T,
+    boost::single_pass_traversal_tag,
+    T>
 {
-	static void registerConverter()
-	{
-		boost::python::converter::registry::push_back(
-			&convertible,
-			&construct,
-			boost::python::type_id<GeneratedRange<T>>());
-	}
+public:
+    TypedIterator()
+    {}
 
-	static void* convertible(PyObject* pObj)
-	{
-		if (!PyGen_Check(pObj))
-			return nullptr;
+    TypedIterator(const pybind11::iterator& it)
+        : m_it(it)
+    {}
 
-		return pObj;
-	}
+private:
+    friend class boost::iterator_core_access;
 
-	// Convert obj_ptr into a QString
-	static void construct(PyObject* pObj,
-						  boost::python::converter::rvalue_from_python_stage1_data* data)
-	{
-		using namespace boost::python;
+    void increment()
+    {
+        ++m_it;
+    }
 
-		// Grab pointer to memory into which to construct the new QString
-		void* storage = (
-			(converter::rvalue_from_python_storage<GeneratedRange<T>>*)
-			data)->storage.bytes;
+    bool equal(TypedIterator const& other) const
+    {
+        return m_it == other.m_it;
+    }
 
-		handle<> hndl(borrowed(pObj));
-		new (storage) GeneratedRange<T>(GeneratorIterator<T>(object(hndl)),
-										GeneratorIterator<T>());
+    T dereference() const
+    {
+        return (*m_it).template cast<T>();
+    }
 
-		// Stash the memory chunk pointer for later use by boost.python
-		data->convertible = storage;
-	}
+    py::iterator m_it;
 };
+
+template<typename T>
+using GeneratedRange = boost::any_range<T, boost::single_pass_traversal_tag, T>;
 
 } // namespace GMusicApi
+
+namespace pybind11
+{
+namespace detail
+{
+
+template<typename T>
+struct type_caster<GMusicApi::GeneratedRange<T>>
+{
+    PYBIND11_TYPE_CASTER(GMusicApi::GeneratedRange<T>, _(""));
+    
+    // Convert Python->C++
+    bool load(handle src, bool /*implicit*/)
+    {
+        if (!PyGen_Check(src.ptr())
+            && !PySequence_Check(src.ptr()))
+        {
+            return false;
+        }
+
+        namespace gm = GMusicApi;
+                
+        if (PyGen_Check(src.ptr()))
+        {
+            value = gm::GeneratedRange<T>(gm::GeneratorIterator<T>(iterator(src, true)),
+                                          gm::GeneratorIterator<T>());
+        }
+        else
+        {
+            value = gm::GeneratedRange<T>(gm::TypedIterator<T>(src.begin()),
+                                          gm::TypedIterator<T>(src.end()));
+        }
+
+        return true;
+    }
+};
+
+} // namespace detail
+} // namespace pybind11

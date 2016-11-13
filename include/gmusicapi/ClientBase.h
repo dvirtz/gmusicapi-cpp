@@ -42,7 +42,7 @@ public:
                         configuration than to ignore errors.
     */
     ClientBase(Module& module,
-               const std::string& client_name, 
+               const char* client_name, 
                bool debug_logging = true, 
                bool validate = true, 
                bool verify_ssl = true);

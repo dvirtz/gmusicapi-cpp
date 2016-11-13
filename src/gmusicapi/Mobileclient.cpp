@@ -1,5 +1,6 @@
 #include "PythonHelper/utility.h"
 #include "gmusicapi/Mobileclient.h"
+#include <pybind11/stl.h>
 #include <iostream>
 #include <regex>
 
@@ -17,8 +18,8 @@ bool Mobileclient::login(const std::string & email, const std::string & password
 {
     if (android_id.empty())
     {
-        namespace bp = boost::python;
-        return callMethod<bool>("login", email, password, getMember<bp::object>("FROM_MAC_ADDRESS"));
+        namespace py = pybind11;
+        return callMethod<bool>("login", email, password, getMember<py::object>("FROM_MAC_ADDRESS"));
     }
 
     return callMethod<bool>("login", email, password, android_id);

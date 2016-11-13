@@ -15,17 +15,3 @@ GMUSICAPI_DEFINE_STRUCT(
     (int, num_tracks)
     (std::string, title)
     )
-
-namespace GMusicApi
-{
-
-inline void registerSharedPlaylistInfoConverters()
-{
-    namespace bp = boost::python;
-    namespace ph = PythonHelper;
-
-    // Python to C++ converters
-    ph::PyToCppConverter<bp::dict, SharedPlaylistInfo>::registerConverter();
-}
-
-} // namespace GMusicApi

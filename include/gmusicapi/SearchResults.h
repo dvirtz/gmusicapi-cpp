@@ -34,27 +34,3 @@ GMUSICAPI_DEFINE_STRUCT(
     (std::vector<GMusicApi::SongHit>, song_hits)
     (std::vector<GMusicApi::PlaylistHit>, playlist_hits)
     )
-
-namespace GMusicApi
-{
-
-inline void registerSearchResultsConverters()
-{
-    namespace bp = boost::python;
-    namespace ph = PythonHelper;
-
-    // Python to C++ converters
-    ph::PyToCppConverter<bp::dict, AlbumHit>::registerConverter();
-    ph::PyToCppConverter<bp::dict, ArtistHit>::registerConverter();
-    ph::PyToCppConverter<bp::dict, SongHit>::registerConverter();
-    ph::PyToCppConverter<bp::dict, PlaylistHit>::registerConverter();
-    ph::PyToCppConverter<bp::dict, SearchResults>::registerConverter();
-    ph::PySequenceToCppContainerConverter<std::vector<AlbumHit>>::registerConverter();
-    ph::PySequenceToCppContainerConverter<std::vector<ArtistHit>>::registerConverter();
-    ph::PySequenceToCppContainerConverter<std::vector<SongHit>>::registerConverter();
-    ph::PySequenceToCppContainerConverter<std::vector<PlaylistHit>>::registerConverter();
-
-    // C++ to Python converters
-}
-
-} // namespace GMusicApi

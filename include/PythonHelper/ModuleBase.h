@@ -2,11 +2,9 @@
 
 #include "PythonHelper/utility.h"
 MSC_DISABLE_WARNINGS
-#include <boost/python/detail/wrap_python.hpp>
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include <boost/optional.hpp>
 MSC_RESTORE_WARNINGS
-#include "PythonHelper/Initializer.h"
 #include <string>
 
 namespace PythonHelper
@@ -15,105 +13,106 @@ namespace PythonHelper
 class ModuleBase
 {
 public:
-    ModuleBase(const std::string& name, const boost::optional<std::string>& path = {});
+    ModuleBase(const char* name, const boost::optional<std::string>& path = {});
     virtual ~ModuleBase();
 
     template<typename... Args>
-    boost::python::object createObject(const std::string& name, Args&&... args) const;
+    pybind11::object createObject(const char* name, Args&&... args) const;
 
     template<typename Ret, typename... Args>
-    Ret callStaticMethod(const std::string& className, 
-                         const std::string& methodName,
+    Ret callStaticMethod(const char* className,
+                         const char* methodName,
                          Args&&... args) const;
 
     template<typename Ret, typename... Args>
-    Ret callGlobalMethod(const std::string& methodName,
+    Ret callGlobalMethod(const char* methodName,
                          Args&&... args) const;
 
 protected:
-    
-    template<typename T = boost::python::object>
-    T getMember(const std::string& memberName) const;
+
+    template<typename T = pybind11::object>
+    T getMember(const char* memberName) const;
 
     template <typename T>
-    void setMember(const std::string& memberName, const T& value);
+    void setMember(const char* memberName, const T& value);
 
 protected:
-	boost::python::object m_dict;
+    pybind11::dict m_dict;
 };
 
 template<typename ...Args>
-inline boost::python::object ModuleBase::createObject(const std::string & name, Args&& ...args) const
+inline pybind11::object ModuleBase::createObject(const char* name, Args&& ...args) const
 {
-    namespace bp = boost::python;
+    namespace py = pybind11;
     try
     {
-        bp::object type = m_dict[name];
-        return bp::call<boost::python::object>(type.ptr(), std::forward<Args>(args)...);
+        py::function f {m_dict[name]};
+        return f(std::forward<Args>(args)...);
     }
-    catch (const bp::error_already_set&)
+    catch (const py::error_already_set&)
     {
         handlePythonException();
     }
 }
 
 template<typename Ret, typename... Args>
-inline Ret ModuleBase::callStaticMethod(const std::string& className,
-                                                 const std::string& methodName,
-                                                 Args&&... args) const
+inline Ret ModuleBase::callStaticMethod(const char* className,
+                                        const char* methodName,
+                                        Args&&... args) const
 {
-    namespace bp = boost::python;
+    namespace py = pybind11;
     try
     {
         auto classObject = m_dict[className];
-        bp::object methodObject = classObject.attr("__dict__")[methodName];
-        bp::object funcObject = methodObject.attr("__func__");
-        return bp::call<Ret>(funcObject.ptr(), std::forward<Args>(args)...);
+        py::object methodObject {classObject.attr("__dict__")[methodName]};
+        py::function funcObject {methodObject.attr("__func__")};
+        return funcObject(std::forward<Args>(args)...);
     }
-    catch (const bp::error_already_set&)
+    catch (const py::error_already_set&)
     {
         handlePythonException();
     }
 }
 
 template<typename T>
-inline T ModuleBase::getMember(const std::string & memberName) const
+inline T ModuleBase::getMember(const char* memberName) const
 {
-    namespace bp = boost::python;
+    namespace py = pybind11;
     try
     {
-        return bp::extract<T>(m_dict[memberName]);
+        return m_dict[memberName].cast<T>();
     }
-    catch (const bp::error_already_set&)
+    catch (const py::error_already_set&)
     {
         handlePythonException();
     }
 }
 
 template<typename T>
-inline void ModuleBase::setMember(const std::string & memberName, const T & value)
+inline void ModuleBase::setMember(const char* memberName, const T & value)
 {
-    namespace bp = boost::python;
+    namespace py = pybind11;
     try
     {
-        m_dict[memberName] = value;
+        m_dict[memberName] = py::cast(value);
     }
-    catch (const bp::error_already_set&)
+    catch (const py::error_already_set&)
     {
         handlePythonException();
     }
 }
 
 template<typename Ret, typename ...Args>
-inline Ret ModuleBase::callGlobalMethod(const std::string & methodName, Args && ...args) const
+inline Ret ModuleBase::callGlobalMethod(const char* methodName, Args && ...args) const
 {
-    namespace bp = boost::python;
+    namespace py = pybind11;
     try
     {
-        bp::object methodObject = m_dict[methodName];
-        return bp::call<Ret>(methodObject.ptr(), std::forward<Args>(args)...);
+        py::function methodObject {m_dict[methodName]};
+        auto ret = methodObject(std::forward<Args>(args)...);
+        return ret.template cast<Ret>();
     }
-    catch (const bp::error_already_set&)
+    catch (const py::error_already_set&)
     {
         handlePythonException();
     }

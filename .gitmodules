@@ -6,4 +6,4 @@
 	url = https://github.com/philsquared/Catch
 [submodule "pybind11"]
 	path = pybind11
-	url = https://github.com/pybind/pybind11.git
+	url = https://github.com/dvirtz/pybind11.git

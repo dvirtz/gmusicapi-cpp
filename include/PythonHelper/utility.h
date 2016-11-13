@@ -17,8 +17,7 @@ __pragma(warning(pop))
 #endif
 
 MSC_DISABLE_WARNINGS
-#include <boost/python.hpp>
-#include <boost/python/stl_iterator.hpp>
+#include <pybind11/pybind11.h>
 #include <boost/fusion/sequence/io.hpp>
 MSC_RESTORE_WARNINGS
 #include <iostream>
@@ -26,46 +25,27 @@ MSC_RESTORE_WARNINGS
 #include <stdexcept>
 #include <set>
 #include <type_traits>
+#include <iterator>
 
 namespace PythonHelper
 {
 
-inline void printDict(const boost::python::dict& dict)
+inline void printDict(const pybind11::dict& dict)
 {
-	auto start = boost::python::stl_input_iterator<std::string>(dict.keys());
-	auto end = boost::python::stl_input_iterator<std::string>();
-	std::for_each(start, end, [dict](const std::string& key)
-	{
-		boost::python::object o(dict[key]);
-		std::string object_classname = boost::python::extract<std::string>(o.attr("__class__").attr("__name__"));
-		std::cout << key << ": " << object_classname << "\n";
-	});
+    pybind11::print(dict);
 }
 
-inline void printList(const boost::python::list& list)
+inline void printList(const pybind11::list& list)
 {
-	auto start = boost::python::stl_input_iterator<std::string>(list);
-	auto end = boost::python::stl_input_iterator<std::string>();
-	std::cout << "[";
-	bool first = true;
-	std::for_each(start, end, [&first](const std::string& value)
-	{
-		if (first == false)
-		{
-			std::cout << ", ";
-		}
-		first = false;
-		std::cout << value;
-	});
-	std::cout << "]\n";
+    pybind11::print(list);
 }
 
 template<typename T>
-bool getFromDict(const boost::python::dict& dict, const std::string& key, T& t)
+bool getFromDict(const pybind11::dict& dict, const char* key, T& t)
 {
-	if (dict.has_key(key))
+	if (dict.contains(key))
 	{
-		t = boost::python::extract<T>(dict[key])();
+        t = dict[key].cast<T>();
         return true;
 	}
 
@@ -73,28 +53,16 @@ bool getFromDict(const boost::python::dict& dict, const std::string& key, T& t)
 }
 
 template<typename T>
-void setToDict(boost::python::dict& dict, const std::string& key, const T& t)
+void setToDict(pybind11::dict& dict, const char* key, const T& t)
 {
-    dict[key] = t;
+    dict[key] = pybind11::cast(t);
 }
 
 NORETURN(void handlePythonException());
 
 inline void handlePythonException()
 {
-    using namespace boost::python;
-
-    PyObject *exc, *val, *tb;
-    object formatted_list, formatted;
-    PyErr_Fetch(&exc, &val, &tb);
-    handle<> hexc(exc), hval(allow_null(val)), htb(allow_null(tb));
-    object traceback(import("traceback"));
-
-    object format_exception(traceback.attr("format_exception"));
-    formatted_list = format_exception(hexc, hval, htb);
-    formatted = str("\n").join(formatted_list);
-
-    throw std::runtime_error(extract<std::string>(formatted));
+    throw;
 }
 
 template<typename T>

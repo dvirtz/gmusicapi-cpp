@@ -73,7 +73,6 @@ public:
     */
     void perform_oauth(const boost::optional<std::string>& storage_filepath = {},
                        bool open_browser = false);
-
     /*!
     Authenticates the Music Manager using OAuth.
     Returns `true` on success, `false` on failure.
@@ -84,46 +83,7 @@ public:
     In most cases, the default parameters should be acceptable. Users on
     virtual machines will want to provide `uploader_id`.
 
-    \param oauth_credentials    a path to OAuth storage file.
-                                By default, the same default path used by perform_oauth() is used.
-                                Endusers will likely call perform_oauth() once to write credentials
-                                to disk and then ignore this parameter.
-
-    \param uploader_id          a unique id as a MAC address, e.g. `'00:11:22:33:AA:BB'`.
-                                This should only be provided in cases where the default
-                                (host MAC address incremented by 1) will not work.
-                                Upload behavior is undefined if a Music Manager uses the same id, especially when
-                                reporting bad matches.
-                                `ValueError` will be raised if this is provided but not in the proper form.
-                                `OSError` will be raised if this is not provided and a real MAC could not be
-                                determined (most common when running on a VPS).
-                                If provided, use the same id on all future runs for this machine,
-                                because of the upload device limit explained below.
-
-    \param uploader_name        human-readable non-unique id; default is `"<hostname> (gmusicapi-{version})"`.
-                                This doesn't appear to be a part of authentication at all.
-                                Registering with (id, name = X, Y) and logging in with (id, name = X, Z)
-                                works, and does not change the server-stored uploader_name.
-
-    There are hard limits on how many upload devices can be registered; refer to
-    [Google's docs](http://support.google.com/googleplay/bin/answer.py?hl=en&answer=1230356).
-    There have been limits on deauthorizing devices in the past, so it's smart not to register
-    more devices than necessary.
-    */
-    bool login(const boost::optional<std::string>& oauth_credentials = {},
-               const boost::optional<identifier>& uploader_id = {},
-               const boost::optional<std::string>& uploader_name = {});
-    /*!
-    Authenticates the Music Manager using OAuth.
-    Returns `true` on success, `false` on failure.
-
-    Unlike the Webclient, OAuth allows authentication without
-    providing plaintext credentials to the application.
-
-    In most cases, the default parameters should be acceptable. Users on
-    virtual machines will want to provide `uploader_id`.
-
-    \param oauth_credentials    an OAuth2Credentials instance;
+    \param oauth_credentials    an OAuth2Credentials instance or a path to a file storing OAuth credentials;
                                 This param is mostly intended to allow flexibility for developers of a
                                 3rd party service who intend to perform their own OAuth flow
                                 (e.g. on their website).
@@ -149,7 +109,7 @@ public:
     There have been limits on deauthorizing devices in the past, so it's smart not to register
     more devices than necessary.
     */
-    bool login(const OAuth2Credentials& oauth_credentials,
+    bool login(const boost::variant<OAuth2Credentials, std::string>& oauth_credentials,
                const boost::optional<identifier>& uploader_id = {},
                const boost::optional<std::string>& uploader_name = {});
 

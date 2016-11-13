@@ -12,7 +12,7 @@ source_group("Configure Files" FILES ${CONFIGURE_FILES})
 set(HEADERS ${CMAKE_CURRENT_BINARY_DIR}/${TEST_FILES_H} TestFixture.h)
 set(SOURCES MobileclientTest.cpp TesterMain.cpp WebclientTester.cpp MusicmanagerTest.cpp ClientsTest.cpp TestFixture.cpp)
 
-find_package(Boost CONFIG REQUIRED COMPONENTS python date_time program_options)
+find_package(Boost CONFIG REQUIRED COMPONENTS date_time program_options)
 
 if(MSVC)
 	set_source_files_properties(TesterMain.cpp PROPERTIES COMPILE_FLAGS /wd4702)
@@ -28,7 +28,7 @@ target_include_directories(Tester PUBLIC ${Catch_INCLUDE_DIR}
 target_link_libraries(Tester PUBLIC
 	GMusicApi
 	PythonHelper
-	Boost::python Boost::date_time Boost::program_options
+	Boost::date_time Boost::program_options
 	${PYTHON_LIBRARIES})
 
 if(UNIX)
