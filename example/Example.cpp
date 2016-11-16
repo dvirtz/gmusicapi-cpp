@@ -44,22 +44,30 @@ int main()
     std::cout << "Password:";
     SetStdinEcho(false);
     std::cin >> password;
+    std::cout << '\n';
     SetStdinEcho(true);
 
-    GMusicApi::Module module;
-    GMusicApi::Mobileclient mc(module);
-    mc.login(username, password, "1234567890abcdef");
-
-    auto library = mc.get_all_songs();
-    GMusicApi::identifiers sweet_track_ids;
-    for (auto&& song : library)
+    try
     {
-        if (song.artist == "The Cat Empire")
-        {
-            sweet_track_ids.push_back(song.id);
-        }
-    }
+        GMusicApi::Module module;
+        GMusicApi::Mobileclient mc(module);
+        mc.login(username, password, "1234567890abcdef");
 
-    auto playlist_id = mc.create_playlist("Rad muzak");
-    mc.add_songs_to_playlist(playlist_id, sweet_track_ids);
+        auto library = mc.get_all_songs();
+        GMusicApi::identifiers sweet_track_ids;
+        for (auto&& song : library)
+        {
+            if (song.artist == "The Cat Empire")
+            {
+                sweet_track_ids.push_back(song.id);
+            }
+        }
+
+        auto playlist_id = mc.create_playlist("Rad muzak");
+        mc.add_songs_to_playlist(playlist_id, sweet_track_ids);
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
