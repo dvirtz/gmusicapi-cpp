@@ -39,7 +39,7 @@ build_script:
   - cmake --build _build --config %CONFIGURATION%
   
 test_script:
-  - python -c "import gmusicapi; print(gmusicapi.__file__)"
+  - python -c "import sys; print(sys.path)"
   - cd _build
   - ctest -C %CONFIGURATION% -V
   - cd ..

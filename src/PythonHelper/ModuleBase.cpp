@@ -12,11 +12,12 @@ ModuleBase::ModuleBase(const char* name, const boost::optional<std::string>& pat
 
     static Initializer initializer;
 
+    auto sys = py::module::import("sys");
+    py::list pythonPath(sys.attr("path"));
+    printList(pythonPath);
+
     if (path)
     {
-        auto sys = py::module::import("sys");
-        py::list pythonPath(sys.attr("path"));
-
         // add module to path
         pythonPath.append(py::str(*path));
     }
