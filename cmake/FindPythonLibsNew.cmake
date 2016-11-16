@@ -165,7 +165,7 @@ else()
     # information the python interpreter itself gave us were more complete.
     find_library(PYTHON_LIBRARY
         NAMES "python${PYTHON_LIBRARY_SUFFIX}"
-        PATHS ${_PYTHON_LIBS_SEARCH}
+        HINTS ${_PYTHON_LIBS_SEARCH}
         NO_SYSTEM_ENVIRONMENT_PATH)
     message(STATUS "Found Python lib ${PYTHON_LIBRARY}")
 endif()
