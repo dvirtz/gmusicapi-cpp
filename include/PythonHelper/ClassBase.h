@@ -50,43 +50,22 @@ template<typename Ret, typename ...Args>
 inline Ret ClassBase::callMethod(const char* methodName, Args&& ...args) const
 {
     namespace py = pybind11;
-    try
-    {
-        py::function f {m_object.attr(methodName)};
-        return f(std::forward<Args>(args)...).template cast<Ret>();
-    }
-    catch (const py::error_already_set&)
-    {
-        handlePythonException();
-    }
+    py::function f {m_object.attr(methodName)};
+    return f(std::forward<Args>(args)...).template cast<Ret>();
 }
 
 template<typename T>
 inline T ClassBase::getMember(const char* memberName) const
 {
     namespace py = pybind11;
-    try
-    {
-        return m_object.attr(memberName).template cast<T>();
-    }
-    catch (const py::error_already_set&)
-    {
-        handlePythonException();
-    }
+    return m_object.attr(memberName).template cast<T>();
 }
 
 template<typename T>
 inline void ClassBase::setMember(const char* memberName, const T & value)
 {
     namespace py = pybind11;
-    try
-    {
-        m_object.attr(memberName) = py::cast(value);
-    }
-    catch (const py::error_already_set&)
-    {
-        handlePythonException();
-    }
+    m_object.attr(memberName) = py::cast(value);
 }
 
 } // namespace PythonHelper

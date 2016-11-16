@@ -58,13 +58,6 @@ void setToDict(pybind11::dict& dict, const char* key, const T& t)
     dict[key] = pybind11::cast(t);
 }
 
-NORETURN(void handlePythonException());
-
-inline void handlePythonException()
-{
-    throw;
-}
-
 template<typename T>
 struct is_sequence : public std::false_type {};
 

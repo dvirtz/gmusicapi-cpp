@@ -44,15 +44,8 @@ template<typename ...Args>
 inline pybind11::object ModuleBase::createObject(const char* name, Args&& ...args) const
 {
     namespace py = pybind11;
-    try
-    {
-        py::function f {m_dict[name]};
-        return f(std::forward<Args>(args)...);
-    }
-    catch (const py::error_already_set&)
-    {
-        handlePythonException();
-    }
+    py::function f {m_dict[name]};
+    return f(std::forward<Args>(args)...);
 }
 
 template<typename Ret, typename... Args>
@@ -61,61 +54,33 @@ inline Ret ModuleBase::callStaticMethod(const char* className,
                                         Args&&... args) const
 {
     namespace py = pybind11;
-    try
-    {
-        auto classObject = m_dict[className];
-        py::object methodObject {classObject.attr("__dict__")[methodName]};
-        py::function funcObject {methodObject.attr("__func__")};
-        return funcObject(std::forward<Args>(args)...);
-    }
-    catch (const py::error_already_set&)
-    {
-        handlePythonException();
-    }
+    auto classObject = m_dict[className];
+    py::object methodObject {classObject.attr("__dict__")[methodName]};
+    py::function funcObject {methodObject.attr("__func__")};
+    return funcObject(std::forward<Args>(args)...);
 }
 
 template<typename T>
 inline T ModuleBase::getMember(const char* memberName) const
 {
     namespace py = pybind11;
-    try
-    {
-        return m_dict[memberName].cast<T>();
-    }
-    catch (const py::error_already_set&)
-    {
-        handlePythonException();
-    }
+    return m_dict[memberName].cast<T>();
 }
 
 template<typename T>
 inline void ModuleBase::setMember(const char* memberName, const T & value)
 {
     namespace py = pybind11;
-    try
-    {
-        m_dict[memberName] = py::cast(value);
-    }
-    catch (const py::error_already_set&)
-    {
-        handlePythonException();
-    }
+    m_dict[memberName] = py::cast(value);
 }
 
 template<typename Ret, typename ...Args>
 inline Ret ModuleBase::callGlobalMethod(const char* methodName, Args && ...args) const
 {
     namespace py = pybind11;
-    try
-    {
-        py::function methodObject {m_dict[methodName]};
-        auto ret = methodObject(std::forward<Args>(args)...);
-        return ret.template cast<Ret>();
-    }
-    catch (const py::error_already_set&)
-    {
-        handlePythonException();
-    }
+    py::function methodObject {m_dict[methodName]};
+    auto ret = methodObject(std::forward<Args>(args)...);
+    return ret.template cast<Ret>();
 }
 
 } // namespace PythonHelper
