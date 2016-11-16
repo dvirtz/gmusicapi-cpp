@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.1.0)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
-set(HUNTER_STATUS_DEBUG ON)
+set(HUNTER_STATUS_DEBUG OFF)
 
 include(HunterGate)
 
@@ -48,7 +48,13 @@ set(BOOST_ROOT "" CACHE PATH "Boost location")
 add_definitions(-DBOOST_ALL_NO_LIB)
 
 find_package(PythonInterp REQUIRED)
-find_package(PythonLibsNew ${PYTHON_VERSION_STRING} REQUIRED)
+find_package(PythonLibsNew REQUIRED)
+
+add_library(PythonLib UNKNOWN IMPORTED)
+set_target_properties(PythonLib PROPERTIES 
+	IMPORTED_LOCATION ${PYTHON_LIBRARIES}
+	INTERFACE_LINK_LIBRARIES $<$<BOOL:${UNIX}>:dl\;pthread\;rt\;util>
+) 
 
 hunter_add_package(Boost COMPONENTS date_time program_options)
 

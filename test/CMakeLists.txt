@@ -29,7 +29,7 @@ target_link_libraries(Tester PUBLIC
 	GMusicApi
 	PythonHelper
 	Boost::date_time Boost::program_options
-	${PYTHON_LIBRARIES})
+	PythonLib)
 
 if(UNIX)
 	get_filename_component(PYTHON_PATH ${PYTHON_LIBRARIES} DIRECTORY)
