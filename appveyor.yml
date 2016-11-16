@@ -18,6 +18,9 @@ environment:
       
 configuration: Release
 
+cache:
+  - C:\.hunter
+
 install:
   - git submodule update --init --recursive
   - if "%platform%"=="Win32" set PYTHON_URL=https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi
