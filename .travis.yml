@@ -10,10 +10,8 @@ env:
   matrix:
     - CXX=g++ BUILD_TYPE=Release
   global:
-    # - BOOST_VERSION=1_60_0
-    # - BOOST_DOT_VERSION=1.60.0
-    # - BOOST_ROOT=${HOME}/boost_${BOOST_VERSION}_PY_${TRAVIS_PYTHON_VERSION}
     - HUNTER_ROOT=${HOME}/Hunter
+    - CTEST_OUTPUT_ON_FAILURE=1
     - secure: "g+iZw5iuBztrlPegctYgoANAmuQnOM60zAN6XsGswkuRN076WC7J8q1ZoxPfRsk54trWqx3v5o5KZwu9AapvSNiIiaY9KVVoVRNFAP9298GOmN9lTPdkVp/qNBSU5G52mi9ZAy9uzl8Ri31xQbWhg2sfF+kAZV6xh5CMSpHwfXnCYObA/Yn1lvdmwARW6EBEtzheKZf57HBD9FensnhKRgZqw+BcfwcYx2YCTIecywPR4GsxBxNabQdojgUrBRxwNmKixCUjyMoX3WPjbJvoeDTVXoXBRe3QDmIK5QaSa+JGkbw8Hx9BGKuYEUXhJ4xkH3Zqrd5CBAI1k4YFHsSDu+MXmkj0l5/NyvTuhc9SS3NrbNUXJeDSHJqfHPPKT9QjNixwObvrpJcdT4LHH4B/JvMVPfLBDN2XfdoaKtMPAm4i9CabaqhZbQXqKLfV/O3Ai2s0oOLCFBmpxYqIsn+bTD4+Ga8nHUqVIV6+MUF1jWZueP8/RfohHrHC9BqbBeRSG6hKpk/Y3TGvSu25vXt2vNl01mZetdm4Sa7wpQ6BN9YOQqYgBcokGDdqdQQQWSDKtte3wDKOQby27Oo1GrSfWNhLSEKZXjWLrRVya1UO8/JtzaDoRhVjJ5W4Rj4gfpwV8ghsQQKQ/NbmOLtlvfDn+CRtVbG46tTGrDPW3nh538k="
     - secure: "QSS8aCzBwgA8NwXa0SIFRj2L1//fTXRGLr1utGEzSK+iIQ0R3i3SpRakl22JhnHBCXULmW9A0UCgejbn7uM8NtDPBYleldpe+3Yqxk/2a9VO91ETUc6agcpwrGz9B+V03NwpR9G5m9eLaTW5BmgbtrTf0wNOX1ekZF0khb7/bY+EABPrl8ELAQ9VokXy9sDJJmqdjKe3xIPUGs9USgd94g2eHCd7BOvVx2+jMmiXyiu3N4xJipy4XXkihrOqUDP/tbdsYursKBrlE4fXsbI4wq1dF9HeGTugq8glIg417ZaxlkziuBt1qqWf+doCwOnQcYXy4u8aU+4ryRdq6CsvqMCQpS6BTaudgu+PxBtynEHQcx+htEZ3fDkVxHIcZJ/EYbTRAooIWZd5Xx5tSXkQ2c6PC9GmoylBebARf810khpqLNL1q00MvUNlm2ZIQ90Zszsmp3eW566Fnk1nccjviothBYUpX/IedR7URj+qxZj2ozkS1V5YAt6Okg7hb7i4unIcteKxzUiK4twtHIap7fXottYiohsYmn/OXj+MJeX1DbzNOSNNxLFXg8BD/VrRG+4kk6Qr5CIQvh9uhaEtN5kjl/91nfRU0yh5xhPCUsNHC79Kjdc0DWnRFEBfYD1HryfowqcTqwIGhE1Rd4kELB52OIrbxh4ARHKAbtl6QU8="
     - secure: "Kh6JZff8btqwdRt8QBzmXAVWqlFdcGxwwJ9FvQQQClIOlyXYz9DxwBmLVSwVsPHBJ6bu4c9dRu8p5WGiGAGWJZJTAu8pudeJ8aMdMH4djU8Bphwz+vQECnlQ/lbeq8TEpOz2K9EU95tJh+dA8SMEB4BS/drDeUYfyM73VScNGvxZhpmsD02MwsKwKqGltLH2yrIGIp1a16WzHe4QcAdt7fEerwvquswgaP0N0QYvi6vl5BeiJwRHD5u70Satul+yuNNZ9sUf4uYd0Oa3boVBMEE8vStRtiyun5sSe3FvlQkyLGX6tSkij6FGWPvSAABgvniNvo7N8Ahy2UAvpeh+jyNxp7SrFEzjJlAiutYkKctr5gLqqXonzzH0olYVyQGZFKZTJOj4VqAcWC2rsex9zrFhESAiWLHX4xS+qTnstukvccGkvt0jNpNMpVxT/rcxtyX4ETN7hotaSuFkiK0jFh4baA9Pr3XOoTERczgs7mqDKZuPEUUnPG8jmrL8kpQrkOeGS3b6RUdjN7TzsiCgzhrcm7kNxQWvls/YS5X6al2oWpX9YnIochkcYTIwWGiRzhfbmUwo/Pca7vV8u4TUThQSKXgFvty2a2Vb4w8r/tsSsTRnMgewChmLVjUDiSCmlqMN+WNprp8VAeZjmeEZ7sA+dy9es5ZWaEtIBliyWp8="
@@ -39,15 +37,12 @@ install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
   - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.8" CC="clang-3.8"; fi
   - source scripts/install-cmake.sh
-  - pushd gmusicapi
-  - python setup.py sdist --formats=zip -k
-  - find ./dist -iname "*.zip" -print0 | xargs -0 pip install
-  - popd
+  - source scripts/install-gmusicapi.sh
 
 script:
-  - cmake . -B_build
+  - cmake . -B_build -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPYBIND11_PYTHON_VERSION=$TRAVIS_PYTHON_VERSION
   - cmake --build _build
-  - cmake --build _build --target test -- ARGS=-V
+  - cmake --build _build --target test
 
 after_failure:
   - cat ~/.cache/gmusicapi/log/gmusicapi.log
