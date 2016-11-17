@@ -12,17 +12,16 @@ ModuleBase::ModuleBase(const char* name, const boost::optional<std::string>& pat
 
     static Initializer initializer;
 
-    auto sys = py::module::import("sys");
-    py::list pythonPath(sys.attr("path"));
-    printList(pythonPath);
-
     if (path)
     {
+        auto sys = py::module::import("sys");
+        py::list pythonPath(sys.attr("path"));
+
         // add module to path
         pythonPath.append(py::str(*path));
     }
 
-    // import gmusicapi module
+    // import requested module
     auto module = py::module::import(name);
     m_dict = module.attr("__dict__");
 }

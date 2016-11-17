@@ -20,16 +20,15 @@ endif()
 
 add_executable(Tester ${HEADERS} ${SOURCES} ${CONFIGURE_FILES})
 
-target_include_directories(Tester PUBLIC ${Catch_INCLUDE_DIR} 
-	$<TARGET_PROPERTY:GMusicApi,INTERFACE_INCLUDE_DIRECTORIES>
+target_include_directories(Tester 
+	PUBLIC 
+	${Catch_INCLUDE_DIR} 
 	PRIVATE
 	${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(Tester PUBLIC
 	GMusicApi
-	PythonHelper
-	Boost::date_time Boost::program_options
-	PythonLib)
+	Boost::date_time Boost::program_options)
 
 if(UNIX)
 	get_filename_component(PYTHON_PATH ${PYTHON_LIBRARIES} DIRECTORY)

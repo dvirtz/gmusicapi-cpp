@@ -6,6 +6,4 @@ find_package(Boost CONFIG REQUIRED)
 
 target_link_libraries(Example PRIVATE
 	GMusicApi
-	PythonHelper
-	PythonLib
 )

@@ -1,11 +1,10 @@
 #include "gmusicapi/Clients.h"
-#include "gmusicapiPath.h"
 
 namespace GMusicApi
 {
 
 Clients::Clients()
-    : PythonHelper::ModuleBase("gmusicapi.clients", gmusicapi_path)
+    : PythonHelper::ModuleBase("gmusicapi.clients")
 {}
 
 std::string Clients::OAUTH_FILEPATH()

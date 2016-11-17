@@ -14,7 +14,7 @@ HunterGate(
 
 project(GMusicApi)
 
-# require C++11 support
+# require C++14 support
 if("$ENV{TRAVIS}" STREQUAL "true")
 	set(TRAVIS ON)
 	set(CI ON)
@@ -40,33 +40,12 @@ endif()
 
 # Includes Catch in the project:
 set(Catch_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/Catch/include)
-set(PyBind_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/pybind11/include)
-
-# default Cache values
-set(BOOST_ROOT "" CACHE PATH "Boost location")
-# disable boost auto-link
-add_definitions(-DBOOST_ALL_NO_LIB)
-
-find_package(PythonInterp REQUIRED)
-find_package(PythonLibsNew REQUIRED)
-
-add_library(PythonLib UNKNOWN IMPORTED)
-set_target_properties(PythonLib PROPERTIES 
-	IMPORTED_LOCATION ${PYTHON_LIBRARIES}
-	INTERFACE_LINK_LIBRARIES $<$<BOOL:${UNIX}>:dl\;pthread\;rt\;util>
-) 
 
 hunter_add_package(Boost COMPONENTS date_time program_options)
 
-# the following resolves the issue in
-# http://stackoverflow.com/questions/10660524/error-building-boost-1-49-0-with-gcc-4-7-0
-if(MINGW)
-	add_definitions(-D_hypot=hypot)
-endif()
-
 if(MSVC)
 	add_definitions(/WX /W4 /wd4172)
-elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+elseif(CMAKE_COMPILER_IS_GNUCXX)
 	add_definitions(-Wall -Wpedantic -Werror)
 endif()
 
@@ -76,8 +55,7 @@ enable_testing()
 
 find_package(Boost CONFIG REQUIRED)
 
-add_definitions(-DBOOST_PYTHON_STATIC_LIB)
-
+add_subdirectory(pybind11)
 add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(example)

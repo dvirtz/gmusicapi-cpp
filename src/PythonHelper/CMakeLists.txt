@@ -1,25 +1,25 @@
 set(SOURCES ModuleBase.cpp Initializer.cpp)
+set(HEADERS 
+	include/ModuleBase.h 
+	include/ClassBase.h 
+	include/utility.h 
+	include/Initializer.h 
+	include/typeConverters.h)
 
-set(INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
-set(INCLUDE_HEADERS ModuleBase.h ClassBase.h utility.h Initializer.h typeConverters.h)
-foreach(header ${INCLUDE_HEADERS})
-	list(REMOVE_ITEM INCLUDE_HEADERS ${header})
-	list(APPEND INCLUDE_HEADERS ${INCLUDE_DIR}/PythonHelper/${header})
-endforeach()
+string(REPLACE "include/" "${INCLUDE_DIR}/PythonHelper/"
+       HEADERS "${HEADERS}")
 
 find_package(Boost CONFIG REQUIRED)
 
-add_library(PythonHelper ${SOURCES} ${INCLUDE_HEADERS})
-
-target_compile_definitions(PythonHelper PUBLIC
-	PYTHON_MAJOR=${PYTHON_VERSION_MAJOR})
+add_library(PythonHelper ${SOURCES} ${HEADERS})
 	
 target_include_directories(PythonHelper PUBLIC
 	${INCLUDE_DIR})
 
 target_include_directories(PythonHelper SYSTEM PUBLIC
-	${PyBind_INCLUDE_DIR}
+	${PYBIND11_INCLUDE_DIR}
 	${PYTHON_INCLUDE_DIRS})
 
 target_link_libraries(PythonHelper PUBLIC
-	Boost::boost)
+	Boost::boost
+	${PYTHON_LIBRARIES})

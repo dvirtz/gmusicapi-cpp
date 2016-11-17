@@ -3,7 +3,6 @@
 #include "gmusicapi/Musicmanager.h"
 #include "testFiles.h"
 #include "gmusicapi/Mobileclient.h"
-#include "gmusicapiPath.h"
 #include <regex>
 
 using namespace GMusicApi;
@@ -14,7 +13,7 @@ class MusicmanagerTestFixture : public TestFixture
     {
     public:
         MusicmanagerProtocol()
-            : PythonHelper::ModuleBase("gmusicapi.protocol.musicmanager", gmusicapi_path)
+            : PythonHelper::ModuleBase("gmusicapi.protocol.musicmanager")
         {}
 
         OAuth2Credentials credentials_from_refresh_token(const std::string& token)
@@ -27,7 +26,7 @@ class MusicmanagerTestFixture : public TestFixture
     {
     public:
         Utils()
-            : PythonHelper::ModuleBase("gmusicapi.utils.utils", gmusicapi_path)
+            : PythonHelper::ModuleBase("gmusicapi.utils.utils")
         {}
 
         /*!

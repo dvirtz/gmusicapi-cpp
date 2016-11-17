@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
         {"username", "Google Music username", "GM_U", &TestFixture::gm_user, true},
         {"password", "Google Music password", "GM_P", &TestFixture::gm_pass, true},
         {"refresh_token", "Google Music refresh token", "GM_R", &TestFixture::gm_refresh, false},
-        {"android_id", "Google Music Android ID", "GM_AA_ID", &TestFixture::gm_user, false}
+        {"android_id", "Google Music Android ID", "GM_AA_ID", &TestFixture::gm_android_id, false}
     };
 
     po::options_description desc("Other options");

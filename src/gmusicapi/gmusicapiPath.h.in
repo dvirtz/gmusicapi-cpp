@@ -1,4 +1,0 @@
-#pragma once
-#include <string>
-
-const std::string gmusicapi_path = "${GMUSICAPI_PATH}";
