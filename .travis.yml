@@ -36,7 +36,7 @@ addons:
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
   - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.8" CC="clang-3.8"; fi
-  - source scripts/install-cmake.sh
+  - source scripts/install-cmake.sh 3.2
   - source scripts/install-gmusicapi.sh
 
 script:
