@@ -12,8 +12,8 @@ environment:
     secure: lRWdgF+NYnKPwDzQBi4oaYeVkSJgGM+m4Jv5LrhAlgA=
   
   matrix:
-    - PYTHON_DIR: C:\\Python27
-      PYTHON_VERSION: 2.7.12
+    # - PYTHON_DIR: C:\\Python27
+      # PYTHON_VERSION: 2.7.12
     - PYTHON_DIR: C:\\Python35
       PYTHON_VERSION: 3.5.2
       
