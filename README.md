@@ -24,4 +24,4 @@ auto playlist_id = mc.create_playlist("Rad muzak");
 mc.add_songs_to_playlist(playlist_id, sweet_track_ids);
 ```
 
-Uses [Boost.Python](http://www.boost.org/doc/libs/1_60_0/libs/python/doc/html/index.html) to translate C++ code to python and back.
+Uses [pybind11](https://github.com/pybind/pybind11) to translate C++ code to python and back.
