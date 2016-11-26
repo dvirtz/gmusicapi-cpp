@@ -145,7 +145,8 @@ struct type_caster<GMusicApi::GeneratedRange<T>>
                 
         if (PyGen_Check(src.ptr()))
         {
-            value = gm::GeneratedRange<T>(gm::GeneratorIterator<T>(iterator(src, true)),
+            auto it = reinterpret_borrow<iterator>(src);
+            value = gm::GeneratedRange<T>(gm::GeneratorIterator<T>(it),
                                           gm::GeneratorIterator<T>());
         }
         else

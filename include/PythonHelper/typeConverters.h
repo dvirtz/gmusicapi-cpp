@@ -60,12 +60,12 @@ struct type_caster<Struct, typename std::enable_if<boost::fusion::traits::is_seq
         namespace bf = boost::fusion;
         using PythonHelper::getFromDict;
 
-        dict d {src, true};
-
-        if (!d.check())
+        if (isinstance<dict>(src) == false)
         {
             return false;
         }
+
+        auto d = reinterpret_borrow<dict>(src);
 
         PythonHelper::apply(bf::begin(value), bf::end(value), [&d, this](const std::string& name, auto& member)
         {

@@ -23,7 +23,7 @@ ModuleBase::ModuleBase(const char* name, const boost::optional<std::string>& pat
 
     // import requested module
     auto module = py::module::import(name);
-    m_dict = module.attr("__dict__");
+    m_dict = py::dict(module.attr("__dict__"));
 }
 
 ModuleBase::~ModuleBase() = default;
