@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.1.0)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 set(HUNTER_STATUS_DEBUG OFF)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 include(HunterGate)
 
@@ -51,7 +52,7 @@ endif()
 
 include(doxygen.cmake)
 
-enable_testing()
+include(CTest)
 
 find_package(Boost CONFIG REQUIRED)
 

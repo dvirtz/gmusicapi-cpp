@@ -36,9 +36,8 @@ build_script:
   - cmake --build _build --config %CONFIGURATION%
   
 test_script:
-  - cd _build
-  - ctest -C %CONFIGURATION% -VV
-  - cd ..
+  # this runs ctest and results uploads to cdash
+  - cmake --build _build --target Continuous --config %CONFIGURATION%
 
 on_failure:
   - set GMUSICAPI_LOG=%LOCALAPPDATA%\Simon Weber\gmusicapi\Logs\gmusicapi.log

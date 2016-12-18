@@ -40,10 +40,10 @@ install:
   - source scripts/install-gmusicapi.sh
 
 script:
-  - cmake . -B_build -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPYBIND11_PYTHON_VERSION:STRING=$TRAVIS_PYTHON_VERSION
-  - cmake --build _build
-  - cmake --build _build --target test
+  - cmake . -B_$BUILD_TYPE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPYBIND11_PYTHON_VERSION:STRING=$TRAVIS_PYTHON_VERSION
+  - cmake --build _$BUILD_TYPE
+  - cmake --build _$BUILD_TYPE --target Continuous
 
 after_failure:
-  - cat _build/CMakeCache.txt
+  - cat _$BUILD_TYPE/CMakeCache.txt
   - cat ~/.cache/gmusicapi/log/gmusicapi.log
